@@ -102,6 +102,7 @@ public class UserController {
         return new ResponseEntity<Object>("Role successfully added to user!", OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
 
@@ -118,6 +119,7 @@ public class UserController {
 
     }
 
+
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User user) {
         User newUser = new User();
@@ -130,6 +132,7 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update/score", method = RequestMethod.POST)
     public ResponseEntity<?> updateUserPersonalScore(@RequestBody User user) {
 
@@ -143,6 +146,7 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@RequestBody User user) {
 
@@ -161,7 +165,7 @@ public class UserController {
     }
 
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
 
