@@ -76,7 +76,7 @@ public class JwtUtil {
         return JWT.create().withIssuer("issuer").withAudience("Audience")
                 .withIssuedAt(new Date()).withSubject(authUserDetails.getUsername())
                 .withArrayClaim("roles", claims)
-                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 7* 24 * 60 * 60 * 1000))
                 .sign(Algorithm.HMAC512(SECRET_KEY.getBytes()));
     }
 
