@@ -41,13 +41,11 @@ public class User {
         super();
     }
 
-    public User(Long id, String username, String password/*, Integer personalScore, Collection<String> team*/) {
+    public User(Long id, String username, String password) {
         super();
         this.id = id;
         this.username = username;
         this.password = password;
-//        this.personalScore = personalScore;
-//        this.team = team;
     }
 
     public Long getId() {
