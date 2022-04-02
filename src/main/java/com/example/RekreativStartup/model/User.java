@@ -18,9 +18,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "presonal_score")
-    private Integer personalScore;
-
 //    @OneToMany(mappedBy = "user", targetEntity = Team.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JsonIgnoreProperties({"user"})
 //    @ManyToMany
@@ -30,8 +27,8 @@ public class User {
 //            inverseJoinColumns = @JoinColumn(name = "team_id"))
 //    private Collection<Team> team = new ArrayList<>();
 
-    @ElementCollection
-    private Collection<String> team = new ArrayList<String>();
+//    @ElementCollection
+//    private Collection<String> team = new ArrayList<String>();
 
     @ManyToMany
     @JoinTable(
@@ -44,13 +41,13 @@ public class User {
         super();
     }
 
-    public User(Long id, String username, String password, Integer personalScore, Collection<String> team) {
+    public User(Long id, String username, String password/*, Integer personalScore, Collection<String> team*/) {
         super();
         this.id = id;
         this.username = username;
         this.password = password;
-        this.personalScore = personalScore;
-        this.team = team;
+//        this.personalScore = personalScore;
+//        this.team = team;
     }
 
     public Long getId() {
@@ -77,13 +74,13 @@ public class User {
         this.password = password;
     }
 
-    public Collection<String> getTeam() {
-        return team;
-    }
-
-    public void setTeam(Collection<String> team) {
-        this.team = team;
-    }
+//    public Collection<String> getTeam() {
+//        return team;
+//    }
+//
+//    public void setTeam(Collection<String> team) {
+//        this.team = team;
+//    }
 
     public Collection<Role> getRoles() {
         return roles;
@@ -93,11 +90,11 @@ public class User {
         this.roles = roles;
     }
 
-    public Integer getPersonalScore() {
-        return personalScore;
-    }
-
-    public void setPersonalScore(Integer personalScore) {
-        this.personalScore = personalScore;
-    }
+//    public Integer getPersonalScore() {
+//        return personalScore;
+//    }
+//
+//    public void setPersonalScore(Integer personalScore) {
+//        this.personalScore = personalScore;
+//    }
 }

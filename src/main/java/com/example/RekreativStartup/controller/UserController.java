@@ -125,26 +125,26 @@ public class UserController {
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
-        newUser.setPersonalScore(null);
-        newUser.setTeam(null);
+//        newUser.setPersonalScore(null);
+//        newUser.setTeam(null);
         newUser = userService.saveUser(newUser);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/update/score", method = RequestMethod.POST)
-    public ResponseEntity<?> updateUserPersonalScore(@RequestBody User user) {
-
-        User existingUser = userService.findUserByUsername(user.getUsername()).orElse(null);
-        if (existingUser == null) {
-            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-        }
-
-        existingUser.setPersonalScore(user.getPersonalScore());
-        userService.saveUser(existingUser);
-        return new ResponseEntity<Object>(HttpStatus.CREATED);
-    }
+//    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+//    @RequestMapping(path = "/update/score", method = RequestMethod.POST)
+//    public ResponseEntity<?> updateUserPersonalScore(@RequestBody User user) {
+//
+//        User existingUser = userService.findUserByUsername(user.getUsername()).orElse(null);
+//        if (existingUser == null) {
+//            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+//        }
+//
+//        existingUser.setPersonalScore(user.getPersonalScore());
+//        userService.saveUser(existingUser);
+//        return new ResponseEntity<Object>(HttpStatus.CREATED);
+//    }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update", method = RequestMethod.POST)
@@ -157,8 +157,8 @@ public class UserController {
 
         existingUser.setUsername(user.getUsername());
         existingUser.setPassword(user.getPassword());
-        existingUser.setPersonalScore(user.getPersonalScore());
-        existingUser.setTeam(user.getTeam());
+//        existingUser.setPersonalScore(user.getPersonalScore());
+//        existingUser.setTeam(user.getTeam());
         userService.saveUser(existingUser);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);

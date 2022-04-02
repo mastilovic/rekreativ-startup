@@ -50,9 +50,7 @@ public class UserService implements UserDetailsService {
             User adminUser = new User(
                     null,
                     "admin",
-                    passwordEncoder.encode(adminpass),
-                    null,
-                    null);
+                    passwordEncoder.encode(adminpass));
             adminUser.getRoles().add(adminRole);
             userRepository.save(adminUser);
         }

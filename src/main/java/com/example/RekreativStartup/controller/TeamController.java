@@ -3,11 +3,16 @@ package com.example.RekreativStartup.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.RekreativStartup.Service.TeamService;
+import com.example.RekreativStartup.Service.TeammateService;
 import com.example.RekreativStartup.Service.UserService;
 import com.example.RekreativStartup.model.Team;
+import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.model.User;
+import com.example.RekreativStartup.repository.TeamRepository;
+import com.example.RekreativStartup.repository.TeammateRepository;
 import com.example.RekreativStartup.repository.UserRepository;
 import com.example.RekreativStartup.util.JwtUtil;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
@@ -20,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -29,15 +35,26 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequestMapping("/api/team/v1")
 public class TeamController {
 
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
+    private final TeammateRepository teammateRepository;
+    private final TeammateService teammateService;
 
     @Autowired
-    public TeamController(JwtUtil jwtUtil, UserRepository userRepository, UserService userService) {
+    public TeamController(JwtUtil jwtUtil,
+                          UserRepository userRepository,
+                          UserService userService,
+                          TeamRepository teamRepository,
+                          TeammateRepository teammateRepository,
+                          TeammateService teammateService) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.teamRepository = teamRepository;
+        this.teammateRepository = teammateRepository;
+        this.teammateService = teammateService;
     }
 
     @Autowired
@@ -62,27 +79,14 @@ public class TeamController {
     //long id, str teamname, str[] teammates, str captain, str city, int score
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody Team team, HttpServletRequest request) {
-
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String token = authorizationHeader.substring("Bearer ".length());
-        DecodedJWT decodedJWT = jwtUtil.decodedToken(token);
-        String username = decodedJWT.getSubject();
-
-        User existingUser = userRepository.findByUsername(username).orElseThrow(null);
-//        List<User> myList = new ArrayList<>();
-//        myList.add(existingUser);
+    public ResponseEntity<?> register(@RequestBody Team team) {
 
         Team newTeam = new Team();
 
         newTeam.setTeamName(team.getTeamName());
         newTeam.setCity(team.getCity());
-        newTeam.getTeammate().add(username);
-//        newTeam.setTeammate(Arrays.asList(username));
+//        newTeam.setTeammate(null);
         newTeam = teamService.save(newTeam);
-
-        existingUser.getTeam().add(team.getTeamName());
-        userService.saveUser(existingUser);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
@@ -93,25 +97,18 @@ public class TeamController {
         if (existingTeam == null) {
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
-        existingTeam.setScore(team.getScore());
+//        existingTeam.setScore(team.getScore());
         teamService.save(existingTeam);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
+
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/add/user", method = RequestMethod.POST)
-    public ResponseEntity<?> addUserToTeam(@RequestBody TeammateToTeamForm team) {
+    @RequestMapping(path = "/add/teammate", method = RequestMethod.POST)
+    public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateToTeamForm form){
 
-        Team existingTeam = teamService.getByTeamname(team.getTeamName()).orElse(null);
-        if (existingTeam == null) {
-            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-        }
-
-//        existingTeam.getTeammate().add(teammate);
-
-        teamService.addTeammateToTeam(team.getTeamName(), team.getTeamMate());
-
+        teamService.addTeammateToTeam(form.getTeamName(), form.getTeamMate());
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
@@ -176,7 +173,7 @@ public class TeamController {
 //        existingTeam.setUser(team.getUser());
 //        existingTeam.setCaptain(team.getCaptain());
         existingTeam.setCity(team.getCity());
-        existingTeam.setScore(team.getScore());
+//        existingTeam.setScore(team.getScore());
         teamService.save(existingTeam);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
