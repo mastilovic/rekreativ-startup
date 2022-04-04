@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Teammate {
@@ -18,7 +16,17 @@ public class Teammate {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @Column(name = "personal_score")
     private Integer personalScore;
+
+//    @ManyToOne
+//    @JoinColumns(
+//        {
+//            @JoinColumn(updatable=false,insertable=false, name="team_a_score", referencedColumnName="team_a_score"),
+//            @JoinColumn(updatable=false,insertable=false, name="team_b_score", referencedColumnName="team_b_score")
+//        }
+//    )
+//    private Matches personalScore;
 
 
 //    private Set<Team> team;

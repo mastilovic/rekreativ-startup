@@ -49,10 +49,9 @@ public class MatchesController {
                 ValidatorUtil.teamValidator(existingTeamTwo)){
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
+
         Matches newMatchup = matchesService.createNewMatchup(teama, teamb, teamascore, teambscore);
 
         return new ResponseEntity<Object>(newMatchup, HttpStatus.CREATED);
     }
-
-//    @RequestParam(value = "teamname", required = false) String teamname,
 }

@@ -91,6 +91,18 @@ public class TeamService {
         return teamRepository.save(team);
     }
 
+    public ArrayList<Teammate> findTeammatesInTeam(String teamName){
+        Optional<Team> existingTeam = getByTeamname(teamName);
+        if (existingTeam == null){
+            return null;
+        }
+        ArrayList<Teammate> teammatesInTeam = new ArrayList<Teammate>();
+
+        existingTeam.map(Team::getTeammates).get().forEach(teammate ->
+                teammatesInTeam.add(teammate));
+        return teammatesInTeam;
+    }
+
     public void addTeammateToTeam(String teamname, String username){
         Team existingTeam = teamRepository.findByTeamName(teamname).get();
         Optional<Teammate> optionalTeammate = teammateRepository.findTeammateByName(username);
