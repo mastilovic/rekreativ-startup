@@ -4,7 +4,7 @@ About project
 
 UML Diagram
 
-![alt text](https://github.com/salexdxd/rekreativ-startup/blob/main/UML/RekreativUML.drawio.png?raw=true)
+![alt text](https://github.com/salexdxd/rekreativ-startup/blob/main/src/main/resources/static/UML/RekreativUML.drawio.png?raw=true)
 
 Verbal description
 
