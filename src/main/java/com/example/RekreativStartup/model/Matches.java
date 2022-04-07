@@ -86,19 +86,4 @@ public class Matches {
         this.teamBScore = teamBScore;
     }
 
-    //    public Set<Teammate> getTeamAScore() {
-//        return teamAScore;
-//    }
-//
-//    public void setTeamAScore(Set<Teammate> teamAScore) {
-//        this.teamAScore = teamAScore;
-//    }
-//
-//    public Set<Teammate> getTeamBScore() {
-//        return teamBScore;
-//    }
-//
-//    public void setTeamBScore(Set<Teammate> teamBScore) {
-//        this.teamBScore = teamBScore;
-//    }
 }

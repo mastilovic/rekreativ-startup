@@ -58,4 +58,8 @@ public class MatchesService {
     public Matches save(Matches matches) {
         return matchesRepository.save(matches);
     }
+
+    public Iterable<Matches> findAll(){
+        return matchesRepository.findAll();
+    }
 }

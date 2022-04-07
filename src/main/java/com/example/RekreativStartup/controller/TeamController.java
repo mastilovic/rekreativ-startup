@@ -89,6 +89,7 @@ public class TeamController {
         newTeam = teamService.save(newTeam);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
+
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update/score", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeamScore(@RequestBody Team team) {

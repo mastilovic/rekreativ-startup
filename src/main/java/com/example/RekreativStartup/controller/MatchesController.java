@@ -15,6 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/matches/v1")
@@ -39,19 +41,67 @@ public class MatchesController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/create/matches", method = RequestMethod.POST)
-    public ResponseEntity<?> createNewMatches(@RequestParam(value = "teama", required = false) String teama,
-                                              @RequestParam(value = "teamb", required = false) String teamb,
-                                              @RequestParam(value = "teamascore", required = false) Integer teamascore,
-                                              @RequestParam(value = "teambscore", required = false) Integer teambscore) {
-        Team existingTeamOne = teamService.getByTeamname(teama).get();
-        Team existingTeamTwo = teamService.getByTeamname(teamb).get();
-        if (ValidatorUtil.teamValidator(existingTeamOne) ||
-                ValidatorUtil.teamValidator(existingTeamTwo)){
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> createNewMatch(@RequestBody MatchesToMatchForm match) {
+        Team existingTeamOne = teamService.getByTeamname(match.getTeamOne()).get();
+        Team existingTeamTwo = teamService.getByTeamname(match.getTeamTwo()).get();
+//        if (ValidatorUtil.teamValidator(existingTeamOne) ||
+//                ValidatorUtil.teamValidator(existingTeamTwo)){
+//            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+//        }
+        Matches newMatch = new Matches();
+        newMatch.setTeamA(existingTeamOne);
+        newMatch.setTeamB(existingTeamTwo);
+        newMatch.setTeamAScore(match.getTeamOneScore());
+        newMatch.setTeamBScore(match.getTeamTwoScore());
+        matchesService.save(newMatch);
 
-        Matches newMatchup = matchesService.createNewMatchup(teama, teamb, teamascore, teambscore);
+        return new ResponseEntity<Object>(newMatch, HttpStatus.CREATED);
+    }
 
-        return new ResponseEntity<Object>(newMatchup, HttpStatus.CREATED);
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/get/all", method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() {
+
+        Iterable<Matches> obj = matchesService.findAll();
+        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+    }
+}
+
+class MatchesToMatchForm{
+    private String teamOne;
+    private String teamTwo;
+    private Integer teamOneScore;
+    private Integer teamTwoScore;
+
+    public String getTeamOne() {
+        return teamOne;
+    }
+
+    public void setTeamOne(String teamOne) {
+        this.teamOne = teamOne;
+    }
+
+    public String getTeamTwo() {
+        return teamTwo;
+    }
+
+    public void setTeamTwo(String teamTwo) {
+        this.teamTwo = teamTwo;
+    }
+
+    public Integer getTeamOneScore() {
+        return teamOneScore;
+    }
+
+    public void setTeamOneScore(Integer teamOneScore) {
+        this.teamOneScore = teamOneScore;
+    }
+
+    public Integer getTeamTwoScore() {
+        return teamTwoScore;
+    }
+
+    public void setTeamTwoScore(Integer teamTwoScore) {
+        this.teamTwoScore = teamTwoScore;
     }
 }
