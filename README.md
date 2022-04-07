@@ -6,7 +6,7 @@ UML Diagram
 
 ![alt text](https://github.com/salexdxd/rekreativ-startup/blob/main/src/main/resources/static/UML/RekreativUML.drawio.png?raw=true)
 
-Verbal description
+Description
 
 When registering, user gets a default user role (ROLE_USER). Every user can create a team. Each team can have teammates that can be created by user. Teams can play each other, which will be saved in table Matches. For every match between teams, score will be kept for TeamA and TeamB.
 
