@@ -71,35 +71,4 @@ public class MatchesService {
     public Optional<Matches> findMatchById(Long id) {
         return matchesRepository.findById(id);
     }
-
-    public Matches getWinner(String teamOne, String teamTwo, Long matchId){
-        Team existingTeamOne = teamService.getByTeamname(teamOne).get();
-        Team existingTeamTwo = teamService.getByTeamname(teamTwo).get();
-        Matches existingMatch = findMatchById(matchId).get();
-
-        if (existingTeamOne.getScore() > existingTeamTwo.getScore()) {
-            existingMatch.setWinner(existingMatch.getTeamA().getTeamName());
-            int myTeamAResult = existingMatch.getTeamA().getScore();
-            myTeamAResult++;
-            existingMatch.getTeamA().setScore(myTeamAResult);
-
-            int myTeamBResult = existingMatch.getTeamB().getScore();
-            myTeamBResult--;
-            existingMatch.getTeamB().setScore(myTeamBResult);
-
-        } else if (existingMatch.getTeamAScore() < existingMatch.getTeamBScore()){
-            existingMatch.setWinner(existingMatch.getTeamB().getTeamName());
-
-            int myTeamBResult = existingMatch.getTeamB().getScore();
-            myTeamBResult++;
-            existingMatch.getTeamB().setScore(myTeamBResult);
-
-            int myTeamAResult = existingMatch.getTeamA().getScore();
-            myTeamAResult--;
-            existingMatch.getTeamA().setScore(myTeamAResult);
-        } else if (Objects.equals(existingMatch.getTeamAScore(), existingMatch.getTeamBScore())){
-            existingMatch.setWinner("draw");
-        }
-        return save(existingMatch);
-    }
 }
