@@ -86,6 +86,7 @@ public class TeamController {
         newTeam.setTeamName(team.getTeamName());
         newTeam.setCity(team.getCity());
 //        newTeam.setTeammate(null);
+        newTeam.setScore(team.getScore());
         newTeam = teamService.save(newTeam);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
@@ -98,7 +99,7 @@ public class TeamController {
         if (existingTeam == null) {
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
-//        existingTeam.setScore(team.getScore());
+        existingTeam.setScore(team.getScore());
         teamService.save(existingTeam);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
@@ -171,10 +172,8 @@ public class TeamController {
         }
 
         existingTeam.setTeamName(team.getTeamName());
-//        existingTeam.setUser(team.getUser());
-//        existingTeam.setCaptain(team.getCaptain());
         existingTeam.setCity(team.getCity());
-//        existingTeam.setScore(team.getScore());
+        existingTeam.setScore(team.getScore());
         teamService.save(existingTeam);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);

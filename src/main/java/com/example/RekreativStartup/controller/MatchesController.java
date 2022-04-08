@@ -7,6 +7,7 @@ import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.repository.MatchesRepository;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.util.ValidatorUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/matches/v1")
+@Slf4j
 public class MatchesController {
 
     private final TeamRepository teamRepository;
@@ -53,6 +56,21 @@ public class MatchesController {
         newMatch.setTeamB(existingTeamTwo);
         newMatch.setTeamAScore(match.getTeamOneScore());
         newMatch.setTeamBScore(match.getTeamTwoScore());
+        if (newMatch.getTeamAScore() > newMatch.getTeamBScore()) {
+            newMatch.setWinner(newMatch.getTeamA().getTeamName());
+
+            existingTeamOne.setScore(existingTeamOne.getScore() +1);
+            teamService.save(existingTeamOne);
+
+        } else if (newMatch.getTeamAScore() < newMatch.getTeamBScore()){
+            newMatch.setWinner(newMatch.getTeamB().getTeamName());
+
+            existingTeamTwo.setScore(existingTeamTwo.getScore()+1);
+            teamService.save(existingTeamTwo);
+        } else if (Objects.equals(newMatch.getTeamAScore(), newMatch.getTeamBScore())){
+            newMatch.setWinner("draw");
+        }
+
         matchesService.save(newMatch);
 
         return new ResponseEntity<Object>(newMatch, HttpStatus.CREATED);

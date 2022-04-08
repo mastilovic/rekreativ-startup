@@ -61,18 +61,18 @@ public class Team {
 
     private String city;
 
-//    private Integer score;
+    private Integer score;
 
     public Team(){
         super();
     }
 
-    public Team(Long id, String teamName, String city/*, Integer score*/) {
+    public Team(Long id, String teamName, String city, Integer score) {
         super();
         this.id = id;
         this.teamName = teamName;
         this.city = city;
-//        this.score = score;
+        this.score = score;
     }
 
     public Long getId() {
@@ -91,13 +91,13 @@ public class Team {
         this.teamName = teamName;
     }
 
-//    public Integer getScore() {
-//        return score;
-//    }
-//
-//    public void setScore(Integer score) {
-//        this.score = score;
-//    }
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
     public String getCity() {
         return city;
