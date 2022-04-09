@@ -45,10 +45,6 @@ public class MatchesController {
     public ResponseEntity<?> createNewMatch(@RequestBody MatchesToMatchForm match) {
         Team existingTeamOne = teamService.getByTeamname(match.getTeamOne()).get();
         Team existingTeamTwo = teamService.getByTeamname(match.getTeamTwo()).get();
-//        if (ValidatorUtil.teamValidator(existingTeamOne) ||
-//                ValidatorUtil.teamValidator(existingTeamTwo)){
-//            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-//        }
         Matches newMatch = new Matches();
         newMatch.setTeamA(existingTeamOne);
         newMatch.setTeamB(existingTeamTwo);

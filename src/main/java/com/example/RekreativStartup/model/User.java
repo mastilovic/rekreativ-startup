@@ -18,18 +18,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-//    @OneToMany(mappedBy = "user", targetEntity = Team.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JsonIgnoreProperties({"user"})
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_teams",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "team_id"))
-//    private Collection<Team> team = new ArrayList<>();
-
-//    @ElementCollection
-//    private Collection<String> team = new ArrayList<String>();
-
     @ManyToMany
     @JoinTable(
             name = "user_roles",
@@ -72,14 +60,6 @@ public class User {
         this.password = password;
     }
 
-//    public Collection<String> getTeam() {
-//        return team;
-//    }
-//
-//    public void setTeam(Collection<String> team) {
-//        this.team = team;
-//    }
-
     public Collection<Role> getRoles() {
         return roles;
     }
@@ -88,11 +68,4 @@ public class User {
         this.roles = roles;
     }
 
-//    public Integer getPersonalScore() {
-//        return personalScore;
-//    }
-//
-//    public void setPersonalScore(Integer personalScore) {
-//        this.personalScore = personalScore;
-//    }
 }

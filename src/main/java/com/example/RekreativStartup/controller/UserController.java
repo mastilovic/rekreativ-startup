@@ -3,6 +3,8 @@ package com.example.RekreativStartup.controller;
 
 import com.example.RekreativStartup.Service.UserService;
 import com.example.RekreativStartup.auth.AuthUserDetails;
+import com.example.RekreativStartup.dto.UserDTO;
+import com.example.RekreativStartup.model.Role;
 import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.RoleRepository;
 import com.example.RekreativStartup.util.JwtUtil;
@@ -19,9 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -103,20 +103,48 @@ public class UserController {
         return new ResponseEntity<Object>("Role successfully added to user!", OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @RequestMapping(path = "/admin/get/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getOneForAdmin(@PathVariable("id") Long id) {
+
+        User obj = userService.findUserById(id).orElse(null);
+
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
+
+        if (obj == null) {
+
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+
+
+        ModelMapper modelMapper = new ModelMapper();
+        UserDTO userDto = modelMapper.map(obj, UserDTO.class);
+
+        return new ResponseEntity<Object>(userDto, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
 
         User obj = userService.findUserById(id).orElse(null);
+
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
+
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-        }
-//
-//        ModelMapper modelMapper = new ModelMapper();
-//        UserDTO userDto = modelMapper.map(obj, UserDTO.class);
+        } else if (obj.getRoles().contains(adminRole)) {
 
-        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+            return new ResponseEntity<Object>("Can't access users that have Admin role!",
+                    HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+        }
+
+
+        ModelMapper modelMapper = new ModelMapper();
+        UserDTO userDto = modelMapper.map(obj, UserDTO.class);
+
+        return new ResponseEntity<Object>(userDto, HttpStatus.OK);
 
     }
 
@@ -168,30 +196,62 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @RequestMapping(path = "/admin/get/all", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllForAdmin() {
+
+        Iterable<User> obj = userService.findAll();
+        ArrayList<User> myList = new ArrayList<>();
+
+        for (User u: obj){
+            myList.add(u);
+        }
+        if (obj == null) {
+
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+
+        Object[] objArray = myList.toArray();
+        ArrayList<UserDTO> dtoList = new ArrayList<>();
+
+        ModelMapper modelMapper = new ModelMapper();
+        for(int i=0; i < objArray.length ; i++) {
+            UserDTO userDto = modelMapper.map(objArray[i], UserDTO.class);
+            dtoList.add(userDto);
+        }
+
+        return new ResponseEntity<Object>(dtoList, HttpStatus.OK);
+    }
+
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
 
         Iterable<User> obj = userService.findAll();
-//        ArrayList myList = new ArrayList();
-//        for (User u: obj){
-//            myList.add(u);
-//        }
-//        if (obj == null) {
-//
-//            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-//        }
+        ArrayList<User> myList = new ArrayList<>();
 
-//        Object[] objArray = myList.toArray();
-//        ArrayList dtoList = new ArrayList();
-//        ModelMapper modelMapper = new ModelMapper();
-//        for(int i=0; i < objArray.length ; i++) {
-//            UserDTO userDto = modelMapper.map(objArray[i], UserDTO.class);
-//            dtoList.add(userDto);
-//        }
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
+        for (User u: obj){
+            if(!u.getRoles().contains(adminRole)) {
+                myList.add(u);
+            }
+        }
+        if (obj == null) {
 
-        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+
+        Object[] objArray = myList.toArray();
+        ArrayList<UserDTO> dtoList = new ArrayList<>();
+
+        ModelMapper modelMapper = new ModelMapper();
+        for(int i=0; i < objArray.length ; i++) {
+            UserDTO userDto = modelMapper.map(objArray[i], UserDTO.class);
+            dtoList.add(userDto);
+        }
+
+        return new ResponseEntity<Object>(dtoList, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
