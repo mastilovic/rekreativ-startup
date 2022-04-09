@@ -62,15 +62,15 @@ public class Team {
     private String city;
 
     // usint int primitive type to avoid working with null
-    private int score;
+    private Integer score;
     // usint int primitive type to avoid working with null
-    private int totalGamesPlayed;
+    private Integer totalGamesPlayed;
 
     public Team(){
         super();
     }
 
-    public Team(Long id, String teamName, String city, int score, int totalGamesPlayed) {
+    public Team(Long id, String teamName, String city, Integer score, Integer totalGamesPlayed) {
         super();
         this.id = id;
         this.teamName = teamName;
@@ -95,11 +95,11 @@ public class Team {
         this.teamName = teamName;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
@@ -119,11 +119,11 @@ public class Team {
         this.teammates = teammates;
     }
 
-    public int getTotalGamesPlayed() {
+    public Integer getTotalGamesPlayed() {
         return totalGamesPlayed;
     }
 
-    public void setTotalGamesPlayed(int totalGamesPlayed) {
+    public void setTotalGamesPlayed(Integer totalGamesPlayed) {
         this.totalGamesPlayed = totalGamesPlayed;
     }
 }

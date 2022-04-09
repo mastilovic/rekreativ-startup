@@ -79,6 +79,8 @@ public class TeamController {
         Team newTeam = new Team();
         newTeam.setTeamName(team.getTeamName());
         newTeam.setCity(team.getCity());
+        newTeam.setScore(0);
+        newTeam.setTotalGamesPlayed(0);
         teamService.save(newTeam);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
