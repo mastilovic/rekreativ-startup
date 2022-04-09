@@ -5,6 +5,7 @@ import com.example.RekreativStartup.Service.TeamService;
 import com.example.RekreativStartup.Service.TeammateService;
 import com.example.RekreativStartup.Service.UserService;
 import com.example.RekreativStartup.forms.TeammateToTeamForm;
+import com.example.RekreativStartup.model.Matches;
 import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
@@ -53,7 +54,7 @@ public class TeamController {
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
 
-        Team obj = teamService.findById(id).orElse(null);
+        Team obj = teamService.findTeamById(id).orElse(null);
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
@@ -122,7 +123,7 @@ public class TeamController {
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeam(@RequestBody Team team) {
 
-        Team existingTeam = teamService.findById(team.getId()).orElse(null);
+        Team existingTeam = teamService.findTeamById(team.getId()).orElse(null);
         if (existingTeam == null) {
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
@@ -157,5 +158,12 @@ public class TeamController {
 //        }
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        teamService.delete(id);
+        return new ResponseEntity<Object>("Team deleted successfully!", HttpStatus.OK);
     }
 }

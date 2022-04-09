@@ -17,7 +17,7 @@ public interface TeamRepository extends CrudRepository<Team, Long> {
     @Query(value = "SELECT teammate FROM Team", nativeQuery = true)
     Optional<Team> findByTeammate(String teammate);
 
-    @Query(value = "DELETE FROM team WHERE teammate={teammate};", nativeQuery = true)
+    @Query(value = "DELETE d FROM team as d WHERE d.teammate={teammate};", nativeQuery = true)
     Optional<Team> deleteTeammate(String teammate);
 
 //    @Query(value = "SELECT t.teammate FROM Team t WHERE t.teammates.team_name IN (:teamName)")

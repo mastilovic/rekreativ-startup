@@ -53,7 +53,7 @@ public class TeamService {
         return teamRepository.findAll();
     }
 
-    public Optional<Team> findById(Long id){
+    public Optional<Team> findTeamById(Long id){
         return teamRepository.findById(id);
     }
 
@@ -63,6 +63,10 @@ public class TeamService {
 
     public Optional<Team> findByTeammate(String teammate){
         return teamRepository.findByTeammate(teammate);
+    }
+
+    public void delete(Long id) {
+        teamRepository.deleteById(id);
     }
 
     public void deleteTeammate(String teammate){
