@@ -2,6 +2,7 @@ package com.example.RekreativStartup.controller;
 
 import com.example.RekreativStartup.Service.RoleService;
 import com.example.RekreativStartup.model.Role;
+import com.example.RekreativStartup.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,9 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @RequestMapping(path = "/save", method = RequestMethod.POST)
     public ResponseEntity<?> saveRole(@RequestBody Role role) {
-
+        if (ValidatorUtil.roleValidator(role)){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
         Role newRole = new Role();
         newRole.setName(role.getName());
         newRole = roleService.save(newRole);

@@ -11,6 +11,7 @@ import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
 import com.example.RekreativStartup.repository.UserRepository;
 import com.example.RekreativStartup.util.JwtUtil;
+import com.example.RekreativStartup.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,13 +72,15 @@ public class TeamController {
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody Team team) {
 
-        Team newTeam = new Team();
+        if(ValidatorUtil.teamValidator(team)){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
 
+        Team newTeam = new Team();
         newTeam.setTeamName(team.getTeamName());
         newTeam.setCity(team.getCity());
-//        newTeam.setTeammate(null);
         newTeam.setScore(team.getScore());
-        newTeam = teamService.save(newTeam);
+        teamService.save(newTeam);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 

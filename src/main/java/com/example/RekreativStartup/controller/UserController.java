@@ -6,6 +6,7 @@ import com.example.RekreativStartup.auth.AuthUserDetails;
 import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.RoleRepository;
 import com.example.RekreativStartup.util.JwtUtil;
+import com.example.RekreativStartup.util.ValidatorUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -122,12 +123,15 @@ public class UserController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User user) {
+
+        if (ValidatorUtil.userValidator(user)){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
-//        newUser.setPersonalScore(null);
-//        newUser.setTeam(null);
-        newUser = userService.saveUser(newUser);
+        userService.saveUser(newUser);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }

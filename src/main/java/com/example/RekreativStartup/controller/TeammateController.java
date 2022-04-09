@@ -4,6 +4,7 @@ import com.example.RekreativStartup.Service.TeammateService;
 import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.repository.TeammateRepository;
+import com.example.RekreativStartup.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +33,10 @@ public class TeammateController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody Teammate teammate) {
-//
-//        Teammate newTeammate = new Teammate();
-//
-//        newTeammate.setName(teammate.getName());
-//        newTeammate.setPersonalScore(null);
+        if(ValidatorUtil.teammateValidator(teammate)){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+
         teammateRepository.save(teammate);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
