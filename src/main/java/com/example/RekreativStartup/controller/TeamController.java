@@ -5,6 +5,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.RekreativStartup.Service.TeamService;
 import com.example.RekreativStartup.Service.TeammateService;
 import com.example.RekreativStartup.Service.UserService;
+import com.example.RekreativStartup.forms.TeammateToTeamForm;
 import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.model.User;
@@ -114,24 +115,6 @@ public class TeamController {
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
-
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-//    @RequestMapping(path = "/add/user", method = RequestMethod.POST)
-//    public ResponseEntity<?> addUserToTeam(@RequestParam(value = "teamname", required = false) String teamname,
-//                                           @RequestParam(value = "teammate", required = false) String teammate) {
-//
-//        Team existingTeam = teamService.findByTeamname(teamname).orElse(null);
-//        if (existingTeam == null) {
-//            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-//        }
-//
-//        existingTeam.getTeammate().add(teammate);
-//
-//        teamService.save(existingTeam);
-//
-//        return new ResponseEntity<Object>(HttpStatus.CREATED);
-//    }
-
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/delete/user/{teammate}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteUserFromTeam(@PathVariable("teammate") String teammate) {
@@ -146,22 +129,7 @@ public class TeamController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-//    @RequestMapping(path = "/add/user", method = RequestMethod.POST)
-//    public ResponseEntity<?> addUser(@RequestBody Team team) {
-//
-//        Team existingTeam = teamService.findByTeamname(team.getTeamName()).orElse(null);
-//        if (existingTeam == null) {
-//            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-//        }
-//        existingTeam.setUser(team.getUser());
-//
-//        teamService.save(existingTeam);
-//
-//        return new ResponseEntity<Object>(HttpStatus.CREATED);
-//    }
-
-    // teamname, user, captain, city, score
+    // teamname, city, score
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeam(@RequestBody Team team) {
@@ -201,26 +169,5 @@ public class TeamController {
 //        }
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
-    }
-}
-
-class TeammateToTeamForm{
-    private String teamName;
-    private String teamMate;
-
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
-    public String getTeamMate() {
-        return teamMate;
-    }
-
-    public void setTeamMate(String teamMate) {
-        this.teamMate = teamMate;
     }
 }

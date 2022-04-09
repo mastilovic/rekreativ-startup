@@ -20,7 +20,7 @@ public class ValidatorUtil {
     }
 
     public static boolean teamValidator(Team team){
-        return !StringUtils.isBlank(String.valueOf(team));
+        return StringUtils.isBlank(String.valueOf(team));
     }
 
     public Integer getScoresFromTeammates(String teamName){
