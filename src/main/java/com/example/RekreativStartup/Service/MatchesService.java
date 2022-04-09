@@ -71,4 +71,9 @@ public class MatchesService {
     public Optional<Matches> findMatchById(Long id) {
         return matchesRepository.findById(id);
     }
+
+    public void delete(Long id) {
+        matchesRepository.deleteById(id);
+    }
+
 }

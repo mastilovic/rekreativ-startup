@@ -7,9 +7,7 @@ import com.example.RekreativStartup.model.Matches;
 import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.repository.MatchesRepository;
 import com.example.RekreativStartup.repository.TeamRepository;
-import com.example.RekreativStartup.util.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 @Controller
@@ -83,5 +80,32 @@ public class MatchesController {
 
         Iterable<Matches> obj = matchesService.findAll();
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
+
+        Matches obj = matchesService.findMatchById(id).orElse(null);
+        if (obj == null) {
+
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+//
+//        ModelMapper modelMapper = new ModelMapper();
+//        UserDTO userDto = modelMapper.map(obj, UserDTO.class);
+
+        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Matches obj = matchesService.findMatchById(id).get();
+        obj.setTeamA(null);
+        obj.setTeamB(null);
+        matchesService.delete(id);
+        return new ResponseEntity<Object>("Match deleted successfully!", HttpStatus.OK);
     }
 }

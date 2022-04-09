@@ -1,35 +1,23 @@
 package com.example.RekreativStartup.controller;
 
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.RekreativStartup.Service.TeamService;
 import com.example.RekreativStartup.Service.TeammateService;
 import com.example.RekreativStartup.Service.UserService;
 import com.example.RekreativStartup.forms.TeammateToTeamForm;
 import com.example.RekreativStartup.model.Team;
-import com.example.RekreativStartup.model.Teammate;
-import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
 import com.example.RekreativStartup.repository.UserRepository;
 import com.example.RekreativStartup.util.JwtUtil;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.Arrays.stream;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Controller
 @CrossOrigin(origins = "*")

@@ -13,12 +13,12 @@ public class Matches {
     private Long id;
     
 //    @Column(name = "team_a")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.ALL, CascadeType.REMOVE})
     @JoinColumn(name = "teamA")
     private Team teamA;
 
 //    @Column(name = "team_b")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.ALL, CascadeType.REMOVE})
     @JoinColumn(name = "teamB")
     private Team teamB;
 
