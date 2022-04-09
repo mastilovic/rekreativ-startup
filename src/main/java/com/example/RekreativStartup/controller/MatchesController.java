@@ -50,21 +50,8 @@ public class MatchesController {
         newMatch.setTeamB(existingTeamTwo);
         newMatch.setTeamAScore(match.getTeamOneScore());
         newMatch.setTeamBScore(match.getTeamTwoScore());
-        if (newMatch.getTeamAScore() > newMatch.getTeamBScore()) {
-            newMatch.setWinner(newMatch.getTeamA().getTeamName());
 
-            existingTeamOne.setScore(existingTeamOne.getScore() +1);
-            teamService.save(existingTeamOne);
-
-        } else if (newMatch.getTeamAScore() < newMatch.getTeamBScore()){
-            newMatch.setWinner(newMatch.getTeamB().getTeamName());
-
-            existingTeamTwo.setScore(existingTeamTwo.getScore()+1);
-            teamService.save(existingTeamTwo);
-        } else if (Objects.equals(newMatch.getTeamAScore(), newMatch.getTeamBScore())){
-            newMatch.setWinner("draw");
-        }
-
+        matchesService.matchOutcome(newMatch, existingTeamOne, existingTeamTwo);
         matchesService.save(newMatch);
 
         return new ResponseEntity<Object>(newMatch, HttpStatus.CREATED);
@@ -87,9 +74,6 @@ public class MatchesController {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
-//
-//        ModelMapper modelMapper = new ModelMapper();
-//        UserDTO userDto = modelMapper.map(obj, UserDTO.class);
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
 
