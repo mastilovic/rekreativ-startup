@@ -20,6 +20,7 @@ Using JWT (JSON Web Token) for authorizing users. Dependency used for generating
 
 ## Requirements to run the project
 
+* Java 11
 * Spring Boot Framework
 * Tomcat apache
 * Local database (MySQL, PostgreSQL or others)
