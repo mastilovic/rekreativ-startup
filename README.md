@@ -10,7 +10,7 @@ Project is created for keeping stats of football matches being played between te
 
 ## Description
 
-User with admin role (ROLE_ADMIN) is initialized when project is ran. When registering, user gets a default user role (ROLE_USER). Every user can create team, teammates and matches played between teams. Teams are created without any teammates and defaults 0 scores. Each team can have teammates that can be created by user. Teammates can be added to teams separately. Teams can play each other, which will be saved in table Matches. For every match between teams, winner, scores and total games played will be kept for TeamA and TeamB. If match is deleted, scores and total games played will be decreased accordingly.
+User with admin role (ROLE_ADMIN) is initialized when project is ran. When registering, user gets a default user role (ROLE_USER). Every user can create team, teammates and matches played between teams. Teams are created without any teammates. Each team can have teammates that can be created by user. Teammates can be added to teams separately. Teams can play each other, which will be saved in table Matches. For every match between teams, winner, scores and total games played will be kept for TeamA and TeamB. If match is deleted, scores and total games played will be decreased accordingly.
 
 Project has basic CRUD API for each of entities.
 
