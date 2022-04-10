@@ -52,7 +52,6 @@ public class Team {
 //    private Collection<Matchup> matchups = new ArrayList<>();
 
     @JsonIgnoreProperties(value = {"team"})
-//    @OneToMany(mappedBy = "team", targetEntity = Teammate.class,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "team_teammates",
         joinColumns = { @JoinColumn(name = "team_id")},
@@ -61,9 +60,8 @@ public class Team {
 
     private String city;
 
-    // usint int primitive type to avoid working with null
     private Integer score;
-    // usint int primitive type to avoid working with null
+
     private Integer totalGamesPlayed;
 
     public Team(){

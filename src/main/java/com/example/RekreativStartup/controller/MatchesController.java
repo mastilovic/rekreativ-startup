@@ -82,9 +82,11 @@ public class MatchesController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        Matches obj = matchesService.findMatchById(id).get();
-        obj.setTeamA(null);
-        obj.setTeamB(null);
+        Matches existingMatch = matchesService.findMatchById(id).get();
+        teamService.decreaseGamesPlayedByOne(existingMatch);
+
+        existingMatch.setTeamA(null);
+        existingMatch.setTeamB(null);
         matchesService.delete(id);
         return new ResponseEntity<Object>("Match deleted successfully!", HttpStatus.OK);
     }

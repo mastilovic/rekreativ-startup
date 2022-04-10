@@ -2,10 +2,7 @@ package com.example.RekreativStartup.Service;
 
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.RekreativStartup.model.Role;
-import com.example.RekreativStartup.model.Team;
-import com.example.RekreativStartup.model.Teammate;
-import com.example.RekreativStartup.model.User;
+import com.example.RekreativStartup.model.*;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
 import com.example.RekreativStartup.repository.UserRepository;
@@ -16,10 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -127,5 +121,20 @@ public class TeamService {
 
     public Team getTeamScore(Team team){
         return null;
+    }
+
+    public void decreaseGamesPlayedByOne(Matches existingMatch){
+
+        Team teamA = getByTeamname(existingMatch.getTeamA().getTeamName()).get();
+        Team teamB = getByTeamname(existingMatch.getTeamB().getTeamName()).get();
+        teamA.setTotalGamesPlayed(teamA.getTotalGamesPlayed() - 1);
+        teamB.setTotalGamesPlayed(teamB.getTotalGamesPlayed() - 1);
+        if (Objects.equals(existingMatch.getWinner(), teamA.getTeamName())){
+            teamA.setScore(teamA.getScore() - 1);
+        } else if(Objects.equals(existingMatch.getWinner(), teamB.getTeamName())){
+            teamB.setScore(teamB.getScore() - 1);
+        }
+        save(teamA);
+        save(teamB);
     }
 }
