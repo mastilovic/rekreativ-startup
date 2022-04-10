@@ -9,7 +9,6 @@ import com.example.RekreativStartup.repository.UserRepository;
 import com.example.RekreativStartup.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -130,9 +129,9 @@ public class TeamService {
         teamA.setTotalGamesPlayed(teamA.getTotalGamesPlayed() - 1);
         teamB.setTotalGamesPlayed(teamB.getTotalGamesPlayed() - 1);
         if (Objects.equals(existingMatch.getWinner(), teamA.getTeamName())){
-            teamA.setScore(teamA.getScore() - 1);
+            teamA.setWins(teamA.getWins() - 1);
         } else if(Objects.equals(existingMatch.getWinner(), teamB.getTeamName())){
-            teamB.setScore(teamB.getScore() - 1);
+            teamB.setWins(teamB.getWins() - 1);
         }
         save(teamA);
         save(teamB);

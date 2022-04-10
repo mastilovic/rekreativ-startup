@@ -60,7 +60,7 @@ public class Team {
 
     private String city;
 
-    private Integer score;
+    private Integer wins;
 
     private Integer totalGamesPlayed;
 
@@ -68,12 +68,12 @@ public class Team {
         super();
     }
 
-    public Team(Long id, String teamName, String city, Integer score, Integer totalGamesPlayed) {
+    public Team(Long id, String teamName, String city, Integer wins, Integer totalGamesPlayed) {
         super();
         this.id = id;
         this.teamName = teamName;
         this.city = city;
-        this.score = score;
+        this.wins = wins;
         this.totalGamesPlayed = totalGamesPlayed;
     }
 
@@ -93,12 +93,12 @@ public class Team {
         this.teamName = teamName;
     }
 
-    public Integer getScore() {
-        return score;
+    public Integer getWins() {
+        return wins;
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setWins(Integer wins) {
+        this.wins = wins;
     }
 
     public String getCity() {

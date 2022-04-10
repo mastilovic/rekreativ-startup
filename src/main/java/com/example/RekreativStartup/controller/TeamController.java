@@ -5,7 +5,6 @@ import com.example.RekreativStartup.Service.TeamService;
 import com.example.RekreativStartup.Service.TeammateService;
 import com.example.RekreativStartup.Service.UserService;
 import com.example.RekreativStartup.forms.TeammateToTeamForm;
-import com.example.RekreativStartup.model.Matches;
 import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
@@ -79,7 +78,7 @@ public class TeamController {
         Team newTeam = new Team();
         newTeam.setTeamName(team.getTeamName());
         newTeam.setCity(team.getCity());
-        newTeam.setScore(0);
+        newTeam.setWins(0);
         newTeam.setTotalGamesPlayed(0);
         teamService.save(newTeam);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
@@ -93,7 +92,7 @@ public class TeamController {
         if (existingTeam == null) {
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
-        existingTeam.setScore(team.getScore());
+        existingTeam.setWins(team.getWins());
         teamService.save(existingTeam);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
@@ -134,7 +133,7 @@ public class TeamController {
 
         existingTeam.setTeamName(team.getTeamName());
         existingTeam.setCity(team.getCity());
-        existingTeam.setScore(team.getScore());
+        existingTeam.setWins(team.getWins());
         teamService.save(existingTeam);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);

@@ -2,19 +2,14 @@ package com.example.RekreativStartup.Service;
 
 import com.example.RekreativStartup.model.Matches;
 import com.example.RekreativStartup.model.Team;
-import com.example.RekreativStartup.model.Teammate;
-import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.MatchesRepository;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 @Service
 public class MatchesService {
@@ -43,7 +38,7 @@ public class MatchesService {
         if (newMatch.getTeamAScore() > newMatch.getTeamBScore()) {
             newMatch.setWinner(newMatch.getTeamA().getTeamName());
 
-            existingTeamOne.setScore(existingTeamOne.getScore() + 1);
+            existingTeamOne.setWins(existingTeamOne.getWins() + 1);
             existingTeamOne.setTotalGamesPlayed(existingTeamOne.getTotalGamesPlayed() + 1);
             existingTeamTwo.setTotalGamesPlayed(existingTeamTwo.getTotalGamesPlayed() + 1);
             teamService.save(existingTeamTwo);
@@ -52,7 +47,7 @@ public class MatchesService {
         } else if (newMatch.getTeamAScore() < newMatch.getTeamBScore()){
             newMatch.setWinner(newMatch.getTeamB().getTeamName());
 
-            existingTeamTwo.setScore(existingTeamTwo.getScore() + 1);
+            existingTeamTwo.setWins(existingTeamTwo.getWins() + 1);
 
             existingTeamOne.setTotalGamesPlayed(existingTeamOne.getTotalGamesPlayed() + 1);
             existingTeamTwo.setTotalGamesPlayed(existingTeamTwo.getTotalGamesPlayed() + 1);
