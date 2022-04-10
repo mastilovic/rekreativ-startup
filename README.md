@@ -18,5 +18,12 @@ Project has basic CRUD API for each of entities.
 
 Using JWT (JSON Web Token) for authorizing users. Dependency used for generating token is auth0. Roles (ROLE_USER, ROLE_ADMIN) are used for permitting users to access each endpoint. ROLE_USER can access any endpoint that has anything to do with Teammate, Team and Matches.
 
+## Requirements to run the project
+
+* Spring Boot Framework
+* Tomcat apache
+* Local database (MySQL, PostgreSQL or others)
+* Database configuration (application.properties)
+
 
 
