@@ -55,13 +55,6 @@ public class TeammateController {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
-//        Object[] objArray = myList.toArray();
-//        ArrayList dtoList = new ArrayList();
-//        ModelMapper modelMapper = new ModelMapper();
-//        for(int i=0; i < objArray.length ; i++) {
-//            UserDTO userDto = modelMapper.map(objArray[i], UserDTO.class);
-//            dtoList.add(userDto);
-//        }
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
     }

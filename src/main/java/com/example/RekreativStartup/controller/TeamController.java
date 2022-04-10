@@ -59,14 +59,11 @@ public class TeamController {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
-//
-//        ModelMapper modelMapper = new ModelMapper();
-//        UserDTO userDto = modelMapper.map(obj, UserDTO.class);
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
 
     }
-    //long id, str teamname, str[] teammates, str captain, str city, int score
+
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody Team team) {
@@ -121,7 +118,6 @@ public class TeamController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    // teamname, city, score
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeam(@RequestBody Team team) {
@@ -152,13 +148,6 @@ public class TeamController {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
-//        Object[] objArray = myList.toArray();
-//        ArrayList dtoList = new ArrayList();
-//        ModelMapper modelMapper = new ModelMapper();
-//        for(int i=0; i < objArray.length ; i++) {
-//            UserDTO userDto = modelMapper.map(objArray[i], UserDTO.class);
-//            dtoList.add(userDto);
-//        }
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
     }

@@ -60,9 +60,6 @@ public class UserController {
         AuthUserDetails authUserDetails = new AuthUserDetails(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(authUserDetails);
 
-//        ModelMapper modelMapper = new ModelMapper();
-//        UserDTO userDto = modelMapper.map(loginUser, UserDTO.class);
-
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
     }
 
@@ -115,8 +112,6 @@ public class UserController {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
-
-
         ModelMapper modelMapper = new ModelMapper();
         UserDTO userDto = modelMapper.map(obj, UserDTO.class);
 
@@ -130,7 +125,6 @@ public class UserController {
         User obj = userService.findUserById(id).orElse(null);
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
-
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
@@ -139,7 +133,6 @@ public class UserController {
             return new ResponseEntity<Object>("Can't access users that have Admin role!",
                     HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
         }
-
 
         ModelMapper modelMapper = new ModelMapper();
         UserDTO userDto = modelMapper.map(obj, UserDTO.class);
@@ -189,8 +182,6 @@ public class UserController {
 
         existingUser.setUsername(user.getUsername());
         existingUser.setPassword(user.getPassword());
-//        existingUser.setPersonalScore(user.getPersonalScore());
-//        existingUser.setTeam(user.getTeam());
         userService.saveUser(existingUser);
 
         return new ResponseEntity<Object>(HttpStatus.CREATED);
