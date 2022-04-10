@@ -24,7 +24,7 @@ Using JWT (JSON Web Token) for authorizing users. Dependency used for generating
 * Spring Boot Framework
 * Tomcat apache
 * Local database (MySQL, PostgreSQL or others)
-* Database configuration (application.properties)
+* Configured database in project (application.properties)
 
 
 
