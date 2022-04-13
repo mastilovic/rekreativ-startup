@@ -2,7 +2,7 @@
 
 ## About project
 
-Project is created for keeping stats of football matches being played between teams. User is not part of team, teammates or matches entities, but is required for creating each of them. User has been mapped to UserDTO, so when getting all users, you won't be able to see their passwords. User can get list of all users that are not admins.
+Project is created for keeping stats of football matches being played between teams. User is not part of team, teammates or matches entities, but is required for creating each of them.
 
 ## UML Diagram
 
