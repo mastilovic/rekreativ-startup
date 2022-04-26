@@ -10,10 +10,6 @@ import java.util.Collection;
 
 public class AuthUserDetails implements UserDetails {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     private User user;
 
     public AuthUserDetails(User user) {
