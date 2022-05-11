@@ -1,4 +1,4 @@
-package com.example.RekreativStartup.Service;
+package com.example.RekreativStartup.service;
 
 import com.example.RekreativStartup.model.Role;
 import com.example.RekreativStartup.repository.RoleRepository;

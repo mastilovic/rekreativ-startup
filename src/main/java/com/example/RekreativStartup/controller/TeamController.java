@@ -1,9 +1,9 @@
 package com.example.RekreativStartup.controller;
 
 
-import com.example.RekreativStartup.Service.TeamService;
-import com.example.RekreativStartup.Service.TeammateService;
-import com.example.RekreativStartup.Service.UserService;
+import com.example.RekreativStartup.service.TeamService;
+import com.example.RekreativStartup.service.TeammateService;
+import com.example.RekreativStartup.service.UserService;
 import com.example.RekreativStartup.forms.TeammateToTeamForm;
 import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.repository.TeamRepository;

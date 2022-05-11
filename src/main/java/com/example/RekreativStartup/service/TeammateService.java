@@ -1,8 +1,6 @@
-package com.example.RekreativStartup.Service;
+package com.example.RekreativStartup.service;
 
-import com.example.RekreativStartup.model.Team;
 import com.example.RekreativStartup.model.Teammate;
-import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
 import org.springframework.beans.factory.annotation.Autowired;

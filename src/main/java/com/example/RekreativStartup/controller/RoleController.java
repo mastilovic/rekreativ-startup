@@ -1,6 +1,6 @@
 package com.example.RekreativStartup.controller;
 
-import com.example.RekreativStartup.Service.RoleService;
+import com.example.RekreativStartup.service.RoleService;
 import com.example.RekreativStartup.model.Role;
 import com.example.RekreativStartup.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;

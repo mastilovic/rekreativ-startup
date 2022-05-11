@@ -1,10 +1,11 @@
-package com.example.RekreativStartup.Service;
+package com.example.RekreativStartup.service;
 
 import com.example.RekreativStartup.auth.AuthUserDetails;
 import com.example.RekreativStartup.model.Role;
 import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.RoleRepository;
 import com.example.RekreativStartup.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,16 +21,21 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-//@Slf4j
+@Slf4j
 @Transactional
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+//    @Autowired
+    private final UserRepository userRepository; //injecting through constructor for testing
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public void initRoleAndUser() {
 
@@ -75,11 +81,12 @@ public class UserService implements UserDetailsService {
 
     //--------------------Save User with default User role--------------------
     public User saveUser(User user) {
-//		log.info("Saving new user {} to the database", user.getFirstName());
+		log.info("Saving new user {} to the database", user.getUsername());
         Role role = roleRepository.findByName("ROLE_USER").orElseThrow(null);
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(role);
         user.setRoles(userRoles);
+        user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userRepository.save(user);
@@ -87,7 +94,7 @@ public class UserService implements UserDetailsService {
 
 
     //--------------------------------------------------------------------
-    public void delete(Long id) {
+    public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 
@@ -103,7 +110,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public Page<User> findAll(Pageable pageable) {
+    public Page<User> findAllPageable(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
@@ -114,4 +121,5 @@ public class UserService implements UserDetailsService {
     public Optional<User> findUserByUsername(String username){
         return userRepository.findByUsername(username);
     }
+
 }

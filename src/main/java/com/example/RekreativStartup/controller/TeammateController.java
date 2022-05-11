@@ -1,7 +1,6 @@
 package com.example.RekreativStartup.controller;
 
-import com.example.RekreativStartup.Service.TeammateService;
-import com.example.RekreativStartup.model.Team;
+import com.example.RekreativStartup.service.TeammateService;
 import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.repository.TeammateRepository;
 import com.example.RekreativStartup.util.ValidatorUtil;

@@ -1,4 +1,4 @@
-package com.example.RekreativStartup.Service;
+package com.example.RekreativStartup.service;
 
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service

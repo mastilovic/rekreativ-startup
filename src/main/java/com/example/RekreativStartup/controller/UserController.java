@@ -1,7 +1,7 @@
 package com.example.RekreativStartup.controller;
 
 
-import com.example.RekreativStartup.Service.UserService;
+import com.example.RekreativStartup.service.UserService;
 import com.example.RekreativStartup.auth.AuthUserDetails;
 import com.example.RekreativStartup.dto.UserDTO;
 import com.example.RekreativStartup.model.Role;
@@ -248,7 +248,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        userService.delete(id);
+        userService.deleteUserById(id);
         return new ResponseEntity<Object>("User deleted successfully!", HttpStatus.OK);
     }
 }

@@ -1,11 +1,12 @@
 package com.example.RekreativStartup.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@Data
 public class User {
 
     @Id

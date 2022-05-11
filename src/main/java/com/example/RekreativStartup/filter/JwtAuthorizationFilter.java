@@ -1,7 +1,7 @@
 package com.example.RekreativStartup.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.RekreativStartup.Service.UserService;
+import com.example.RekreativStartup.service.UserService;
 import com.example.RekreativStartup.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.example.RekreativStartup.controller;
 
-import com.example.RekreativStartup.Service.MatchesService;
-import com.example.RekreativStartup.Service.TeamService;
+import com.example.RekreativStartup.service.MatchesService;
+import com.example.RekreativStartup.service.TeamService;
 import com.example.RekreativStartup.forms.MatchesToMatchForm;
 import com.example.RekreativStartup.model.Matches;
 import com.example.RekreativStartup.model.Team;
@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @Controller
 @CrossOrigin(origins = "*")
