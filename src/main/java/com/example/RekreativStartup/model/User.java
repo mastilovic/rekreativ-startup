@@ -1,12 +1,10 @@
 package com.example.RekreativStartup.model;
 
-import lombok.Data;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Data
 public class User {
 
     @Id
