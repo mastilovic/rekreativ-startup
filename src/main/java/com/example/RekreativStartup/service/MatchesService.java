@@ -2,14 +2,18 @@ package com.example.RekreativStartup.service;
 
 import com.example.RekreativStartup.model.Matches;
 import com.example.RekreativStartup.model.Team;
+import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.repository.MatchesRepository;
 import com.example.RekreativStartup.repository.TeamRepository;
+import com.example.RekreativStartup.repository.TeammateRepository;
 import com.example.RekreativStartup.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchesService {
@@ -20,18 +24,21 @@ public class MatchesService {
     private final TeammateService teammateService;
     private final ValidatorUtil validatorUtil;
     private final TeamService teamService;
+    private final TeammateRepository teammateRepository;
 
     @Autowired
     public MatchesService(MatchesRepository matchesRepository,
                           TeamRepository teamRepository,
                           TeammateService teammateService,
                           ValidatorUtil validatorUtil,
-                          TeamService teamService) {
+                          TeamService teamService,
+                          TeammateRepository teammateRepository) {
         this.matchesRepository = matchesRepository;
         this.teamRepository = teamRepository;
         this.teammateService = teammateService;
         this.validatorUtil = validatorUtil;
         this.teamService = teamService;
+        this.teammateRepository = teammateRepository;
     }
 
     public void matchOutcome(Matches newMatch, Team existingTeamOne, Team existingTeamTwo){
@@ -41,6 +48,20 @@ public class MatchesService {
             existingTeamOne.setWins(existingTeamOne.getWins() + 1);
             existingTeamOne.setTotalGamesPlayed(existingTeamOne.getTotalGamesPlayed() + 1);
             existingTeamTwo.setTotalGamesPlayed(existingTeamTwo.getTotalGamesPlayed() + 1);
+
+            Collection<Teammate> myTeammates = existingTeamOne.getTeammates();
+            for (Teammate t:myTeammates) {
+                Integer myInt = t.getTotalGamesPlayed();
+                myInt = myInt==null?0:myInt;
+                t.setTotalGamesPlayed(myInt + 1);
+
+                Integer myWins = t.getWins();
+                myWins = myWins==null?0:myWins;
+                t.setWins(myWins + 1);
+
+                teammateRepository.save(t);
+            }
+
             teamService.save(existingTeamTwo);
             teamService.save(existingTeamOne);
 
@@ -48,6 +69,19 @@ public class MatchesService {
             newMatch.setWinner(newMatch.getTeamB().getTeamName());
 
             existingTeamTwo.setWins(existingTeamTwo.getWins() + 1);
+
+            Collection<Teammate> myTeammates = existingTeamTwo.getTeammates();
+            for (Teammate t:myTeammates) {
+                Integer myInt = t.getTotalGamesPlayed();
+                myInt = myInt==null?0:myInt;
+                t.setTotalGamesPlayed(myInt + 1);
+
+                Integer myWins = t.getWins();
+                myWins = myWins==null?0:myWins;
+                t.setWins(myWins + 1);
+
+                teammateRepository.save(t);
+            }
 
             existingTeamOne.setTotalGamesPlayed(existingTeamOne.getTotalGamesPlayed() + 1);
             existingTeamTwo.setTotalGamesPlayed(existingTeamTwo.getTotalGamesPlayed() + 1);

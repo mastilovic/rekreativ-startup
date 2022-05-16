@@ -99,21 +99,22 @@ public class TeamService {
         return teammatesInTeam;
     }
 
-    public void addTeammateToTeam(String teamname, String username){
+    public void addTeammateToTeam(String teamname, String teammateName){
         Team existingTeam = teamRepository.findByTeamName(teamname).get();
-        Optional<Teammate> optionalTeammate = teammateRepository.findTeammateByName(username);
+        Optional<Teammate> optionalTeammate = teammateRepository.findTeammateByName(teammateName);
 
         if(!optionalTeammate.isPresent()){
             Teammate newTeammate = new Teammate();
-            newTeammate.setName(username);
-            newTeammate.setPersonalScore(null);
+            newTeammate.setName(teammateName);
+            newTeammate.setTotalGamesPlayed(0);
+            newTeammate.setWins(0);
             teammateService.save(newTeammate);
             existingTeam.getTeammates().add(newTeammate);
-            teamRepository.save(existingTeam);
+            save(existingTeam);
         } else {
             Teammate existingTeammate = optionalTeammate.get();
             existingTeam.getTeammates().add(existingTeammate);
-            teamRepository.save(existingTeam);
+            save(existingTeam);
         }
     }
 

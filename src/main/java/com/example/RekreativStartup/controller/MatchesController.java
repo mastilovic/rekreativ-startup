@@ -1,5 +1,6 @@
 package com.example.RekreativStartup.controller;
 
+import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.service.MatchesService;
 import com.example.RekreativStartup.service.TeamService;
 import com.example.RekreativStartup.forms.MatchesToMatchForm;
@@ -14,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -41,8 +45,20 @@ public class MatchesController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/create/matches", method = RequestMethod.POST)
     public ResponseEntity<?> createNewMatch(@RequestBody MatchesToMatchForm match) {
-        Team existingTeamOne = teamService.getByTeamname(match.getTeamOne()).get();
-        Team existingTeamTwo = teamService.getByTeamname(match.getTeamTwo()).get();
+        Team existingTeamOne = teamService.getByTeamname(match.getTeamOne()).orElse(null);
+        Team existingTeamTwo = teamService.getByTeamname(match.getTeamTwo()).orElse(null);
+
+        if (existingTeamOne == null || existingTeamTwo == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        for (Teammate t:existingTeamOne.getTeammates()){
+            if(existingTeamTwo.getTeammates().contains(t)){
+                return new ResponseEntity<Object>(
+                        "One player can't be part of both teams",
+                        HttpStatus.BAD_REQUEST);
+            }
+        }
+        
         Matches newMatch = new Matches();
         newMatch.setTeamA(existingTeamOne);
         newMatch.setTeamB(existingTeamTwo);

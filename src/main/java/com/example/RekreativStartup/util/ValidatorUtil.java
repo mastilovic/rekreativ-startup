@@ -27,7 +27,7 @@ public class ValidatorUtil {
         ArrayList<Integer> teamScoreList = new ArrayList<Integer>();
 
         optionalTeam.map(Team::getTeammates).get().forEach(teammate ->
-                teamScoreList.add(teammate.getPersonalScore()));
+                teamScoreList.add(teammate.getTotalGamesPlayed()));
 
         Integer teamScore = 0;
         for(int i = 0; i < teamScoreList.size();i++){

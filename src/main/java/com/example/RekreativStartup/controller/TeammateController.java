@@ -12,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -35,10 +38,12 @@ public class TeammateController {
         if(ValidatorUtil.teammateValidator(teammate)){
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
-
+        teammate.setName(teammate.getName());
+        teammate.setTotalGamesPlayed(0);
+        teammate.setWins(0);
         teammateRepository.save(teammate);
 
-        return new ResponseEntity<Object>(HttpStatus.CREATED);
+        return new ResponseEntity<Object>(teammate, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
@@ -46,16 +51,20 @@ public class TeammateController {
     public ResponseEntity<?> getAll() {
 
         Iterable<Teammate> obj = teammateService.findAll();
-        ArrayList myList = new ArrayList();
-        for (Teammate t: obj){
-            myList.add(t);
-        }
+
+        List<Teammate> listOfTeammates = StreamSupport.stream(obj.spliterator(), false)
+                .collect(Collectors.toList());
+
+//        ArrayList myList = new ArrayList();
+//        for (Teammate t: obj){
+//            myList.add(t);
+//        }
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+        return new ResponseEntity<Object>(listOfTeammates, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -145,8 +147,8 @@ public class UserController {
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User user) {
 
-        if (ValidatorUtil.userValidator(user)){
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        if (ValidatorUtil.userValidator(user) || userService.findUserByUsername(user.getUsername()).isPresent()){
+            return new ResponseEntity<Object>("Username is empty or already exists!",HttpStatus.BAD_REQUEST);
         }
 
         User newUser = new User();
@@ -193,25 +195,13 @@ public class UserController {
 
         Iterable<User> obj = userService.findAll();
         ArrayList<User> myList = new ArrayList<>();
-
-        for (User u: obj){
-            myList.add(u);
-        }
-        if (obj == null) {
-
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-        }
-
-        Object[] objArray = myList.toArray();
-        ArrayList<UserDTO> dtoList = new ArrayList<>();
-
         ModelMapper modelMapper = new ModelMapper();
-        for(int i=0; i < objArray.length ; i++) {
-            UserDTO userDto = modelMapper.map(objArray[i], UserDTO.class);
-            dtoList.add(userDto);
-        }
 
-        return new ResponseEntity<Object>(dtoList, HttpStatus.OK);
+        List<UserDTO> listOfDtos = StreamSupport.stream(obj.spliterator(), false)
+                .map(u -> modelMapper.map(u, UserDTO.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<Object>(listOfDtos, HttpStatus.OK);
     }
 
 
@@ -220,29 +210,15 @@ public class UserController {
     public ResponseEntity<?> getAll() {
 
         Iterable<User> obj = userService.findAll();
-        ArrayList<User> myList = new ArrayList<>();
-
         Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
-        for (User u: obj){
-            if(!u.getRoles().contains(adminRole)) {
-                myList.add(u);
-            }
-        }
-        if (obj == null) {
-
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-        }
-
-        Object[] objArray = myList.toArray();
-        ArrayList<UserDTO> dtoList = new ArrayList<>();
 
         ModelMapper modelMapper = new ModelMapper();
-        for(int i=0; i < objArray.length ; i++) {
-            UserDTO userDto = modelMapper.map(objArray[i], UserDTO.class);
-            dtoList.add(userDto);
-        }
+        List<UserDTO> listOfDtos = StreamSupport.stream(obj.spliterator(), false)
+                .filter(u -> !u.getRoles().contains(adminRole))
+                .map(u -> modelMapper.map(u, UserDTO.class))
+                .collect(Collectors.toList());
 
-        return new ResponseEntity<Object>(dtoList, HttpStatus.OK);
+        return new ResponseEntity<Object>(listOfDtos, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

@@ -17,7 +17,15 @@ public class Teammate {
     private String name;
 
     @Column(name = "personal_score")
-    private Integer personalScore;
+    private Integer totalGamesPlayed;
+
+    @Column(name = "wins")
+    private Integer wins;
+    // TODO
+    // change personalScore to totalGamesPlayed
+    // add wins for teammate
+
+
 
 //    @ManyToOne
 //    @JoinColumns(
@@ -40,11 +48,12 @@ public class Teammate {
         super();
     }
 
-    public Teammate(Long id, String name, Integer personalScore) {
+    public Teammate(Long id, String name, Integer totalGamesPlayed, Integer wins) {
         super();
         this.id = id;
         this.name = name;
-        this.personalScore = personalScore;
+        this.totalGamesPlayed = totalGamesPlayed;
+        this.wins = wins;
     }
 
     public Long getId() {
@@ -63,12 +72,12 @@ public class Teammate {
         this.name = name;
     }
 
-    public Integer getPersonalScore() {
-        return personalScore;
+    public Integer getTotalGamesPlayed() {
+        return totalGamesPlayed;
     }
 
-    public void setPersonalScore(Integer personalScore) {
-        this.personalScore = personalScore;
+    public void setTotalGamesPlayed(Integer totalGamesPlayed) {
+        this.totalGamesPlayed = totalGamesPlayed;
     }
 
     public Collection<Team> getTeam() {
@@ -77,5 +86,13 @@ public class Teammate {
 
     public void setTeam(Collection<Team> team) {
         this.team = team;
+    }
+
+    public Integer getWins() {
+        return wins;
+    }
+
+    public void setWins(Integer wins) {
+        this.wins = wins;
     }
 }

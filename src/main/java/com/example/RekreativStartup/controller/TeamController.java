@@ -1,6 +1,7 @@
 package com.example.RekreativStartup.controller;
 
 
+import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.service.TeamService;
 import com.example.RekreativStartup.service.TeammateService;
 import com.example.RekreativStartup.service.UserService;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -105,15 +109,17 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/delete/user/{teammate}", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteUserFromTeam(@PathVariable("teammate") String teammate) {
+    @RequestMapping(path = "/delete/teammate/{teamname}/{teammate}", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteTeammateFromTeam(@PathVariable("teamname") String teamname,
+                                                    @PathVariable("teammate") String teammate) {
 
-        Team existingTeamate = teamService.getByTeamname(teammate).orElse(null);
-        if (existingTeamate == null) {
+        Team existingTeam = teamService.getByTeamname(teamname).orElse(null);
+        Teammate existingTeammate = teammateService.findTeammateByName(teammate).orElse(null);
+        if (existingTeam == null) {
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
-
-        teamService.deleteTeammate(teammate);
+        existingTeam.getTeammates().remove(existingTeammate);
+        teamService.save(existingTeam);
 
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
@@ -140,16 +146,20 @@ public class TeamController {
     public ResponseEntity<?> getAll() {
 
         Iterable<Team> obj = teamService.findAll();
-        ArrayList myList = new ArrayList();
-        for (Team t: obj){
-            myList.add(t);
-        }
+
+        List<Team> myTeams = StreamSupport.stream(obj.spliterator(), false)
+                .collect(Collectors.toList());
+
+//        ArrayList myList = new ArrayList();
+//        for (Team t: obj){
+//            myList.add(t);
+//        }
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+        return new ResponseEntity<Object>(myTeams, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
