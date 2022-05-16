@@ -73,6 +73,7 @@ public class TeamController {
     public ResponseEntity<?> register(@RequestBody Team team) {
 
         if(ValidatorUtil.teamValidator(team)){
+
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
@@ -82,6 +83,7 @@ public class TeamController {
         newTeam.setWins(0);
         newTeam.setTotalGamesPlayed(0);
         teamService.save(newTeam);
+
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
@@ -105,6 +107,7 @@ public class TeamController {
     public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateToTeamForm form){
 
         teamService.addTeammateToTeam(form.getTeamName(), form.getTeamMate());
+
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
@@ -146,18 +149,13 @@ public class TeamController {
     public ResponseEntity<?> getAll() {
 
         Iterable<Team> obj = teamService.findAll();
-
-        List<Team> myTeams = StreamSupport.stream(obj.spliterator(), false)
-                .collect(Collectors.toList());
-
-//        ArrayList myList = new ArrayList();
-//        for (Team t: obj){
-//            myList.add(t);
-//        }
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
+
+        List<Team> myTeams = StreamSupport.stream(obj.spliterator(), false)
+                .collect(Collectors.toList());
 
         return new ResponseEntity<Object>(myTeams, HttpStatus.OK);
     }
@@ -166,6 +164,7 @@ public class TeamController {
     @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         teamService.delete(id);
+
         return new ResponseEntity<Object>("Team deleted successfully!", HttpStatus.OK);
     }
 }

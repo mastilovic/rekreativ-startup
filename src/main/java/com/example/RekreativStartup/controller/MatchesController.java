@@ -51,10 +51,11 @@ public class MatchesController {
         if (existingTeamOne == null || existingTeamTwo == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         for (Teammate t:existingTeamOne.getTeammates()){
             if(existingTeamTwo.getTeammates().contains(t)){
                 return new ResponseEntity<Object>(
-                        "One player can't be part of both teams",
+                        "One player can't be part of both teams in a single match!",
                         HttpStatus.BAD_REQUEST);
             }
         }
