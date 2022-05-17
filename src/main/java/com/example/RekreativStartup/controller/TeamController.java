@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -35,6 +34,7 @@ public class TeamController {
     private final UserRepository userRepository;
     private final TeammateRepository teammateRepository;
     private final TeammateService teammateService;
+    private final TeamService teamService;
 
     @Autowired
     public TeamController(JwtUtil jwtUtil,
@@ -42,17 +42,17 @@ public class TeamController {
                           UserService userService,
                           TeamRepository teamRepository,
                           TeammateRepository teammateRepository,
-                          TeammateService teammateService) {
+                          TeammateService teammateService, TeamService teamService) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
         this.userService = userService;
         this.teamRepository = teamRepository;
         this.teammateRepository = teammateRepository;
         this.teammateService = teammateService;
+        this.teamService = teamService;
     }
 
-    @Autowired
-    private TeamService teamService;
+
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
@@ -108,7 +108,7 @@ public class TeamController {
 
         teamService.addTeammateToTeam(form.getTeamName(), form.getTeamMate());
 
-        return new ResponseEntity<Object>(HttpStatus.CREATED);
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

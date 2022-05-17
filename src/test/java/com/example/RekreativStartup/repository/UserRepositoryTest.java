@@ -29,7 +29,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void itShouldUserFindByUsername() {
+    void itShouldFindUserByUsername() {
         // give
         User testUser = new User(null,
                 "testUsername",
@@ -43,7 +43,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void checkIfUserCanBeCreatedAsNullObject(){
+    void checkIfUserCanBeCreatedNullObject(){
         // givem
 
         // passing null as id because GeneratedValue
@@ -62,7 +62,7 @@ class UserRepositoryTest {
     @Test
     void checkIfUserCanBeCreatedAsEmptyObject(){
 
-        // givem
+        // given
 
         // passing null as id because GeneratedValue
         // will auto generate new id

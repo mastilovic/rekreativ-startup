@@ -16,11 +16,14 @@ public class Teammate {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(name = "personal_score")
+    @Column(name = "total_games_played")
     private Integer totalGamesPlayed;
 
     @Column(name = "wins")
     private Integer wins;
+
+    @Column(name = "win_rate")
+    private Double winRate;
     // TODO
     // change personalScore to totalGamesPlayed
     // add wins for teammate
@@ -48,12 +51,13 @@ public class Teammate {
         super();
     }
 
-    public Teammate(Long id, String name, Integer totalGamesPlayed, Integer wins) {
+    public Teammate(Long id, String name, Integer totalGamesPlayed, Integer wins, Double winRate) {
         super();
         this.id = id;
         this.name = name;
         this.totalGamesPlayed = totalGamesPlayed;
         this.wins = wins;
+        this.winRate = winRate;
     }
 
     public Long getId() {
@@ -94,5 +98,13 @@ public class Teammate {
 
     public void setWins(Integer wins) {
         this.wins = wins;
+    }
+
+    public Double getWinRate() {
+        return winRate;
+    }
+
+    public void setWinRate(Double winRate) {
+        this.winRate = winRate;
     }
 }

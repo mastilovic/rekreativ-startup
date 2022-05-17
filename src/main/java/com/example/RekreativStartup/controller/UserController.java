@@ -62,7 +62,10 @@ public class UserController {
         AuthUserDetails authUserDetails = new AuthUserDetails(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(authUserDetails);
 
-        return new ResponseEntity<>(loginUser, jwtHeader, OK);
+        ModelMapper modelMapper = new ModelMapper();
+        UserDTO userDto = modelMapper.map(loginUser, UserDTO.class);
+
+        return new ResponseEntity<>(userDto, jwtHeader, OK);
     }
 
     private HttpHeaders getJwtHeader(AuthUserDetails user) {

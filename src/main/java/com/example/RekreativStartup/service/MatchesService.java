@@ -7,13 +7,16 @@ import com.example.RekreativStartup.repository.MatchesRepository;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
 import com.example.RekreativStartup.util.ValidatorUtil;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 public class MatchesService {
@@ -25,6 +28,8 @@ public class MatchesService {
     private final ValidatorUtil validatorUtil;
     private final TeamService teamService;
     private final TeammateRepository teammateRepository;
+
+    private static DecimalFormat df2 = new DecimalFormat("#.##");
 
     @Autowired
     public MatchesService(MatchesRepository matchesRepository,
@@ -41,59 +46,92 @@ public class MatchesService {
         this.teammateRepository = teammateRepository;
     }
 
-    public void matchOutcome(Matches newMatch, Team existingTeamOne, Team existingTeamTwo){
+
+    public void matchOutcome(Matches newMatch, Team existingTeamA, Team existingTeamB){
+        // case when teamA wins
         if (newMatch.getTeamAScore() > newMatch.getTeamBScore()) {
             newMatch.setWinner(newMatch.getTeamA().getTeamName());
 
-            existingTeamOne.setWins(existingTeamOne.getWins() + 1);
-            existingTeamOne.setTotalGamesPlayed(existingTeamOne.getTotalGamesPlayed() + 1);
-            existingTeamTwo.setTotalGamesPlayed(existingTeamTwo.getTotalGamesPlayed() + 1);
+            existingTeamA.setWins(existingTeamA.getWins() + 1);
+            existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
+            existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
 
-            Collection<Teammate> myTeammates = existingTeamOne.getTeammates();
-            for (Teammate t:myTeammates) {
-                Integer myInt = t.getTotalGamesPlayed();
-                myInt = myInt==null?0:myInt;
-                t.setTotalGamesPlayed(myInt + 1);
+            // teammates of team that lost
+            existingTeamB.getTeammates().forEach(teammateB -> {
+                teammateB.setTotalGamesPlayed(teammateB.getTotalGamesPlayed() + 1);
+                double winsDecimal = teammateB.getWins();
+                teammateB.setWinRate((winsDecimal / teammateB.getTotalGamesPlayed())*100);
+                teammateB.setWinRate(Precision.round(teammateB.getWinRate(), 2));
+                teammateService.save(teammateB);
+            });
 
-                Integer myWins = t.getWins();
-                myWins = myWins==null?0:myWins;
-                t.setWins(myWins + 1);
+            // teammates of team that won
+            existingTeamA.getTeammates().forEach(teammateA -> {
+                teammateA.setTotalGamesPlayed(teammateA.getTotalGamesPlayed() + 1);
+                teammateA.setWins(teammateA.getWins() + 1);
+                double winsDecimal = teammateA.getWins();
+                teammateA.setWinRate((winsDecimal / teammateA.getTotalGamesPlayed())*100);
+                teammateA.setWinRate(Precision.round(teammateA.getWinRate(), 2));
+                teammateService.save(teammateA);
+            });
 
-                teammateRepository.save(t);
-            }
+            teamService.save(existingTeamB);
+            teamService.save(existingTeamA);
 
-            teamService.save(existingTeamTwo);
-            teamService.save(existingTeamOne);
-
+        // case when teamB wins
         } else if (newMatch.getTeamAScore() < newMatch.getTeamBScore()){
             newMatch.setWinner(newMatch.getTeamB().getTeamName());
 
-            existingTeamTwo.setWins(existingTeamTwo.getWins() + 1);
+            existingTeamB.setWins(existingTeamB.getWins() + 1);
 
-            Collection<Teammate> myTeammates = existingTeamTwo.getTeammates();
-            for (Teammate t:myTeammates) {
-                Integer myInt = t.getTotalGamesPlayed();
-                myInt = myInt==null?0:myInt;
-                t.setTotalGamesPlayed(myInt + 1);
+            // teammates of team that lost
+            existingTeamA.getTeammates().forEach(teammateA->{
+                teammateA.setTotalGamesPlayed(teammateA.getTotalGamesPlayed() + 1);
+                double winsDecimal = teammateA.getWins();
+                teammateA.setWinRate((winsDecimal / teammateA.getTotalGamesPlayed()) * 100);
+                teammateA.setWinRate(Precision.round(teammateA.getWinRate(), 2));
+                teammateService.save(teammateA);
+            });
 
-                Integer myWins = t.getWins();
-                myWins = myWins==null?0:myWins;
-                t.setWins(myWins + 1);
+            // teammates of team that won
+            existingTeamB.getTeammates().forEach(teammateB -> {
+                teammateB.setTotalGamesPlayed(teammateB.getTotalGamesPlayed() + 1);
+                teammateB.setWins(teammateB.getWins() + 1);
+                double winsDecimal = teammateB.getWins();
+                teammateB.setWinRate((winsDecimal / teammateB.getTotalGamesPlayed()) * 100);
+                teammateB.setWinRate(Precision.round(teammateB.getWinRate(), 2));
+                teammateService.save(teammateB);
+            });
 
-                teammateRepository.save(t);
-            }
+            existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
+            existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
+            teamService.save(existingTeamB);
+            teamService.save(existingTeamA);
 
-            existingTeamOne.setTotalGamesPlayed(existingTeamOne.getTotalGamesPlayed() + 1);
-            existingTeamTwo.setTotalGamesPlayed(existingTeamTwo.getTotalGamesPlayed() + 1);
-            teamService.save(existingTeamTwo);
-            teamService.save(existingTeamOne);
+        // case when its a draw
         } else if (Objects.equals(newMatch.getTeamAScore(), newMatch.getTeamBScore())){
             newMatch.setWinner("draw");
 
-            existingTeamOne.setTotalGamesPlayed(existingTeamOne.getTotalGamesPlayed() + 1);
-            existingTeamTwo.setTotalGamesPlayed(existingTeamTwo.getTotalGamesPlayed() + 1);
-            teamService.save(existingTeamTwo);
-            teamService.save(existingTeamOne);
+            existingTeamA.getTeammates().forEach(teammateA->{
+                teammateA.setTotalGamesPlayed(teammateA.getTotalGamesPlayed() + 1);
+                double winsDecimal = teammateA.getWins();
+                teammateA.setWinRate((winsDecimal / teammateA.getTotalGamesPlayed())*100);
+                teammateA.setWinRate(Precision.round(teammateA.getWinRate(), 2));
+                teammateService.save(teammateA);
+            });
+
+            existingTeamB.getTeammates().forEach(teammateB -> {
+                teammateB.setTotalGamesPlayed(teammateB.getTotalGamesPlayed() + 1);
+                double winsDecimal = teammateB.getWins();
+                teammateB.setWinRate((winsDecimal / teammateB.getTotalGamesPlayed())*100);
+                teammateB.setWinRate(Precision.round(teammateB.getWinRate(), 2));
+                teammateService.save(teammateB);
+            });
+
+            existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
+            existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
+            teamService.save(existingTeamB);
+            teamService.save(existingTeamA);
         }
     }
 
