@@ -42,7 +42,8 @@ public class TeamController {
                           UserService userService,
                           TeamRepository teamRepository,
                           TeammateRepository teammateRepository,
-                          TeammateService teammateService, TeamService teamService) {
+                          TeammateService teammateService,
+                          TeamService teamService) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
         this.userService = userService;
