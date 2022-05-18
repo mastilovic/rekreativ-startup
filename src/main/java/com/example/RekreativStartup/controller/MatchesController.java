@@ -49,11 +49,13 @@ public class MatchesController {
         Team existingTeamTwo = teamService.getByTeamname(match.getTeamTwo()).orElse(null);
 
         if (existingTeamOne == null || existingTeamTwo == null){
+
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         for (Teammate t:existingTeamOne.getTeammates()){
             if(existingTeamTwo.getTeammates().contains(t)){
+
                 return new ResponseEntity<Object>(
                         "One player can't be part of both teams in a single match!",
                         HttpStatus.BAD_REQUEST);
@@ -75,15 +77,14 @@ public class MatchesController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-
         Iterable<Matches> obj = matchesService.findAll();
+
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
-
         Matches obj = matchesService.findMatchById(id).orElse(null);
         if (obj == null) {
 
@@ -91,7 +92,6 @@ public class MatchesController {
         }
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
-
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
@@ -103,6 +103,7 @@ public class MatchesController {
         existingMatch.setTeamA(null);
         existingMatch.setTeamB(null);
         matchesService.delete(id);
+
         return new ResponseEntity<Object>("Match deleted successfully!", HttpStatus.OK);
     }
 }

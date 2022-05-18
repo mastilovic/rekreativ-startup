@@ -153,6 +153,7 @@ public class MatchesService {
         newMatch.setTeamB(teamB);
         newMatch.setTeamAScore(teamOneScore);
         newMatch.setTeamBScore(teamTwoScore);
+
         return matchesRepository.save(newMatch);
     }
 

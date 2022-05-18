@@ -83,11 +83,10 @@ public class UserController {
     @RequestMapping(path = "/add/role/to/user", method = RequestMethod.POST)
     public ResponseEntity<?> addRoleToUser(@RequestParam(value = "username", required = false) String username,
                                            @RequestParam(value = "roles", required = false) String roles) {
-
         if (roleRepository.findByName(roles).isEmpty()){
+
             return new ResponseEntity<Object>("Role doesn't exist!", HttpStatus.BAD_REQUEST);
         }
-
         Optional<User> userObj = userService.findUserByUsername(username);
         List<String> userRoles = new ArrayList<>();
 
@@ -96,7 +95,6 @@ public class UserController {
         });
         if (userRoles.contains(roles)) {
             // log.error("User already has that role!");
-
             return new ResponseEntity<Object>("User already has that role!", HttpStatus.BAD_REQUEST);
         } else {
             userService.addRoleToUser(username, roles);
@@ -108,9 +106,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @RequestMapping(path = "/admin/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOneForAdmin(@PathVariable("id") Long id) {
-
         User obj = userService.findUserById(id).orElse(null);
-
         Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
 
         if (obj == null) {
@@ -126,9 +122,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
-
         User obj = userService.findUserById(id).orElse(null);
-
         Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
         if (obj == null) {
 
@@ -138,22 +132,19 @@ public class UserController {
             return new ResponseEntity<Object>("Can't access users that have Admin role!",
                     HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
         }
-
         ModelMapper modelMapper = new ModelMapper();
         UserDTO userDto = modelMapper.map(obj, UserDTO.class);
 
         return new ResponseEntity<Object>(userDto, HttpStatus.OK);
-
     }
 
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User user) {
-
         if (ValidatorUtil.userValidator(user) || userService.findUserByUsername(user.getUsername()).isPresent()){
+
             return new ResponseEntity<Object>("Username is empty or already exists!",HttpStatus.BAD_REQUEST);
         }
-
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
@@ -162,29 +153,14 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-//    @RequestMapping(path = "/update/score", method = RequestMethod.POST)
-//    public ResponseEntity<?> updateUserPersonalScore(@RequestBody User user) {
-//
-//        User existingUser = userService.findUserByUsername(user.getUsername()).orElse(null);
-//        if (existingUser == null) {
-//            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-//        }
-//
-//        existingUser.setPersonalScore(user.getPersonalScore());
-//        userService.saveUser(existingUser);
-//        return new ResponseEntity<Object>(HttpStatus.CREATED);
-//    }
-
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@RequestBody User user) {
-
         User existingUser = userService.findUserById(user.getId()).orElse(null);
         if (existingUser == null) {
+
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
-
         existingUser.setUsername(user.getUsername());
         existingUser.setPassword(user.getPassword());
         userService.saveUser(existingUser);
@@ -195,11 +171,9 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @RequestMapping(path = "/admin/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllForAdmin() {
-
         Iterable<User> obj = userService.findAll();
-        ArrayList<User> myList = new ArrayList<>();
-        ModelMapper modelMapper = new ModelMapper();
 
+        ModelMapper modelMapper = new ModelMapper();
         List<UserDTO> listOfDtos = StreamSupport.stream(obj.spliterator(), false)
                 .map(u -> modelMapper.map(u, UserDTO.class))
                 .collect(Collectors.toList());
@@ -211,7 +185,6 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-
         Iterable<User> obj = userService.findAll();
         Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
 
@@ -228,6 +201,7 @@ public class UserController {
     @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         userService.deleteUserById(id);
+
         return new ResponseEntity<Object>("User deleted successfully!", HttpStatus.OK);
     }
 }

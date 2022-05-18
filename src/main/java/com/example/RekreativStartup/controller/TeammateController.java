@@ -36,6 +36,7 @@ public class TeammateController {
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody Teammate teammate) {
         if(ValidatorUtil.teammateValidator(teammate)){
+
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         teammate.setName(teammate.getName());
@@ -49,28 +50,20 @@ public class TeammateController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-
         Iterable<Teammate> obj = teammateService.findAll();
-
-        List<Teammate> listOfTeammates = StreamSupport.stream(obj.spliterator(), false)
-                .collect(Collectors.toList());
-
-//        ArrayList myList = new ArrayList();
-//        for (Teammate t: obj){
-//            myList.add(t);
-//        }
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Object>(listOfTeammates, HttpStatus.OK);
+        return new ResponseEntity<Object>(obj, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteTeammate(@PathVariable Long id) {
         teammateService.delete(id);
+
         return new ResponseEntity<Object>("Teammate deleted successfully!", HttpStatus.OK);
     }
 }

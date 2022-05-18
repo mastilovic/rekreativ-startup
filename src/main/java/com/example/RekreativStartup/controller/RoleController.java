@@ -26,6 +26,7 @@ public class RoleController {
     @RequestMapping(path = "/save", method = RequestMethod.POST)
     public ResponseEntity<?> saveRole(@RequestBody Role role) {
         if (ValidatorUtil.roleValidator(role)){
+
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         Role newRole = new Role();

@@ -123,7 +123,6 @@ public class TeamService {
     }
 
     public void decreaseGamesPlayedByOne(Matches existingMatch){
-
         Team teamA = getByTeamname(existingMatch.getTeamA().getTeamName()).get();
         Team teamB = getByTeamname(existingMatch.getTeamB().getTeamName()).get();
         teamA.setTotalGamesPlayed(teamA.getTotalGamesPlayed() - 1);

@@ -53,12 +53,9 @@ public class TeamController {
         this.teamService = teamService;
     }
 
-
-
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
-
         Team obj = teamService.findTeamById(id).orElse(null);
         if (obj == null) {
 
@@ -66,13 +63,11 @@ public class TeamController {
         }
 
         return new ResponseEntity<Object>(obj, HttpStatus.OK);
-
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody Team team) {
-
         if(ValidatorUtil.teamValidator(team)){
 
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -91,9 +86,9 @@ public class TeamController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update/score", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeamScore(@RequestBody Team team) {
-
         Team existingTeam = teamService.getByTeamname(team.getTeamName()).orElse(null);
         if (existingTeam == null) {
+
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
         existingTeam.setWins(team.getWins());
@@ -106,7 +101,6 @@ public class TeamController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/add/teammate", method = RequestMethod.POST)
     public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateToTeamForm form){
-
         teamService.addTeammateToTeam(form.getTeamName(), form.getTeamMate());
 
         return new ResponseEntity<Object>(HttpStatus.OK);
@@ -116,10 +110,10 @@ public class TeamController {
     @RequestMapping(path = "/delete/teammate/{teamname}/{teammate}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteTeammateFromTeam(@PathVariable("teamname") String teamname,
                                                     @PathVariable("teammate") String teammate) {
-
         Team existingTeam = teamService.getByTeamname(teamname).orElse(null);
         Teammate existingTeammate = teammateService.findTeammateByName(teammate).orElse(null);
         if (existingTeam == null) {
+
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
         existingTeam.getTeammates().remove(existingTeammate);
@@ -131,9 +125,9 @@ public class TeamController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeam(@RequestBody Team team) {
-
         Team existingTeam = teamService.findTeamById(team.getId()).orElse(null);
         if (existingTeam == null) {
+
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
 
@@ -148,17 +142,13 @@ public class TeamController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-
         Iterable<Team> obj = teamService.findAll();
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
 
-        List<Team> myTeams = StreamSupport.stream(obj.spliterator(), false)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<Object>(myTeams, HttpStatus.OK);
+        return new ResponseEntity<Object>(obj, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
