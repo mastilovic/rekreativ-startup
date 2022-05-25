@@ -28,21 +28,6 @@ public class Teammate {
     // change personalScore to totalGamesPlayed
     // add wins for teammate
 
-
-
-//    @ManyToOne
-//    @JoinColumns(
-//        {
-//            @JoinColumn(updatable=false,insertable=false, name="team_a_score", referencedColumnName="team_a_score"),
-//            @JoinColumn(updatable=false,insertable=false, name="team_b_score", referencedColumnName="team_b_score")
-//        }
-//    )
-//    private Matches personalScore;
-
-
-//    private Set<Team> team;
-//    @ManyToMany//(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "team_id", insertable = false, updatable = false)
     @JsonIgnoreProperties(value = {"teammates"})
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "teammates")
     private Collection<Team> team = new ArrayList<>();

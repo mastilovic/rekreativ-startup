@@ -16,41 +16,6 @@ public class Team {
     @Column(unique = true, nullable = false)
     private String teamName;
 
-
-//    @ManyToMany(mappedBy="team")
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private User user; //= new ArrayList<>();
-
-//    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-//    @JoinTable(name = "team_team",
-//            joinColumns = { @JoinColumn(name = "parent_team_id", referencedColumnName = "id", insertable = false, updatable = false) },
-//            inverseJoinColumns = { @JoinColumn(name = "child_team_id", referencedColumnName = "id", insertable = false, updatable = false) } )
-//    private Team parentTeam;
-//
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "team_team",
-//            joinColumns = {
-//                    @JoinColumn(name = "parent_team_id",
-//                            referencedColumnName = "id",
-//                            insertable = false,
-//                            updatable = false)
-//            },
-//            inverseJoinColumns = {
-//                    @JoinColumn(name = "child_team_id",
-//                            referencedColumnName = "id",
-//                            insertable = false,
-//                            updatable = false) } )
-//    private List<Team> childTeam;
-
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "team_enemy",
-//            joinColumns = @JoinColumn(name = "team_id"),
-//            inverseJoinColumns = @JoinColumn(name = "opponent_id"))
-//    private Collection<Matchup> matchups = new ArrayList<>();
-
     @JsonIgnoreProperties(value = {"team"})
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "team_teammates",

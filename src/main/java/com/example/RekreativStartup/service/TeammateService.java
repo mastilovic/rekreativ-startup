@@ -20,17 +20,8 @@ public class TeammateService {
         return teammateRepository.findTeammateByName(name);
     }
 
-//    public Optional<Teammate> getTeammateByTeamName(String teamName){
-//        return teammateRepository.findTeammateByTeamName(teamName);
-//    }
-
-//    public Optional<Team> getAllTeammatesByTeamName(String teamName){
-//        return teamRepository.findAllTeammatesByTeamName(teamName);
-//    }
 
     public Teammate save(Teammate teammate) {
-//        team.setUser(team.getUser());
-//        team.setScore(null);
         return teammateRepository.save(teammate);
     }
 

@@ -27,14 +27,6 @@ public class Matches {
 
     @Column(name = "winner")
     private String winner;
-    
-//    @Column(name = "team_a_score")
-//    @OneToMany(mappedBy = "personalScore", targetEntity = Teammate.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<Teammate> teamAScore;
-//
-//    @Column(name = "team_b_score")
-//    @OneToMany(mappedBy = "personalScore", targetEntity = Teammate.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<Teammate> teamBScore;
 
     public Matches(){
         super();

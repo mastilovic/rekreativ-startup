@@ -4,7 +4,6 @@ package com.example.RekreativStartup.controller;
 import com.example.RekreativStartup.service.UserService;
 import com.example.RekreativStartup.auth.AuthUserDetails;
 import com.example.RekreativStartup.dto.UserDTO;
-import com.example.RekreativStartup.model.Role;
 import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.RoleRepository;
 import com.example.RekreativStartup.util.JwtUtil;
@@ -40,7 +39,6 @@ public class UserController {
     AuthenticationManager authenticationManager;
 
     private JwtUtil jwtUtil;
-//    private ValidatorUtil validatorUtil;
 
     @Autowired
     public UserController(JwtUtil jwtUtil) {
@@ -70,7 +68,7 @@ public class UserController {
 
     private HttpHeaders getJwtHeader(AuthUserDetails user) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Jwt-Token", jwtUtil.generateJwtToken(user));
+        headers.add("token", jwtUtil.generateJwtToken(user));
 
         return headers;
     }
@@ -103,35 +101,15 @@ public class UserController {
         return new ResponseEntity<Object>("Role successfully added to user!", OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    @RequestMapping(path = "/admin/get/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getOneForAdmin(@PathVariable("id") Long id) {
-        User obj = userService.findUserById(id).orElse(null);
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
-
-        if (obj == null) {
-
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-        }
-        ModelMapper modelMapper = new ModelMapper();
-        UserDTO userDto = modelMapper.map(obj, UserDTO.class);
-
-        return new ResponseEntity<Object>(userDto, HttpStatus.OK);
-    }
-
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
         User obj = userService.findUserById(id).orElse(null);
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
         if (obj == null) {
 
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-        } else if (obj.getRoles().contains(adminRole)) {
-
-            return new ResponseEntity<Object>("Can't access users that have Admin role!",
-                    HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
         }
+
         ModelMapper modelMapper = new ModelMapper();
         UserDTO userDto = modelMapper.map(obj, UserDTO.class);
 
@@ -168,29 +146,14 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    @RequestMapping(path = "/admin/get/all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllForAdmin() {
-        Iterable<User> obj = userService.findAll();
-
-        ModelMapper modelMapper = new ModelMapper();
-        List<UserDTO> listOfDtos = StreamSupport.stream(obj.spliterator(), false)
-                .map(u -> modelMapper.map(u, UserDTO.class))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<Object>(listOfDtos, HttpStatus.OK);
-    }
-
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
         Iterable<User> obj = userService.findAll();
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
 
         ModelMapper modelMapper = new ModelMapper();
         List<UserDTO> listOfDtos = StreamSupport.stream(obj.spliterator(), false)
-                .filter(u -> !u.getRoles().contains(adminRole))
                 .map(u -> modelMapper.map(u, UserDTO.class))
                 .collect(Collectors.toList());
 

@@ -73,17 +73,10 @@ public class TeamService {
 
         User newUser = new User();
         newUser.setUsername(username);
-
-//        newUser.getUsername().forEach(role -> {
-//            authorities.add(new SimpleGrantedAuthority(role.getName()));
-//        });
-//        team.setScore(null);
         return teamRepository.save(team);
     }
 
     public Team save(Team team) {
-//        team.setUser(team.getUser());
-//        team.setScore(null);
         return teamRepository.save(team);
     }
 

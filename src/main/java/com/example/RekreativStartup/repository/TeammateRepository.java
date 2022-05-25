@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface TeammateRepository extends CrudRepository<Teammate, Long> {
     Optional<Teammate> findTeammateByName(String name);
-//    Optional<Teammate> findTeammateByTeamName(String teamName);
 }

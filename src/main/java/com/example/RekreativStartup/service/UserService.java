@@ -25,7 +25,6 @@ import java.util.Set;
 @Transactional
 public class UserService implements UserDetailsService {
 
-//    @Autowired
     private final UserRepository userRepository; //injecting through constructor for testing
     @Autowired
     private RoleRepository roleRepository;
@@ -101,10 +100,6 @@ public class UserService implements UserDetailsService {
     public void delete(User User) {
         userRepository.delete(User);
     }
-
-//    public User findUserById(Long id) {
-//        return userRepository.findById(id).orElse(null);
-//    }
 
     public Iterable<User> findAll(){
         return userRepository.findAll();

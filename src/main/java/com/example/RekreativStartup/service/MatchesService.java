@@ -2,7 +2,6 @@ package com.example.RekreativStartup.service;
 
 import com.example.RekreativStartup.model.Matches;
 import com.example.RekreativStartup.model.Team;
-import com.example.RekreativStartup.model.Teammate;
 import com.example.RekreativStartup.repository.MatchesRepository;
 import com.example.RekreativStartup.repository.TeamRepository;
 import com.example.RekreativStartup.repository.TeammateRepository;
@@ -12,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -140,13 +137,6 @@ public class MatchesService {
         Optional<Team> optionalTeamB = teamRepository.findByTeamName(teamTwo);
         Team teamA = optionalTeamA.get();
         Team teamB = optionalTeamB.get();
-//
-//        ArrayList<String> teammatesInTeamAList = new ArrayList<String>();
-//        ArrayList<String> teammatesInTeamBList = new ArrayList<String>();
-//
-//        ArrayList<Integer> teamAScoreList = new ArrayList<Integer>();
-//        Integer teamAScore = validatorUtil.getScoresFromTeammates(teamOne);
-//        Integer teamBScore = validatorUtil.getScoresFromTeammates(teamTwo);
 
         Matches newMatch = new Matches();
         newMatch.setTeamA(teamA);
