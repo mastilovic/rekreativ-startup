@@ -53,16 +53,8 @@ public class TeamService {
         return teamRepository.findByTeamName(teamName);
     }
 
-    public Optional<Team> findByTeammate(String teammate){
-        return teamRepository.findByTeammate(teammate);
-    }
-
     public void delete(Long id) {
         teamRepository.deleteById(id);
-    }
-
-    public void deleteTeammate(String teammate){
-        teamRepository.deleteTeammate(teammate);
     }
 
     public Team saveTeamWithUsername(Team team, HttpServletRequest request){

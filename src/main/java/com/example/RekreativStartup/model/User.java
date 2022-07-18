@@ -4,7 +4,7 @@ package com.example.RekreativStartup.model;
 import javax.persistence.*;
 import java.util.*;
 
-@Entity
+@Entity(name = "user")
 public class User {
 
     @Id

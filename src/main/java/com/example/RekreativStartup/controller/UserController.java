@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,6 +38,7 @@ public class UserController {
     private RoleRepository roleRepository;
     @Autowired
     AuthenticationManager authenticationManager;
+    private static final Logger LOGGER = Logger.getLogger( UserController.class.getName() );
 
     private JwtUtil jwtUtil;
 
@@ -82,15 +84,16 @@ public class UserController {
     public ResponseEntity<?> addRoleToUser(@RequestParam(value = "username", required = false) String username,
                                            @RequestParam(value = "roles", required = false) String roles) {
         if (roleRepository.findByName(roles).isEmpty()){
-
             return new ResponseEntity<Object>("Role doesn't exist!", HttpStatus.BAD_REQUEST);
         }
+
         Optional<User> userObj = userService.findUserByUsername(username);
         List<String> userRoles = new ArrayList<>();
 
         userObj.map(User::getRoles).get().forEach(role -> {
             userRoles.add(role.getName());
         });
+
         if (userRoles.contains(roles)) {
             // log.error("User already has that role!");
             return new ResponseEntity<Object>("User already has that role!", HttpStatus.BAD_REQUEST);
@@ -120,9 +123,9 @@ public class UserController {
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User user) {
         if (ValidatorUtil.userValidator(user) || userService.findUserByUsername(user.getUsername()).isPresent()){
-
             return new ResponseEntity<Object>("Username is empty or already exists!",HttpStatus.BAD_REQUEST);
         }
+
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
@@ -135,10 +138,11 @@ public class UserController {
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@RequestBody User user) {
         User existingUser = userService.findUserById(user.getId()).orElse(null);
-        if (existingUser == null) {
 
+        if (existingUser == null) {
             return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
         }
+
         existingUser.setUsername(user.getUsername());
         existingUser.setPassword(user.getPassword());
         userService.saveUser(existingUser);
