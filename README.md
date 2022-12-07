@@ -26,5 +26,7 @@ Using JWT (JSON Web Token) for authorizing users. Dependency used for generating
 * Local database (MySQL, PostgreSQL or others)
 * Configured database properties in project (src/main/resources/application.properties)
 
+## TODO: FRONTEND :)
+
 
 
