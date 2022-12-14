@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -48,29 +47,12 @@ public class MatchesService {
         // case when teamA wins
         if (newMatch.getTeamAScore() > newMatch.getTeamBScore()) {
             newMatch.setWinner(newMatch.getTeamA().getTeamName());
-
             existingTeamA.setWins(existingTeamA.getWins() + 1);
             existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
             existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
 
-            // teammates of team that lost
-            existingTeamB.getTeammates().forEach(teammateB -> {
-                teammateB.setTotalGamesPlayed(teammateB.getTotalGamesPlayed() + 1);
-                double winsDecimal = teammateB.getWins();
-                teammateB.setWinRate((winsDecimal / teammateB.getTotalGamesPlayed())*100);
-                teammateB.setWinRate(Precision.round(teammateB.getWinRate(), 2));
-                teammateService.save(teammateB);
-            });
-
-            // teammates of team that won
-            existingTeamA.getTeammates().forEach(teammateA -> {
-                teammateA.setTotalGamesPlayed(teammateA.getTotalGamesPlayed() + 1);
-                teammateA.setWins(teammateA.getWins() + 1);
-                double winsDecimal = teammateA.getWins();
-                teammateA.setWinRate((winsDecimal / teammateA.getTotalGamesPlayed())*100);
-                teammateA.setWinRate(Precision.round(teammateA.getWinRate(), 2));
-                teammateService.save(teammateA);
-            });
+            updateTeammatesThatDidntWin(existingTeamB);
+            updateTeammatesThatWon(existingTeamA);
 
             teamService.save(existingTeamB);
             teamService.save(existingTeamA);
@@ -78,55 +60,25 @@ public class MatchesService {
         // case when teamB wins
         } else if (newMatch.getTeamAScore() < newMatch.getTeamBScore()){
             newMatch.setWinner(newMatch.getTeamB().getTeamName());
-
             existingTeamB.setWins(existingTeamB.getWins() + 1);
-
-            // teammates of team that lost
-            existingTeamA.getTeammates().forEach(teammateA->{
-                teammateA.setTotalGamesPlayed(teammateA.getTotalGamesPlayed() + 1);
-                double winsDecimal = teammateA.getWins();
-                teammateA.setWinRate((winsDecimal / teammateA.getTotalGamesPlayed()) * 100);
-                teammateA.setWinRate(Precision.round(teammateA.getWinRate(), 2));
-                teammateService.save(teammateA);
-            });
-
-            // teammates of team that won
-            existingTeamB.getTeammates().forEach(teammateB -> {
-                teammateB.setTotalGamesPlayed(teammateB.getTotalGamesPlayed() + 1);
-                teammateB.setWins(teammateB.getWins() + 1);
-                double winsDecimal = teammateB.getWins();
-                teammateB.setWinRate((winsDecimal / teammateB.getTotalGamesPlayed()) * 100);
-                teammateB.setWinRate(Precision.round(teammateB.getWinRate(), 2));
-                teammateService.save(teammateB);
-            });
-
             existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
             existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
+
+            updateTeammatesThatDidntWin(existingTeamA);
+            updateTeammatesThatWon(existingTeamB);
+
             teamService.save(existingTeamB);
             teamService.save(existingTeamA);
 
         // case when its a draw
-        } else if (Objects.equals(newMatch.getTeamAScore(), newMatch.getTeamBScore())){
+        } else if (newMatch.getTeamAScore().equals(newMatch.getTeamBScore())){
             newMatch.setWinner("draw");
-
-            existingTeamA.getTeammates().forEach(teammateA->{
-                teammateA.setTotalGamesPlayed(teammateA.getTotalGamesPlayed() + 1);
-                double winsDecimal = teammateA.getWins();
-                teammateA.setWinRate((winsDecimal / teammateA.getTotalGamesPlayed())*100);
-                teammateA.setWinRate(Precision.round(teammateA.getWinRate(), 2));
-                teammateService.save(teammateA);
-            });
-
-            existingTeamB.getTeammates().forEach(teammateB -> {
-                teammateB.setTotalGamesPlayed(teammateB.getTotalGamesPlayed() + 1);
-                double winsDecimal = teammateB.getWins();
-                teammateB.setWinRate((winsDecimal / teammateB.getTotalGamesPlayed())*100);
-                teammateB.setWinRate(Precision.round(teammateB.getWinRate(), 2));
-                teammateService.save(teammateB);
-            });
-
             existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
             existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
+
+            updateTeammatesThatDidntWin(existingTeamA);
+            updateTeammatesThatDidntWin(existingTeamB);
+
             teamService.save(existingTeamB);
             teamService.save(existingTeamA);
         }
@@ -161,6 +113,26 @@ public class MatchesService {
 
     public void delete(Long id) {
         matchesRepository.deleteById(id);
+    }
+
+    private void updateTeammatesThatWon(Team team){
+        team.getTeammates().forEach(teammate->{
+            teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
+            double winsDecimal = teammate.getWins();
+            teammate.setWinRate((winsDecimal / teammate.getTotalGamesPlayed()) * 100);
+            teammate.setWinRate(Precision.round(teammate.getWinRate(), 2));
+            teammateService.save(teammate);
+        });
+    }
+
+    private void updateTeammatesThatDidntWin(Team team){
+        team.getTeammates().forEach(teammate->{
+            teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
+            double winsDecimal = teammate.getWins();
+            teammate.setWinRate((winsDecimal / teammate.getTotalGamesPlayed()) * 100);
+            teammate.setWinRate(Precision.round(teammate.getWinRate(), 2));
+            teammateService.save(teammate);
+        });
     }
 
 }

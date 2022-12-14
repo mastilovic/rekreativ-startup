@@ -80,6 +80,11 @@ public class JwtUtil {
                 .sign(Algorithm.HMAC512(SECRET_KEY.getBytes()));
     }
 
+    private String[] getClaimsFromToken(String token){
+        JWTVerifier verifier = tokenVerifier();
+        return verifier.verify(token).getClaim("authorities").asArray(String.class);
+    }
+
     //get claims from user
     private String[] getClaimsFromUser(AuthUserDetails user) {
         List<String> authorities = new ArrayList<>();

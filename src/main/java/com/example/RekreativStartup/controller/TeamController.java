@@ -72,15 +72,15 @@ public class TeamController {
 
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
-
         Team newTeam = new Team();
         newTeam.setTeamName(team.getTeamName());
         newTeam.setCity(team.getCity());
         newTeam.setWins(0);
         newTeam.setTotalGamesPlayed(0);
-        teamService.save(newTeam);
 
-        return new ResponseEntity<Object>(HttpStatus.CREATED);
+        Team save = teamService.save(newTeam);
+
+        return new ResponseEntity<Object>(save, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

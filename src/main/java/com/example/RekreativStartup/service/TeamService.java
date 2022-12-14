@@ -72,10 +72,10 @@ public class TeamService {
         return teamRepository.save(team);
     }
 
-    public ArrayList<Teammate> findTeammatesInTeam(String teamName){
+    public List<Teammate> findTeammatesInTeam(String teamName){
         Optional<Team> existingTeam = getByTeamname(teamName);
-        if (existingTeam == null){
-            return null;
+        if (existingTeam.isEmpty()){
+            return new ArrayList<>();
         }
         ArrayList<Teammate> teammatesInTeam = new ArrayList<Teammate>();
 
@@ -86,22 +86,18 @@ public class TeamService {
 
     public void addTeammateToTeam(String teamname, String teammateName){
         Team existingTeam = teamRepository.findByTeamName(teamname).get();
-        Optional<Teammate> optionalTeammate = teammateRepository.findTeammateByName(teammateName);
+        Optional<Teammate> oTeammate = teammateRepository.findTeammateByName(teammateName);
 
-        if(!optionalTeammate.isPresent()){
-            Teammate newTeammate = new Teammate();
-            newTeammate.setName(teammateName);
-            newTeammate.setTotalGamesPlayed(0);
-            newTeammate.setWins(0);
-            teammateService.save(newTeammate);
-            existingTeam.getTeammates().add(newTeammate);
-            save(existingTeam);
-        } else {
-            Teammate existingTeammate = optionalTeammate.get();
-            existingTeam.getTeammates().add(existingTeammate);
-            save(existingTeam);
-        }
+        Teammate tempTeammate = oTeammate.isEmpty()
+                ? teammateCreation(teammateName)
+                : oTeammate.get();
+
+        existingTeam.getTeammates().add(tempTeammate);
+
+        save(existingTeam);
     }
+
+
 
     public Team getTeamScore(Team team){
         return null;
@@ -110,14 +106,26 @@ public class TeamService {
     public void decreaseGamesPlayedByOne(Matches existingMatch){
         Team teamA = getByTeamname(existingMatch.getTeamA().getTeamName()).get();
         Team teamB = getByTeamname(existingMatch.getTeamB().getTeamName()).get();
+
         teamA.setTotalGamesPlayed(teamA.getTotalGamesPlayed() - 1);
         teamB.setTotalGamesPlayed(teamB.getTotalGamesPlayed() - 1);
-        if (Objects.equals(existingMatch.getWinner(), teamA.getTeamName())){
+
+        if (existingMatch.getWinner().equals(teamA.getTeamName())){
             teamA.setWins(teamA.getWins() - 1);
-        } else if(Objects.equals(existingMatch.getWinner(), teamB.getTeamName())){
+        } else if(existingMatch.getWinner().equals(teamB.getTeamName())){
             teamB.setWins(teamB.getWins() - 1);
         }
+
         save(teamA);
         save(teamB);
+    }
+
+    private Teammate teammateCreation(String teammateName){
+        Teammate newTeammate = new Teammate();
+        newTeammate.setName(teammateName);
+        newTeammate.setTotalGamesPlayed(0);
+        newTeammate.setWins(0);
+
+        return teammateService.save(newTeammate);
     }
 }

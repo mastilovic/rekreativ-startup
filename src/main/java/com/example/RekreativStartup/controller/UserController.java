@@ -8,6 +8,7 @@ import com.example.RekreativStartup.model.User;
 import com.example.RekreativStartup.repository.RoleRepository;
 import com.example.RekreativStartup.util.JwtUtil;
 import com.example.RekreativStartup.util.ValidatorUtil;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -97,9 +98,8 @@ public class UserController {
         if (userRoles.contains(roles)) {
             // log.error("User already has that role!");
             return new ResponseEntity<Object>("User already has that role!", HttpStatus.BAD_REQUEST);
-        } else {
-            userService.addRoleToUser(username, roles);
         }
+        userService.addRoleToUser(username, roles);
 
         return new ResponseEntity<Object>("Role successfully added to user!", OK);
     }
