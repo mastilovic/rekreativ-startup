@@ -36,9 +36,9 @@ public class TeammateController {
 //    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-        Iterable<Teammate> obj = teammateService.findAll();
+        Iterable<Teammate> teammates = teammateService.findAll();
 
-        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+        return new ResponseEntity<Object>(teammates, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

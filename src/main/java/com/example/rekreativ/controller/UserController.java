@@ -1,7 +1,7 @@
 package com.example.rekreativ.controller;
 
 
-import com.example.rekreativ.auth.AuthUserDetails;
+import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.repository.RoleRepository;
@@ -47,19 +47,12 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    public void initRolesAndUser() {
-        if (roleRepository.findByName("ROLE_USER").isEmpty()
-                && roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
-            userService.initRoleAndUser();
-        }
-    }
-
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody User user) {
         authenticate(user.getUsername(), user.getPassword());
         User loginUser = userService.findUserByUsername(user.getUsername());
-        AuthUserDetails authUserDetails = new AuthUserDetails(loginUser);
-        HttpHeaders jwtHeader = getJwtHeader(authUserDetails);
+        AuthUser authUser = new AuthUser(loginUser);
+        HttpHeaders jwtHeader = getJwtHeader(authUser);
 
         ModelMapper modelMapper = new ModelMapper();
         UserDTO userDto = modelMapper.map(loginUser, UserDTO.class);
@@ -67,7 +60,7 @@ public class UserController {
         return new ResponseEntity<>(userDto, jwtHeader, OK);
     }
 
-    private HttpHeaders getJwtHeader(AuthUserDetails user) {
+    private HttpHeaders getJwtHeader(AuthUser user) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("token", jwtUtil.generateJwtToken(user));
 

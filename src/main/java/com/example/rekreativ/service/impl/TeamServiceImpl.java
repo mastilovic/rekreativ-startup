@@ -51,6 +51,8 @@ public class TeamServiceImpl implements TeamService {
         Optional<Team> team = teamRepository.findById(id);
 
         if(team.isEmpty()){
+            log.debug("Team with id: {} doesnt exist!", id);
+
             throw new ObjectNotFoundException(Team.class, id);
         }
 
@@ -58,9 +60,13 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public Team getByTeamname(String teamName){
+        log.debug("calling getByTeamname method in TeamServiceImpl");
+
         Optional<Team> team = teamRepository.findByTeamName(teamName);
 
         if(team.isEmpty()){
+            log.debug("Team not found with name: {}", teamName);
+
             throw new ObjectNotFoundException(Team.class, teamName);
         }
 
@@ -79,6 +85,7 @@ public class TeamServiceImpl implements TeamService {
 
         User newUser = new User();
         newUser.setUsername(username);
+
         return teamRepository.save(team);
     }
 
@@ -105,7 +112,7 @@ public class TeamServiceImpl implements TeamService {
         return team.getTeammates().stream().collect(Collectors.toList());
     }
 
-    public void addTeammateToTeam(String teamname, String teammateName) throws ValidationException {
+    public Team addTeammateToTeam(String teamname, String teammateName) throws ValidationException {
         Team existingTeam = getByTeamname(teamname);
         Teammate teammate = teammateService.findTeammateByName(teammateName);
 
@@ -115,7 +122,7 @@ public class TeamServiceImpl implements TeamService {
 
         existingTeam.getTeammates().add(teammate);
 
-        save(existingTeam);
+        return save(existingTeam);
     }
 
 
@@ -142,6 +149,20 @@ public class TeamServiceImpl implements TeamService {
 
         initSave(teamA);
         initSave(teamB);
+    }
+
+    @Override
+    public Team deleteTeammateFromTeam(String teamname, String teammate) {
+        Team existingTeam = getByTeamname(teamname);
+        Teammate existingTeammate = teammateService.findTeammateByName(teammate);
+
+        if (existingTeam == null) {
+
+            throw new ObjectNotFoundException(Team.class, "Team not found!");
+        }
+
+        existingTeam.getTeammates().remove(existingTeammate);
+        return save(existingTeam);
     }
 
     public Integer getScoresFromTeammates(String teamName) {

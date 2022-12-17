@@ -24,9 +24,11 @@ public interface TeamService {
 
     public List<Teammate> findTeammatesInTeam(String teamName);
 
-    public void addTeammateToTeam(String teamname, String teammateName) throws ValidationException;
+    public Team addTeammateToTeam(String teamname, String teammateName) throws ValidationException;
 
     public Team getTeamScore(Team team);
 
     public void decreaseGamesPlayedByOne(Matches existingMatch);
+
+    Team deleteTeammateFromTeam(String teamname, String teammate);
 }

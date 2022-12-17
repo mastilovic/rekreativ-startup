@@ -1,12 +1,16 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.dto.MatchesRequestDTO;
+import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.model.Team;
+import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.MatchesRepository;
 import com.example.rekreativ.service.MatchesService;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.TeammateService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,7 @@ import java.util.Optional;
 
 
 @Service
+@Slf4j
 public class MatchesServiceImpl implements MatchesService {
 
     private final MatchesRepository matchesRepository;
@@ -34,48 +39,45 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
 
-    public void matchOutcome(Matches newMatch, Team existingTeamA, Team existingTeamB){
-        // case when teamA wins
-        if (newMatch.getTeamAScore() > newMatch.getTeamBScore()) {
-            newMatch.setWinner(newMatch.getTeamA().getTeamName());
+    public void matchOutcome(Matches match, Team existingTeamA, Team existingTeamB){
+        log.debug("calling method matchOutcome in MatchesServiceImpl");
+        if (match.getTeamAScore() > match.getTeamBScore()) {
+            match.setWinner(match.getTeamA().getTeamName());
             existingTeamA.setWins(existingTeamA.getWins() + 1);
-            existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
-            existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
-
-            updateTeammatesThatLost(existingTeamB);
-            updateTeammatesThatWon(existingTeamA);
+            increaseTotalGamesPlayed(existingTeamA);
+            increaseTotalGamesPlayed(existingTeamB);
+            updateLosingTeammates(existingTeamB);
+            updateWinningTeammates(existingTeamA);
 
             teamService.save(existingTeamB);
             teamService.save(existingTeamA);
 
-        // case when teamB wins
-        } else if (newMatch.getTeamAScore() < newMatch.getTeamBScore()){
-            newMatch.setWinner(newMatch.getTeamB().getTeamName());
+        } else if (match.getTeamAScore() < match.getTeamBScore()){
+            match.setWinner(match.getTeamB().getTeamName());
             existingTeamB.setWins(existingTeamB.getWins() + 1);
-            existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
-            existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
-
-            updateTeammatesThatLost(existingTeamA);
-            updateTeammatesThatWon(existingTeamB);
+            increaseTotalGamesPlayed(existingTeamA);
+            increaseTotalGamesPlayed(existingTeamB);
+            updateLosingTeammates(existingTeamA);
+            updateWinningTeammates(existingTeamB);
 
             teamService.save(existingTeamB);
             teamService.save(existingTeamA);
 
-        // case when its a draw
-        } else if (newMatch.getTeamAScore().equals(newMatch.getTeamBScore())){
-            newMatch.setWinner("draw");
-            existingTeamA.setTotalGamesPlayed(existingTeamA.getTotalGamesPlayed() + 1);
-            existingTeamB.setTotalGamesPlayed(existingTeamB.getTotalGamesPlayed() + 1);
-
-            updateTeammatesThatLost(existingTeamA);
-            updateTeammatesThatLost(existingTeamB);
+        } else if (match.getTeamAScore().equals(match.getTeamBScore())){
+            match.setWinner("draw");
+            increaseTotalGamesPlayed(existingTeamA);
+            increaseTotalGamesPlayed(existingTeamB);
+            updateLosingTeammates(existingTeamA);
+            updateLosingTeammates(existingTeamB);
 
             teamService.save(existingTeamB);
             teamService.save(existingTeamA);
         }
     }
 
-    public Matches createNewMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore){
+    public Matches createMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore){
+        log.debug("calling createMatchup method in MatchesServiceImpl");
+
         Team teamA = teamService.getByTeamname(teamOne);
         Team teamB = teamService.getByTeamname(teamTwo);
 
@@ -88,8 +90,33 @@ public class MatchesServiceImpl implements MatchesService {
         return matchesRepository.save(newMatch);
     }
 
-    public Matches save(Matches matches) {
-        return matchesRepository.save(matches);
+    public Matches save(MatchesRequestDTO matchDTO) {
+        Team teamA = teamService.getByTeamname(matchDTO.getTeamOne());
+        Team teamB = teamService.getByTeamname(matchDTO.getTeamTwo());
+
+        if (teamA == null || teamB == null){
+            log.debug("TeamA: {} or TeamB: {} not found!", teamA, teamB);
+
+            throw new ObjectNotFoundException(Team.class, "Team not found");
+        }
+
+        boolean teammateInBothTeams = teamA.getTeammates().stream()
+                .anyMatch(teamB.getTeammates()::contains);
+
+        if(teammateInBothTeams){
+            log.debug("Teammate can't be part of both teams in a single match!");
+            throw new ObjectAlreadyExistsException(Teammate.class, "Teammate can't be part of both teams in a single match");
+        }
+
+        Matches match = new Matches();
+        match.setTeamA(teamA);
+        match.setTeamB(teamB);
+        match.setTeamAScore(matchDTO.getTeamOneScore());
+        match.setTeamBScore(matchDTO.getTeamTwoScore());
+
+        matchOutcome(match, teamA, teamB);
+
+        return matchesRepository.save(match);
     }
 
     public Iterable<Matches> findAll(){
@@ -97,9 +124,11 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
     public Matches findMatchById(Long id) {
+        log.debug("calling findMatchById method in MatchesServiceImpl");
         Optional<Matches> match = matchesRepository.findById(id);
 
         if(match.isEmpty()){
+            log.debug("match doesnt exist with id: {}", id);
 
             throw new ObjectNotFoundException(Matches.class, id);
         }
@@ -117,7 +146,7 @@ public class MatchesServiceImpl implements MatchesService {
         matchesRepository.deleteById(id);
     }
 
-    private void updateTeammatesThatWon(Team team){
+    private void updateWinningTeammates(Team team){
 
         team.getTeammates().forEach(teammate->{
             teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
@@ -128,7 +157,7 @@ public class MatchesServiceImpl implements MatchesService {
         });
     }
 
-    private void updateTeammatesThatLost(Team team){
+    private void updateLosingTeammates(Team team){
         team.getTeammates().forEach(teammate->{
             teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
             double winsDecimal = teammate.getWins();
@@ -136,6 +165,10 @@ public class MatchesServiceImpl implements MatchesService {
             teammate.setWinRate(Precision.round(teammate.getWinRate(), 2));
             teammateService.initSave(teammate);
         });
+    }
+
+    private void increaseTotalGamesPlayed(Team team){
+        team.setTotalGamesPlayed(team.getTotalGamesPlayed() + 1);
     }
 
 }

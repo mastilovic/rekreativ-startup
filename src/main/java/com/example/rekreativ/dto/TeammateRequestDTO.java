@@ -1,6 +1,6 @@
-package com.example.rekreativ.forms;
+package com.example.rekreativ.dto;
 
-public class TeammateToTeamForm {
+public class TeammateRequestDTO {
     private String teamName;
     private String teamMate;
 
