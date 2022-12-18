@@ -27,11 +27,7 @@ public class InitDatabaseUtil {
     }
 
     @PostConstruct
-    public void dbseed(){
-        initRolesAndAdminUser();
-    }
-
-    public void initRolesAndAdminUser() {
+    public void initRoleAndUser() {
 
         if(!roleService.existsByName("ROLE_ADMIN")) {
             Role adminRole = new Role("ROLE_ADMIN");

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> login(@RequestBody LoginDTO user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
         // todo: figure out why authentication fails for hard coded users line 52
         authenticate(user.getUsername(), user.getPassword());  // line 52
         User loginUser = userService.findUserByUsername(user.getUsername());
