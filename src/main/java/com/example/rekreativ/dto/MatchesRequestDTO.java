@@ -1,6 +1,6 @@
-package com.example.rekreativ.forms;
+package com.example.rekreativ.dto;
 
-public class MatchesToMatchForm {
+public class MatchesRequestDTO {
     private String teamOne;
     private String teamTwo;
     private Integer teamOneScore;

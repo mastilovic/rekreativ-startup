@@ -2,7 +2,6 @@ package com.example.rekreativ.controller;
 
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/api/role/v1")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     //save
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")

@@ -1,6 +1,6 @@
 package com.example.rekreativ.service.impl;
 
-import com.example.rekreativ.auth.AuthUserDetails;
+import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             roleService.initSave(adminRole);
         }
 
-
         if(!roleService.existsByName("ROLE_USER")) {
             Role userRole = new Role("ROLE_USER");
             roleService.initSave(userRole);
@@ -65,12 +64,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         if(userRepository.findByUsername("admin").isEmpty()) {
             Role adminRole = roleService.findByName("ROLE_ADMIN");
+
             final String adminpass = "admin";
             User adminUser = new User(
                     null,
                     "admin",
                     passwordEncoder.encode(adminpass));
             adminUser.getRoles().add(adminRole);
+
             userRepository.save(adminUser);
         }
     }
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("Username '%s' was not found",username)));
 
-        return new AuthUserDetails(user);
+        return new AuthUser(user);
     }
 
     //need to validate email, roles etc
@@ -99,6 +100,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         if(userRepository.findByUsername(user.getUsername()).isPresent()){
 
+            log.debug("user already exists with username: {}", user.getUsername());
             throw new ObjectAlreadyExistsException(User.class, user.getUsername());
         }
 
@@ -126,8 +128,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.save(newUser);
     }
 
-
-    //--------------------------------------------------------------------
     public void deleteUserById(Long id) {
         User user = findUserById(id);
 
@@ -158,6 +158,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Optional<User> user = userRepository.findById(id);
 
         if(user.isEmpty()){
+
+            log.debug("User not found with id: {}", id);
             throw new ObjectNotFoundException(User.class, id);
         }
 
@@ -178,7 +180,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     public User findUserByUsername(String username){
         Optional<User> user = userRepository.findByUsername(username);
+
         if(user.isEmpty()){
+
+            log.debug("user not found with username: {}", username);
             throw new ObjectNotFoundException(User.class, username);
         }
 

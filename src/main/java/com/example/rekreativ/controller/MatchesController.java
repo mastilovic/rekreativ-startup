@@ -1,9 +1,7 @@
 package com.example.rekreativ.controller;
 
-import com.example.rekreativ.forms.MatchesToMatchForm;
+import com.example.rekreativ.dto.MatchesRequestDTO;
 import com.example.rekreativ.model.Matches;
-import com.example.rekreativ.model.Team;
-import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.service.MatchesService;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.impl.TeamServiceImpl;
@@ -22,44 +20,18 @@ import org.springframework.web.bind.annotation.*;
 public class MatchesController {
 
     private final MatchesService matchesService;
-    private final TeamService teamService;
 
-    public MatchesController(MatchesService matchesService,
-                             TeamServiceImpl teamService) {
+    public MatchesController(MatchesService matchesService) {
         this.matchesService = matchesService;
-        this.teamService = teamService;
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/create/matches", method = RequestMethod.POST)
-    public ResponseEntity<?> createNewMatch(@RequestBody MatchesToMatchForm match) {
-        Team existingTeamOne = teamService.getByTeamname(match.getTeamOne());
-        Team existingTeamTwo = teamService.getByTeamname(match.getTeamTwo());
+    public ResponseEntity<?> createNewMatch(@RequestBody MatchesRequestDTO match) {
 
-        if (existingTeamOne == null || existingTeamTwo == null){
+        Matches newMatch = matchesService.save(match);
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        for (Teammate t:existingTeamOne.getTeammates()){
-            if(existingTeamTwo.getTeammates().contains(t)){
-
-                return new ResponseEntity<Object>(
-                        "One player can't be part of both teams in a single match!",
-                        HttpStatus.BAD_REQUEST);
-            }
-        }
-        
-        Matches newMatch = new Matches();
-        newMatch.setTeamA(existingTeamOne);
-        newMatch.setTeamB(existingTeamTwo);
-        newMatch.setTeamAScore(match.getTeamOneScore());
-        newMatch.setTeamBScore(match.getTeamTwoScore());
-
-        matchesService.matchOutcome(newMatch, existingTeamOne, existingTeamTwo);
-        matchesService.save(newMatch);
-
-        return new ResponseEntity<Object>(newMatch, HttpStatus.CREATED);
+        return new ResponseEntity<>(newMatch, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

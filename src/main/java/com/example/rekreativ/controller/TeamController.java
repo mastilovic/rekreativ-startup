@@ -1,7 +1,7 @@
 package com.example.rekreativ.controller;
 
 
-import com.example.rekreativ.forms.TeammateToTeamForm;
+import com.example.rekreativ.dto.TeammateRequestDTO;
 import com.example.rekreativ.model.Team;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.service.TeamService;
@@ -20,12 +20,9 @@ import javax.xml.bind.ValidationException;
 public class TeamController {
 
     private final TeamService teamService;
-    private final TeammateService teammateService;
 
-    public TeamController(TeamService teamService,
-                          TeammateService teammateService) {
+    public TeamController(TeamService teamService) {
         this.teamService = teamService;
-        this.teammateService = teammateService;
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
@@ -52,32 +49,25 @@ public class TeamController {
         existingTeam.setWins(team.getWins());
         teamService.save(existingTeam);
 
-        return new ResponseEntity<Object>(HttpStatus.CREATED);
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
-
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/add/teammate", method = RequestMethod.POST)
-    public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateToTeamForm form) throws ValidationException {
-        teamService.addTeammateToTeam(form.getTeamName(), form.getTeamMate());
+    public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateRequestDTO teammateDTO) throws ValidationException {
+        Team team = teamService.addTeammateToTeam(teammateDTO.getTeamName(), teammateDTO.getTeamMate());
 
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/delete/teammate/{teamname}/{teammate}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteTeammateFromTeam(@PathVariable("teamname") String teamname,
                                                     @PathVariable("teammate") String teammate) {
-        Team existingTeam = teamService.getByTeamname(teamname);
-        Teammate existingTeammate = teammateService.findTeammateByName(teammate);
-        if (existingTeam == null) {
 
-            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-        }
-        existingTeam.getTeammates().remove(existingTeammate);
-        teamService.save(existingTeam);
+        Team team = teamService.deleteTeammateFromTeam(teamname, teammate);
 
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
@@ -100,9 +90,9 @@ public class TeamController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-        Iterable<Team> obj = teamService.findAll();
+        Iterable<Team> teams = teamService.findAll();
 
-        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+        return new ResponseEntity<Object>(teams, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
