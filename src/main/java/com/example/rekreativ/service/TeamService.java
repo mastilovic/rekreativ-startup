@@ -5,28 +5,27 @@ import com.example.rekreativ.model.Team;
 import com.example.rekreativ.model.Teammate;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.ValidationException;
 import java.util.List;
 
 public interface TeamService {
 
-    public Iterable<Team> findAll();
+    Iterable<Team> findAll();
 
-    public Team findTeamById(Long id);
+    Team findTeamById(Long id);
 
-    public Team getByTeamname(String teamName);
+    Team getByTeamname(String teamName);
 
-    public void delete(Long id);
+    void delete(Long id);
 
-    public Team saveTeamWithUsername(Team team, HttpServletRequest request);
+    Team saveTeamWithUsername(Team team, HttpServletRequest request);
 
-    public Team save(Team team);
+    Team save(Team team);
 
-    public List<Teammate> findTeammatesInTeam(String teamName);
+    List<Teammate> findTeammatesInTeam(String teamName);
 
-    public Team addTeammateToTeam(String teamname, String teammateName) throws ValidationException;
+    Team addTeammateToTeam(String teamname, String teammateName);
 
-    public Team getTeamScore(Team team);
+    Team getTeamScore(Team team);
 
     public void decreaseGamesPlayedByOne(Matches existingMatch);
 

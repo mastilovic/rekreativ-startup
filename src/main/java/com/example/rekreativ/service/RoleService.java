@@ -4,9 +4,9 @@ import com.example.rekreativ.model.Role;
 
 public interface RoleService {
 
-    public Role findByName(String name);
-    public Role save(Role role);
-    public Role initSave(Role role);
-    public boolean existsByName(String name);
-    public Iterable<Role> findAll();
+    Role findByName(String name);
+    Role save(Role role);
+    Role initSave(Role role);
+    boolean existsByName(String name);
+    Iterable<Role> findAll();
 }

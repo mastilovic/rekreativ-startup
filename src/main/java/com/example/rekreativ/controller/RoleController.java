@@ -24,7 +24,7 @@ public class RoleController {
 
     //save
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    @RequestMapping(path = "/save", method = RequestMethod.POST)
+    @RequestMapping(path = "/save", method = RequestMethod.POST) //todo: change mappings
     public ResponseEntity<?> saveRole(@RequestBody Role role) {
         Role newRole = roleService.save(role);
 

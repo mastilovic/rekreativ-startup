@@ -4,6 +4,8 @@ package com.example.rekreativ.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,6 +17,7 @@ public class Team {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "Team name can't be empty!")
     private String teamName;
 
     @JsonIgnoreProperties(value = {"team"})
@@ -24,10 +27,13 @@ public class Team {
         inverseJoinColumns = { @JoinColumn (name = "teammate_id")})
     private Collection<Teammate> teammates = new ArrayList<>();
 
+    @NotBlank(message = "City can't be empty!")
     private String city;
 
+    @NotNull
     private Integer wins;
 
+    @NotNull
     private Integer totalGamesPlayed;
 
     public Team(){

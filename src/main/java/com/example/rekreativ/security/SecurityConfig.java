@@ -21,6 +21,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -78,10 +79,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(Arrays.asList("*"));
-        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
         config.addExposedHeader("token");
-        config.setAllowedMethods(Arrays.asList("*"));
+        config.setAllowedMethods(List.of("*"));
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);

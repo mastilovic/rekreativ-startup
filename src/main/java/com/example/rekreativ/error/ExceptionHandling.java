@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ValidationException;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -35,9 +35,9 @@ public class ExceptionHandling {
     }
 
     @ResponseBody
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<HttpResponse> validationException(ValidationException e, HttpServletRequest request){
+    public ResponseEntity<HttpResponse> validationException(ConstraintViolationException e, HttpServletRequest request){
         HttpStatus notFound = HttpStatus.BAD_REQUEST;
 
         return createHttpResponse(notFound, e.getMessage(), request.getRequestURI());

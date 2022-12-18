@@ -9,8 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.bind.ValidationException;
-
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -27,7 +25,7 @@ public class TeammateController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody Teammate teammate) throws ValidationException {
+    public ResponseEntity<?> register(@RequestBody Teammate teammate) {
         Teammate newTeammate = teammateService.save(teammate);
 
         return new ResponseEntity<Object>(newTeammate, HttpStatus.CREATED);

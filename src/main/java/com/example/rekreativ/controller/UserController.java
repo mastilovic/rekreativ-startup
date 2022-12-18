@@ -2,9 +2,9 @@ package com.example.rekreativ.controller;
 
 
 import com.example.rekreativ.auth.AuthUser;
+import com.example.rekreativ.dto.LoginDTO;
 import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.model.User;
-import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.service.UserService;
 import com.example.rekreativ.util.JwtUtil;
 import org.modelmapper.ModelMapper;
@@ -18,8 +18,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -32,24 +30,22 @@ public class UserController {
     private static final Logger LOGGER = Logger.getLogger( UserController.class.getName() );
 
     private final UserService userService;
-    private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
     @Autowired
     public UserController(UserService userService,
-                          RoleRepository roleRepository,
                           AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil) {
         this.userService = userService;
-        this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> login(@RequestBody User user) {
-        authenticate(user.getUsername(), user.getPassword());
+    public ResponseEntity<?> login(@RequestBody LoginDTO user) {
+        // todo: figure out why authentication fails for hard coded users line 52
+        authenticate(user.getUsername(), user.getPassword());  // line 52
         User loginUser = userService.findUserByUsername(user.getUsername());
         AuthUser authUser = new AuthUser(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(authUser);
@@ -67,30 +63,15 @@ public class UserController {
         return headers;
     }
 
-    private void authenticate(String email, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+    private void authenticate(String username, String password) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @RequestMapping(path = "/add/role/to/user", method = RequestMethod.POST)
     public ResponseEntity<?> addRoleToUser(@RequestParam(value = "username", required = false) String username,
                                            @RequestParam(value = "roles", required = false) String roles) {
-        if (roleRepository.findByName(roles).isEmpty()){
-            return new ResponseEntity<Object>("Role doesn't exist!", HttpStatus.BAD_REQUEST);
-        }
 
-        User user = userService.findUserByUsername(username);
-        List<String> userRoles = new ArrayList<>();
-
-        //todo: create new method that checks if user has provided role
-        user.getRoles().forEach(role -> {
-            userRoles.add(role.getName());
-        });
-
-        if (userRoles.contains(roles)) {
-            // log.error("User already has that role!");
-            return new ResponseEntity<Object>("User already has that role!", HttpStatus.BAD_REQUEST);
-        }
         userService.addRoleToUser(username, roles);
 
         return new ResponseEntity<Object>("Role successfully added to user!", OK);

@@ -32,11 +32,8 @@ import java.util.stream.StreamSupport;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
-
     private final RoleService roleService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final ValidatorUtil validatorUtil;
 
     public UserServiceImpl(UserRepository userRepository,
@@ -49,32 +46,32 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         this.validatorUtil = validatorUtil;
     }
 
-    @PostConstruct
-    public void initRoleAndUser() {
-
-        if(!roleService.existsByName("ROLE_ADMIN")) {
-            Role adminRole = new Role("ROLE_ADMIN");
-            roleService.initSave(adminRole);
-        }
-
-        if(!roleService.existsByName("ROLE_USER")) {
-            Role userRole = new Role("ROLE_USER");
-            roleService.initSave(userRole);
-        }
-
-        if(userRepository.findByUsername("admin").isEmpty()) {
-            Role adminRole = roleService.findByName("ROLE_ADMIN");
-
-            final String adminpass = "admin";
-            User adminUser = new User(
-                    null,
-                    "admin",
-                    passwordEncoder.encode(adminpass));
-            adminUser.getRoles().add(adminRole);
-
-            userRepository.save(adminUser);
-        }
-    }
+//    @PostConstruct
+//    public void initRoleAndUser() {
+//
+//        if(!roleService.existsByName("ROLE_ADMIN")) {
+//            Role adminRole = new Role("ROLE_ADMIN");
+//            roleService.initSave(adminRole);
+//        }
+//
+//        if(!roleService.existsByName("ROLE_USER")) {
+//            Role userRole = new Role("ROLE_USER");
+//            roleService.initSave(userRole);
+//        }
+//
+//        if(userRepository.findByUsername("admin").isEmpty()) {
+//            Role adminRole = roleService.findByName("ROLE_ADMIN");
+//
+//            final String adminpass = "admin";
+//            User adminUser = new User(
+//                    null,
+//                    "admin",
+//                    passwordEncoder.encode(adminpass));
+//            adminUser.getRoles().add(adminRole);
+//
+//            userRepository.save(adminUser);
+//        }
+//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -87,7 +84,28 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     //need to validate email, roles etc
     public void addRoleToUser(String username, String roles){
+
+        if (!roleService.existsByName(roles)){
+
+            throw new ObjectNotFoundException(Role.class, roles);
+        }
+
         User user = findUserByUsername(username);
+//        List<String> userRoles = new ArrayList<>();
+//
+//        //todo: create new method that checks if user has provided role
+//        user.getRoles().forEach(role -> {
+//            userRoles.add(role.getName());
+//        });
+
+        boolean userContainsRole = user.getRoles().stream()
+                .map(Role::getName)
+                .noneMatch(r-> r.equals(roles));
+
+        if (userContainsRole) {
+            // log.error("User already has that role!");
+            throw new ObjectAlreadyExistsException(Role.class, "User already has that role!");
+        }
 
         Role role = roleService.findByName(roles);
         user.getRoles().add(role);
@@ -105,13 +123,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         Role role = roleService.findByName("ROLE_USER");
+        Role roleAdmin = roleService.findByName("ROLE_ADMIN");
 
         User newUser = new User();
         newUser.getRoles().add(role);
+        newUser.getRoles().add(roleAdmin);
         newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        validatorUtil.userValidator(newUser);
+        validatorUtil.validate(newUser);
 
         return userRepository.save(newUser);
     }

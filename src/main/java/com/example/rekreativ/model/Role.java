@@ -1,6 +1,7 @@
 package com.example.rekreativ.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Name can't be empty!")
     private String name;
 
     @ManyToMany(mappedBy="roles")

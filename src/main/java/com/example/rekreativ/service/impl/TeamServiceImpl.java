@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,8 +82,9 @@ public class TeamServiceImpl implements TeamService {
         DecodedJWT decodedJWT = jwtUtil.decodedToken(token);
         String username = decodedJWT.getSubject();
 
-        User newUser = new User();
-        newUser.setUsername(username);
+        User user = new User();
+        user.setUsername(username);
+        validatorUtil.validate(user);
 
         return teamRepository.save(team);
     }
@@ -96,7 +96,7 @@ public class TeamServiceImpl implements TeamService {
         newTeam.setCity(team.getCity());
         newTeam.setWins(0);
         newTeam.setTotalGamesPlayed(0);
-        validatorUtil.teamValidator(newTeam);
+        validatorUtil.validate(newTeam);
 
         return teamRepository.save(team);
     }
@@ -112,7 +112,7 @@ public class TeamServiceImpl implements TeamService {
         return team.getTeammates().stream().collect(Collectors.toList());
     }
 
-    public Team addTeammateToTeam(String teamname, String teammateName) throws ValidationException {
+    public Team addTeammateToTeam(String teamname, String teammateName) {
         Team existingTeam = getByTeamname(teamname);
         Teammate teammate = teammateService.findTeammateByName(teammateName);
 
@@ -132,6 +132,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public void decreaseGamesPlayedByOne(Matches existingMatch){
+
         Team teamA = getByTeamname(existingMatch.getTeamA().getTeamName());
         Team teamB = getByTeamname(existingMatch.getTeamB().getTeamName());
 
@@ -166,6 +167,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public Integer getScoresFromTeammates(String teamName) {
+
         Team team = getByTeamname(teamName);
         ArrayList<Integer> teamScoreList = new ArrayList<Integer>();
 
@@ -181,7 +183,8 @@ public class TeamServiceImpl implements TeamService {
         return teamScore;
     }
 
-    private Teammate teammateCreation(String teammateName) throws ValidationException {
+    private Teammate teammateCreation(String teammateName) {
+
         Teammate newTeammate = new Teammate();
         newTeammate.setName(teammateName);
         newTeammate.setTotalGamesPlayed(0);

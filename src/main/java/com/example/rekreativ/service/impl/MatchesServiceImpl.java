@@ -10,6 +10,7 @@ import com.example.rekreativ.repository.MatchesRepository;
 import com.example.rekreativ.service.MatchesService;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.TeammateService;
+import com.example.rekreativ.util.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,19 @@ public class MatchesServiceImpl implements MatchesService {
     private final MatchesRepository matchesRepository;
     private final TeammateService teammateService;
     private final TeamService teamService;
+    private final ValidatorUtil validatorUtil;
 
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
     @Autowired
     public MatchesServiceImpl(MatchesRepository matchesRepository,
                               TeammateServiceImpl teammateServiceImpl,
-                              TeamServiceImpl teamService) {
+                              TeamServiceImpl teamService,
+                              ValidatorUtil validatorUtil) {
         this.matchesRepository = matchesRepository;
         this.teammateService = teammateServiceImpl;
         this.teamService = teamService;
+        this.validatorUtil = validatorUtil;
     }
 
 
@@ -81,13 +85,15 @@ public class MatchesServiceImpl implements MatchesService {
         Team teamA = teamService.getByTeamname(teamOne);
         Team teamB = teamService.getByTeamname(teamTwo);
 
-        Matches newMatch = new Matches();
-        newMatch.setTeamA(teamA);
-        newMatch.setTeamB(teamB);
-        newMatch.setTeamAScore(teamOneScore);
-        newMatch.setTeamBScore(teamTwoScore);
+        Matches match = new Matches();
+        match.setTeamA(teamA);
+        match.setTeamB(teamB);
+        match.setTeamAScore(teamOneScore);
+        match.setTeamBScore(teamTwoScore);
 
-        return matchesRepository.save(newMatch);
+        validatorUtil.validate(match);
+
+        return matchesRepository.save(match);
     }
 
     public Matches save(MatchesRequestDTO matchDTO) {
@@ -105,6 +111,7 @@ public class MatchesServiceImpl implements MatchesService {
 
         if(teammateInBothTeams){
             log.debug("Teammate can't be part of both teams in a single match!");
+
             throw new ObjectAlreadyExistsException(Teammate.class, "Teammate can't be part of both teams in a single match");
         }
 

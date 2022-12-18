@@ -9,30 +9,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService {
 
-    public void initRoleAndUser();
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+    void addRoleToUser(String username, String roles);
 
-    public void addRoleToUser(String username, String roles);
+    User saveUser(User user);
 
-    public User saveUser(User user);
+    User initSave(User user);
 
-    public User initSave(User user);
+    void deleteUserById(Long id);
 
-    public void deleteUserById(Long id);
+    void delete(User User);
 
-    public void delete(User User);
+    Iterable<UserDTO> findAll();
 
-    public Iterable<UserDTO> findAll();
+    Page<User> findAllPageable(Pageable pageable);
 
-    public Page<User> findAllPageable(Pageable pageable);
+    User findUserById(Long id);
 
-    public User findUserById(Long id);
+    boolean existsById(Long id);
 
-    public boolean existsById(Long id);
+    boolean existsByUsername(String username);
 
-    public boolean existsByUsername(String username);
-
-    public User findUserByUsername(String username);
+    User findUserByUsername(String username);
 
 }
