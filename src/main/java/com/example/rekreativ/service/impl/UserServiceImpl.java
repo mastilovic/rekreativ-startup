@@ -32,11 +32,8 @@ import java.util.stream.StreamSupport;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
-
     private final RoleService roleService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final ValidatorUtil validatorUtil;
 
     public UserServiceImpl(UserRepository userRepository,
@@ -58,7 +55,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new AuthUser(user);
     }
 
-    //need to validate email, roles etc
     public void addRoleToUser(String username, String roles){
 
         if (!roleService.existsByName(roles)){
@@ -70,7 +66,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         boolean userContainsRole = user.getRoles().stream()
                 .map(Role::getName)
-                .noneMatch(r-> r.equals(roles));
+                .anyMatch(r-> r.equals(roles));
 
         if (userContainsRole) {
             log.debug("User already has {} role!", roles);
@@ -80,10 +76,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         Role role = roleService.findByName(roles);
         user.getRoles().add(role);
-//		log.info("Adding role {} to the user {}", roles, email);
     }
 
-    //--------------------Save User with default User role--------------------
     public User saveUser(User user) {
         log.info("Saving new user {} to the database", user.getUsername());
 

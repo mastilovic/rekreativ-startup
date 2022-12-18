@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,14 +41,14 @@ public class TeamServiceImpl implements TeamService {
         this.validatorUtil = validatorUtil;
     }
 
-    public Iterable<Team> findAll(){
+    public Iterable<Team> findAll() {
         return teamRepository.findAll();
     }
 
-    public Team findTeamById(Long id){
+    public Team findTeamById(Long id) {
         Optional<Team> team = teamRepository.findById(id);
 
-        if(team.isEmpty()){
+        if (team.isEmpty()) {
             log.debug("Team with id: {} doesnt exist!", id);
 
             throw new ObjectNotFoundException(Team.class, id);
@@ -58,12 +57,12 @@ public class TeamServiceImpl implements TeamService {
         return team.get();
     }
 
-    public Team getByTeamname(String teamName){
+    public Team getByTeamname(String teamName) {
         log.debug("calling getByTeamname method in TeamServiceImpl");
 
         Optional<Team> team = teamRepository.findByTeamName(teamName);
 
-        if(team.isEmpty()){
+        if (team.isEmpty()) {
             log.debug("Team not found with name: {}", teamName);
 
             throw new ObjectNotFoundException(Team.class, teamName);
@@ -76,7 +75,7 @@ public class TeamServiceImpl implements TeamService {
         teamRepository.deleteById(id);
     }
 
-    public Team saveTeamWithUsername(Team team, HttpServletRequest request){
+    public Team saveTeamWithUsername(Team team, HttpServletRequest request) {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String token = authorizationHeader.substring("Bearer ".length());
         DecodedJWT decodedJWT = jwtUtil.decodedToken(token);
@@ -101,12 +100,12 @@ public class TeamServiceImpl implements TeamService {
         return teamRepository.save(team);
     }
 
-    public void initSave(Team team){
+    public void initSave(Team team) {
 
         teamRepository.save(team);
     }
 
-    public List<Teammate> findTeammatesInTeam(String teamName){
+    public List<Teammate> findTeammatesInTeam(String teamName) {
         Team team = getByTeamname(teamName);
 
         return team.getTeammates().stream().collect(Collectors.toList());
@@ -126,12 +125,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
 
-
-    public Team getTeamScore(Team team){
+    public Team getTeamScore(Team team) {
         return null;
     }
 
-    public void decreaseGamesPlayedByOne(Matches existingMatch){
+    public void decreaseGamesPlayedByOne(Matches existingMatch) {
 
         Team teamA = getByTeamname(existingMatch.getTeamA().getTeamName());
         Team teamB = getByTeamname(existingMatch.getTeamB().getTeamName());
@@ -139,11 +137,11 @@ public class TeamServiceImpl implements TeamService {
         teamA.setTotalGamesPlayed(teamA.getTotalGamesPlayed() - 1);
         teamB.setTotalGamesPlayed(teamB.getTotalGamesPlayed() - 1);
 
-        if (existingMatch.getWinner().equals(teamA.getTeamName())){
+        if (existingMatch.getWinner().equals(teamA.getTeamName())) {
 
             teamA.setWins(teamA.getWins() - 1);
 
-        } else if(existingMatch.getWinner().equals(teamB.getTeamName())){
+        } else if (existingMatch.getWinner().equals(teamB.getTeamName())) {
 
             teamB.setWins(teamB.getWins() - 1);
         }
@@ -169,15 +167,15 @@ public class TeamServiceImpl implements TeamService {
     public Integer getScoresFromTeammates(String teamName) {
 
         Team team = getByTeamname(teamName);
-        ArrayList<Integer> teamScoreList = new ArrayList<Integer>();
 
-        team.getTeammates().forEach(teammate ->
-                teamScoreList.add(teammate.getTotalGamesPlayed()));
+        List<Integer> teamScoreList = team.getTeammates().stream()
+                .map(Teammate::getTotalGamesPlayed)
+                .collect(Collectors.toList());
 
         Integer teamScore = 0;
 
-        for(int i = 0; i < teamScoreList.size();i++){
-            teamScore+=teamScoreList.get(i);
+        for (int i = 0; i < teamScoreList.size(); i++) {
+            teamScore += teamScoreList.get(i);
         }
 
         return teamScore;

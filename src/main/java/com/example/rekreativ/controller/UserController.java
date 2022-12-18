@@ -45,8 +45,7 @@ public class UserController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody User user) {
-        // todo: figure out why authentication fails for hard coded users line 52
-        authenticate(user.getUsername(), user.getPassword());  // line 52
+        authenticate(user.getUsername(), user.getPassword());
         User loginUser = userService.findUserByUsername(user.getUsername());
         AuthUser authUser = new AuthUser(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(authUser);
@@ -55,17 +54,6 @@ public class UserController {
         UserDTO userDto = modelMapper.map(loginUser, UserDTO.class);
 
         return new ResponseEntity<>(userDto, jwtHeader, OK);
-    }
-
-    private HttpHeaders getJwtHeader(AuthUser user) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("token", jwtUtil.generateJwtToken(user));
-
-        return headers;
-    }
-
-    private void authenticate(String username, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
@@ -127,5 +115,16 @@ public class UserController {
         userService.deleteUserById(id);
 
         return new ResponseEntity<Object>("User deleted successfully!", HttpStatus.OK);
+    }
+
+    private HttpHeaders getJwtHeader(AuthUser user) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("token", jwtUtil.generateJwtToken(user));
+
+        return headers;
+    }
+
+    private void authenticate(String username, String password) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 }

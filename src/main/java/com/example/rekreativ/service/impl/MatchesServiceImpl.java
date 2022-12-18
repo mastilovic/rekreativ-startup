@@ -43,42 +43,6 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
 
-    public void matchOutcome(Matches match, Team existingTeamA, Team existingTeamB){
-        log.debug("calling method matchOutcome in MatchesServiceImpl");
-        if (match.getTeamAScore() > match.getTeamBScore()) {
-            match.setWinner(match.getTeamA().getTeamName());
-            existingTeamA.setWins(existingTeamA.getWins() + 1);
-            increaseTotalGamesPlayed(existingTeamA);
-            increaseTotalGamesPlayed(existingTeamB);
-            updateLosingTeammates(existingTeamB);
-            updateWinningTeammates(existingTeamA);
-
-            teamService.save(existingTeamB);
-            teamService.save(existingTeamA);
-
-        } else if (match.getTeamAScore() < match.getTeamBScore()){
-            match.setWinner(match.getTeamB().getTeamName());
-            existingTeamB.setWins(existingTeamB.getWins() + 1);
-            increaseTotalGamesPlayed(existingTeamA);
-            increaseTotalGamesPlayed(existingTeamB);
-            updateLosingTeammates(existingTeamA);
-            updateWinningTeammates(existingTeamB);
-
-            teamService.save(existingTeamB);
-            teamService.save(existingTeamA);
-
-        } else if (match.getTeamAScore().equals(match.getTeamBScore())){
-            match.setWinner("draw");
-            increaseTotalGamesPlayed(existingTeamA);
-            increaseTotalGamesPlayed(existingTeamB);
-            updateLosingTeammates(existingTeamA);
-            updateLosingTeammates(existingTeamB);
-
-            teamService.save(existingTeamB);
-            teamService.save(existingTeamA);
-        }
-    }
-
     public Matches createMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore){
         log.debug("calling createMatchup method in MatchesServiceImpl");
 
@@ -126,6 +90,48 @@ public class MatchesServiceImpl implements MatchesService {
         return matchesRepository.save(match);
     }
 
+    public void matchOutcome(Matches match, Team existingTeamA, Team existingTeamB){
+        log.debug("calling method matchOutcome in MatchesServiceImpl");
+        if (match.getTeamAScore() > match.getTeamBScore()) {
+            match.setWinner(match.getTeamA().getTeamName());
+            existingTeamA.setWins(existingTeamA.getWins() + 1);
+
+            increaseTotalGamesPlayed(existingTeamA);
+            increaseTotalGamesPlayed(existingTeamB);
+
+            updateWinningTeammates(existingTeamA);
+            updateLosingTeammates(existingTeamB);
+
+            teamService.save(existingTeamB);
+            teamService.save(existingTeamA);
+
+        } else if (match.getTeamAScore() < match.getTeamBScore()){
+            match.setWinner(match.getTeamB().getTeamName());
+            existingTeamB.setWins(existingTeamB.getWins() + 1);
+
+            increaseTotalGamesPlayed(existingTeamA);
+            increaseTotalGamesPlayed(existingTeamB);
+
+            updateLosingTeammates(existingTeamA);
+            updateWinningTeammates(existingTeamB);
+
+            teamService.save(existingTeamB);
+            teamService.save(existingTeamA);
+
+        } else if (match.getTeamAScore().equals(match.getTeamBScore())){
+            match.setWinner("draw");
+
+            increaseTotalGamesPlayed(existingTeamA);
+            increaseTotalGamesPlayed(existingTeamB);
+
+            updateLosingTeammates(existingTeamA);
+            updateLosingTeammates(existingTeamB);
+
+            teamService.save(existingTeamB);
+            teamService.save(existingTeamA);
+        }
+    }
+
     public Iterable<Matches> findAll(){
         return matchesRepository.findAll();
     }
@@ -165,6 +171,7 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
     private void updateLosingTeammates(Team team){
+
         team.getTeammates().forEach(teammate->{
             teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
             double winsDecimal = teammate.getWins();
