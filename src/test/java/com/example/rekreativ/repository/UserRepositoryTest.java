@@ -1,79 +1,75 @@
 package com.example.rekreativ.repository;
 
 import com.example.rekreativ.model.User;
+import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataJpaTest
+@SpringBootTest
+@Testcontainers
 class UserRepositoryTest {
 
     @Autowired
     private UserRepository underTest;
 
+    @Container
+    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7")
+            .withDatabaseName("testdb")
+            .withUsername("root")
+            .withPassword("root");
+
+    @DynamicPropertySource
+    public static void mysqlProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.uri", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
+    }
 
     @AfterEach
     void tearDown() {
         underTest.deleteAll();
     }
 
+    User userOne, emptyUser;
+
     @BeforeEach
     void setUp() {
+        userOne = new User(null,
+                "testUsername",
+                "testPassword");
 
+        emptyUser = new User(null,
+                " ",
+                " ");
+
+        underTest.save(userOne);
+    }
+
+    @AfterEach
+    void clearDb(){
+        underTest.deleteAll();
     }
 
     @Test
     void itShouldFindUserByUsername() {
-        // give
-        User testUser = new User(null,
-                "testUsername",
-                "testPassword");
-        underTest.save(testUser);
-        // when
-        Optional<User> testFindUserByUsername = underTest.findByUsername(testUser.getUsername());
-        // then
-        assertThat(testFindUserByUsername).isPresent();
+        Optional<User> user = underTest.findByUsername(userOne.getUsername());
 
-    }
+        assertThat(user).isPresent();
 
-    @Test
-    void checkIfUserCanBeCreatedNullObject(){
-        // givem
-
-        // passing null as id because GeneratedValue
-        // would auto generate new id
-        User nullUser = new User(null,
-                null,
-                null);
-
-        // when
-        Optional<User> existingNullUser = underTest.findByUsername(nullUser.getUsername());
-
-        // then
-        assertThat(existingNullUser).isEmpty();
-    }
-
-    @Test
-    void checkIfUserCanBeCreatedAsEmptyObject(){
-
-        // given
-
-        // passing null as id because GeneratedValue
-        // will auto generate new id
-        User emptyUser = new User (null,
-                " ",
-                " ");
-
-        // when
-        Optional<User> existingEmptyUser = underTest.findByUsername(emptyUser.getUsername());
-
-        // then
-        assertThat(existingEmptyUser).isEmpty();
     }
 }

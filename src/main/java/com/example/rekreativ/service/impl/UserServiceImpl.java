@@ -55,26 +55,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new AuthUser(user);
     }
 
-    public void addRoleToUser(String username, String roles){
-
-        if (!roleService.existsByName(roles)){
-
-            throw new ObjectNotFoundException(Role.class, roles);
-        }
+    public void addRoleToUser(String username, String roleName){
 
         User user = findUserByUsername(username);
+        Role role = roleService.findByName(roleName);
 
         boolean userContainsRole = user.getRoles().stream()
                 .map(Role::getName)
-                .anyMatch(r-> r.equals(roles));
+                .anyMatch(r-> r.equals(roleName));
 
         if (userContainsRole) {
-            log.debug("User already has {} role!", roles);
+            log.debug("User already has {} role!", roleName);
 
-            throw new ObjectAlreadyExistsException(Role.class, "User already has that role!");
+            throw new ObjectAlreadyExistsException(Role.class, "User already has role: " + roleName);
         }
 
-        Role role = roleService.findByName(roles);
         user.getRoles().add(role);
     }
 
