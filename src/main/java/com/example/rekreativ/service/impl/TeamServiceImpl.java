@@ -1,6 +1,7 @@
 package com.example.rekreativ.service.impl;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.model.Team;
@@ -34,7 +35,8 @@ public class TeamServiceImpl implements TeamService {
     @Autowired
     public TeamServiceImpl(JwtUtil jwtUtil,
                            TeamRepository teamRepository,
-                           TeammateService teammateService, ValidatorUtil validatorUtil) {
+                           TeammateService teammateService,
+                           ValidatorUtil validatorUtil) {
         this.jwtUtil = jwtUtil;
         this.teamRepository = teamRepository;
         this.teammateService = teammateService;
@@ -72,7 +74,9 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public void delete(Long id) {
-        teamRepository.deleteById(id);
+        Team team = findTeamById(id);
+
+        teamRepository.deleteById(team.getId());
     }
 
     public Team saveTeamWithUsername(Team team, HttpServletRequest request) {
@@ -89,6 +93,14 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public Team save(Team team) {
+        log.info("inside save method in TeamServiceImpl");
+        Optional<Team> optionalTeam = teamRepository.findByTeamName(team.getTeamName());
+
+        if(optionalTeam.isPresent()) {
+            log.error("Team already exists with name: " + team.getTeamName());
+
+            throw new ObjectAlreadyExistsException(Team.class, team.getTeamName());
+        }
 
         Team newTeam = new Team();
         newTeam.setTeamName(team.getTeamName());
@@ -120,8 +132,7 @@ public class TeamServiceImpl implements TeamService {
 //                : oTeammate.get();
 
         existingTeam.getTeammates().add(teammate);
-
-        return save(existingTeam);
+        return teamRepository.save(existingTeam);
     }
 
 

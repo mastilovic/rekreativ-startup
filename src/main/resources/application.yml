@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/rekreativdb
+    url: jdbc:mysql://localhost:3309/rekreativdb
     username: root
     password: root
   jpa:

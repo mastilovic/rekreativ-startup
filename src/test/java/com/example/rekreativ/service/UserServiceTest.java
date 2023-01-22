@@ -48,7 +48,7 @@ class UserServiceTest {
     private ArgumentCaptor<User> userArgumentCaptor;
 
     User userOne, emptyUser;
-    Role userRole, adminRole;
+    Role roleUser, roleAdmin;
     AuthUser authUser;
 
     @BeforeEach
@@ -63,8 +63,8 @@ class UserServiceTest {
 
         authUser = new AuthUser(userOne);
 
-        userRole = new Role("ROLE_USER");
-        adminRole = new Role("ROLE_ADMIN");
+        roleUser = new Role("ROLE_USER");
+        roleAdmin = new Role("ROLE_ADMIN");
 
     }
 
@@ -117,23 +117,23 @@ class UserServiceTest {
     void should_addRoleToUser() {
         when(userRepository.findByUsername(userOne.getUsername()))
                 .thenReturn(Optional.of(userOne));
-        when(roleService.findByName(userRole.getName()))
-                .thenReturn(userRole);
+        when(roleService.findByName(roleUser.getName()))
+                .thenReturn(roleUser);
 
-        underTest.addRoleToUser(userOne.getUsername(), userRole.getName());
+        underTest.addRoleToUser(userOne.getUsername(), roleUser.getName());
 
-        assertThat(userOne.getRoles()).contains(userRole);
+        assertThat(userOne.getRoles()).contains(roleUser);
     }
 
     @Test
     void should_ThrowIfUserAlreadyHasThatRole() {
         when(userRepository.findByUsername(userOne.getUsername()))
                 .thenReturn(Optional.of(userOne));
-        when(roleService.findByName(userRole.getName()))
-                .thenReturn(userRole);
+        when(roleService.findByName(roleUser.getName()))
+                .thenReturn(roleUser);
 
-        userOne.getRoles().add(userRole);
-        assertThatThrownBy(() ->  underTest.addRoleToUser(userOne.getUsername(), userRole.getName()))
+        userOne.getRoles().add(roleUser);
+        assertThatThrownBy(() ->  underTest.addRoleToUser(userOne.getUsername(), roleUser.getName()))
                 .isInstanceOf(ObjectAlreadyExistsException.class);
     }
 
