@@ -3,8 +3,6 @@ package com.example.rekreativ.controller;
 import com.example.rekreativ.dto.MatchesRequestDTO;
 import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.service.MatchesService;
-import com.example.rekreativ.service.TeamService;
-import com.example.rekreativ.service.impl.TeamServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,9 +35,9 @@ public class MatchesController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-        Iterable<Matches> obj = matchesService.findAll();
+        Iterable<Matches> matches = matchesService.findAll();
 
-        return new ResponseEntity<Object>(obj, HttpStatus.OK);
+        return new ResponseEntity<Object>(matches, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

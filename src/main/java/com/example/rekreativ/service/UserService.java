@@ -4,35 +4,29 @@ import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService {
 
-    public void initRoleAndUser();
+    void addRoleToUser(String username, String roles);
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+    User saveUser(User user);
 
-    public void addRoleToUser(String username, String roles);
+    User initSave(User user);
 
-    public User saveUser(User user);
+    void deleteUserById(Long id);
 
-    public User initSave(User user);
+    void delete(User User);
 
-    public void deleteUserById(Long id);
+    Iterable<UserDTO> findAll();
 
-    public void delete(User User);
+    Page<User> findAllPageable(Pageable pageable);
 
-    public Iterable<UserDTO> findAll();
+    User findUserById(Long id);
 
-    public Page<User> findAllPageable(Pageable pageable);
+    boolean existsById(Long id);
 
-    public User findUserById(Long id);
+    boolean existsByUsername(String username);
 
-    public boolean existsById(Long id);
-
-    public boolean existsByUsername(String username);
-
-    public User findUserByUsername(String username);
+    User findUserByUsername(String username);
 
 }

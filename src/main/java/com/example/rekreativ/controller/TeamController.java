@@ -3,16 +3,12 @@ package com.example.rekreativ.controller;
 
 import com.example.rekreativ.dto.TeammateRequestDTO;
 import com.example.rekreativ.model.Team;
-import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.service.TeamService;
-import com.example.rekreativ.service.TeammateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.bind.ValidationException;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -54,7 +50,7 @@ public class TeamController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/add/teammate", method = RequestMethod.POST)
-    public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateRequestDTO teammateDTO) throws ValidationException {
+    public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateRequestDTO teammateDTO) {
         Team team = teamService.addTeammateToTeam(teammateDTO.getTeamName(), teammateDTO.getTeamMate());
 
         return new ResponseEntity<>(team, HttpStatus.OK);
@@ -65,9 +61,9 @@ public class TeamController {
     public ResponseEntity<?> deleteTeammateFromTeam(@PathVariable("teamname") String teamname,
                                                     @PathVariable("teammate") String teammate) {
 
-        Team team = teamService.deleteTeammateFromTeam(teamname, teammate);
+        teamService.deleteTeammateFromTeam(teamname, teammate);
 
-        return new ResponseEntity<>(team, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

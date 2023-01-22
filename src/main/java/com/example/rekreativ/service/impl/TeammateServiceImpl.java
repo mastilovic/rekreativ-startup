@@ -7,7 +7,6 @@ import com.example.rekreativ.service.TeammateService;
 import com.example.rekreativ.util.ValidatorUtil;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.ValidationException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -47,14 +46,15 @@ public class TeammateServiceImpl implements TeammateService {
     }
 
 
-    public Teammate save(Teammate teammate) throws ValidationException {
+    public Teammate save(Teammate teammate) {
         if(Objects.isNull(teammate)) return null;
 
         Teammate newTeammate = new Teammate();
+
         newTeammate.setName(teammate.getName());
         newTeammate.setTotalGamesPlayed(0);
         newTeammate.setWins(0);
-        validatorUtil.teammateValidator(newTeammate);
+        validatorUtil.validate(newTeammate);
 
         return teammateRepository.save(newTeammate);
     }

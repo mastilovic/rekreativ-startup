@@ -2,6 +2,7 @@ package com.example.rekreativ.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -13,9 +14,11 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "Username is mandatory!")
     private String username;
 
     @Column(nullable = false)
+    @NotBlank(message = "Password is mandatory!")
     private String password;
 
     @ManyToMany

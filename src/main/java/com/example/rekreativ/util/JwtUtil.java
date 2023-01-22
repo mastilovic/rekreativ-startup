@@ -6,11 +6,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.example.rekreativ.auth.AuthUser;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +15,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static java.util.Arrays.stream;
 
 @Service
@@ -28,28 +29,24 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "jKZGcDKSY1fcmFAwxVsof5GicOdsz9sD";
 
-    //decode token
     public DecodedJWT decodedToken(String token) {
         JWTVerifier verifier = tokenVerifier();
 
         return verifier.verify(token);
     }
 
-    //validate token
     public boolean isTokenValid(String username, String token) {
         JWTVerifier verifier = tokenVerifier();
 
         return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
     }
 
-    //check if token is expired
     private boolean isTokenExpired(JWTVerifier verifier, String token) {
         Date expiration = verifier.verify(token).getExpiresAt();
 
         return expiration.before(new Date());
     }
 
-    //verify token
     public JWTVerifier tokenVerifier() {
         JWTVerifier verifier;
 
@@ -77,7 +74,6 @@ public class JwtUtil {
         return userPasswordAuthToken;
     }
 
-    //get authorities from token
     public Collection<SimpleGrantedAuthority> getAuthorities(String token) {
         String[] claims = getClaimsFromToken(token);
 
@@ -86,7 +82,6 @@ public class JwtUtil {
                 .collect(Collectors.toList());
     }
 
-    //generate JWT token
     public String generateJwtToken(AuthUser authUser) {
         String[] claims = getClaimsFromUser(authUser);
 
@@ -109,7 +104,6 @@ public class JwtUtil {
         return verifier.verify(token).getClaim("roles").asArray(String.class);
     }
 
-    //get claims from user
     private String[] getClaimsFromUser(AuthUser user) {
         List<String> authorities = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

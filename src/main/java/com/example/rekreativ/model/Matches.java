@@ -1,6 +1,8 @@
 package com.example.rekreativ.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Matches {
@@ -12,20 +14,25 @@ public class Matches {
 //    @Column(name = "team_a")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamA")
+    @NotNull
     private Team teamA;
 
 //    @Column(name = "team_b")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamB")
+    @NotNull
     private Team teamB;
 
     @Column(name = "team_a_score")
+    @NotNull
     private Integer teamAScore;
 
     @Column(name = "team_b_score")
+    @NotNull
     private Integer teamBScore;
 
     @Column(name = "winner")
+    @NotBlank(message = "Name can't be empty!")
     private String winner;
 
     public Matches(){

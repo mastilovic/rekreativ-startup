@@ -1,15 +1,18 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.service.RoleService;
 import com.example.rekreativ.util.ValidatorUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -26,6 +29,7 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> optionalRole = roleRepository.findByName(name);
 
         if(optionalRole.isEmpty()){
+            log.debug("Role not found with name: {}", name);
 
             throw new ObjectNotFoundException(Role.class, name);
         }
@@ -35,11 +39,15 @@ public class RoleServiceImpl implements RoleService {
 
     public Role save(Role role) {
 
-        findByName(role.getName());
+        if(existsByName(role.getName())){
+            log.debug("Role already exists with name: {}", role.getName());
+
+            throw new ObjectAlreadyExistsException(Role.class, role.getName());
+        }
 
         Role newRole = new Role();
         newRole.setName(role.getName());
-        validatorUtil.roleValidator(role);
+        validatorUtil.validate(role);
 
         return roleRepository.save(newRole);
     }

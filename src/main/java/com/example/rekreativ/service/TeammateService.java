@@ -2,19 +2,17 @@ package com.example.rekreativ.service;
 
 import com.example.rekreativ.model.Teammate;
 
-import javax.xml.bind.ValidationException;
-
 public interface TeammateService {
 
-    public Teammate findTeammateByName(String name);
+    Teammate findTeammateByName(String name);
 
-    public Teammate findById(Long id);
+    Teammate findById(Long id);
 
-    public Teammate save(Teammate teammate) throws ValidationException;
+    Teammate save(Teammate teammate);
 
-    public Teammate initSave(Teammate teammate);
+    Teammate initSave(Teammate teammate);
 
-    public Iterable<Teammate> findAll();
+    Iterable<Teammate> findAll();
 
-    public void delete(Long id);
+    void delete(Long id);
 }

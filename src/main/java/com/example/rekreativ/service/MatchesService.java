@@ -6,15 +6,15 @@ import com.example.rekreativ.model.Team;
 
 public interface MatchesService {
 
-    public void matchOutcome(Matches newMatch, Team existingTeamA, Team existingTeamB);
+    void processMatchOutcome(Matches newMatch, Team existingTeamA, Team existingTeamB);
 
     public Matches createMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore);
 
     public Matches save(MatchesRequestDTO matches);
 
-    public Iterable<Matches> findAll();
+    Iterable<Matches> findAll();
 
-    public Matches findMatchById(Long id);
+    Matches findMatchById(Long id);
 
-    public void delete(Long id);
+    void delete(Long id);
 }

@@ -32,11 +32,8 @@ import java.util.stream.StreamSupport;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
-
     private final RoleService roleService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final ValidatorUtil validatorUtil;
 
     public UserServiceImpl(UserRepository userRepository,
@@ -49,33 +46,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         this.validatorUtil = validatorUtil;
     }
 
-    @PostConstruct
-    public void initRoleAndUser() {
-
-        if(!roleService.existsByName("ROLE_ADMIN")) {
-            Role adminRole = new Role("ROLE_ADMIN");
-            roleService.initSave(adminRole);
-        }
-
-        if(!roleService.existsByName("ROLE_USER")) {
-            Role userRole = new Role("ROLE_USER");
-            roleService.initSave(userRole);
-        }
-
-        if(userRepository.findByUsername("admin").isEmpty()) {
-            Role adminRole = roleService.findByName("ROLE_ADMIN");
-
-            final String adminpass = "admin";
-            User adminUser = new User(
-                    null,
-                    "admin",
-                    passwordEncoder.encode(adminpass));
-            adminUser.getRoles().add(adminRole);
-
-            userRepository.save(adminUser);
-        }
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -85,47 +55,51 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new AuthUser(user);
     }
 
-    //need to validate email, roles etc
-    public void addRoleToUser(String username, String roles){
-        User user = findUserByUsername(username);
+    public void addRoleToUser(String username, String roleName){
 
-        Role role = roleService.findByName(roles);
+        User user = findUserByUsername(username);
+        Role role = roleService.findByName(roleName);
+
+        boolean userContainsRole = user.getRoles().stream()
+                .map(Role::getName)
+                .anyMatch(r-> r.equals(roleName));
+
+        if (userContainsRole) {
+            log.debug("User already has {} role!", roleName);
+
+            throw new ObjectAlreadyExistsException(Role.class, "User already has role: " + roleName);
+        }
+
         user.getRoles().add(role);
-//		log.info("Adding role {} to the user {}", roles, email);
     }
 
-    //--------------------Save User with default User role--------------------
     public User saveUser(User user) {
-		log.info("Saving new user {} to the database", user.getUsername());
+        log.info("Saving new user {} to the database", user.getUsername());
 
         if(userRepository.findByUsername(user.getUsername()).isPresent()){
-
             log.debug("user already exists with username: {}", user.getUsername());
+
             throw new ObjectAlreadyExistsException(User.class, user.getUsername());
         }
 
         Role role = roleService.findByName("ROLE_USER");
+        Role roleAdmin = roleService.findByName("ROLE_ADMIN");
 
         User newUser = new User();
         newUser.getRoles().add(role);
+        newUser.getRoles().add(roleAdmin);
         newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        validatorUtil.userValidator(newUser);
+        validatorUtil.validate(newUser);
 
         return userRepository.save(newUser);
     }
 
     @Override
     public User initSave(User user) {
-        Role role = roleService.findByName("ROLE_USER");
 
-        User newUser = new User();
-        newUser.getRoles().add(role);
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        return userRepository.save(newUser);
+        return userRepository.save(user);
     }
 
     public void deleteUserById(Long id) {
@@ -151,6 +125,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     public Page<User> findAllPageable(Pageable pageable) {
+
         return userRepository.findAll(pageable);
     }
 
@@ -158,8 +133,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Optional<User> user = userRepository.findById(id);
 
         if(user.isEmpty()){
-
             log.debug("User not found with id: {}", id);
+
             throw new ObjectNotFoundException(User.class, id);
         }
 
@@ -182,8 +157,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Optional<User> user = userRepository.findByUsername(username);
 
         if(user.isEmpty()){
-
             log.debug("user not found with username: {}", username);
+
             throw new ObjectNotFoundException(User.class, username);
         }
 
