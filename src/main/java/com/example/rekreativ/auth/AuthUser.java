@@ -28,13 +28,11 @@ public class AuthUser implements UserDetails {
 
     @Override
     public String getPassword() {
-
         return this.user.getPassword();
     }
 
     @Override
     public String getUsername() {
-
         return this.user.getUsername();
     }
 
