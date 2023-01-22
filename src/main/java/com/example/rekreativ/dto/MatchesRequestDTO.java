@@ -1,5 +1,10 @@
 package com.example.rekreativ.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class MatchesRequestDTO {
     private String teamOne;
     private String teamTwo;

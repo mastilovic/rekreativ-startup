@@ -29,9 +29,6 @@ public class MatchesServiceImpl implements MatchesService {
     private final TeamService teamService;
     private final ValidatorUtil validatorUtil;
 
-    private static DecimalFormat df2 = new DecimalFormat("#.##");
-
-    @Autowired
     public MatchesServiceImpl(MatchesRepository matchesRepository,
                               TeammateServiceImpl teammateServiceImpl,
                               TeamServiceImpl teamService,
@@ -41,7 +38,6 @@ public class MatchesServiceImpl implements MatchesService {
         this.teamService = teamService;
         this.validatorUtil = validatorUtil;
     }
-
 
     public Matches createMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore){
         log.debug("calling createMatchup method in MatchesServiceImpl");
@@ -64,12 +60,6 @@ public class MatchesServiceImpl implements MatchesService {
         Team teamA = teamService.getByTeamname(matchDTO.getTeamOne());
         Team teamB = teamService.getByTeamname(matchDTO.getTeamTwo());
 
-        if (teamA == null || teamB == null){
-            log.debug("TeamA: {} or TeamB: {} not found!", teamA, teamB);
-
-            throw new ObjectNotFoundException(Team.class, "Team not found");
-        }
-
         boolean teammateInBothTeams = teamA.getTeammates().stream()
                 .anyMatch(teamB.getTeammates()::contains);
 
@@ -85,13 +75,14 @@ public class MatchesServiceImpl implements MatchesService {
         match.setTeamAScore(matchDTO.getTeamOneScore());
         match.setTeamBScore(matchDTO.getTeamTwoScore());
 
-        matchOutcome(match, teamA, teamB);
+        processMatchOutcome(match, teamA, teamB);
 
         return matchesRepository.save(match);
     }
 
-    public void matchOutcome(Matches match, Team existingTeamA, Team existingTeamB){
+    public void processMatchOutcome(Matches match, Team existingTeamA, Team existingTeamB){
         log.debug("calling method matchOutcome in MatchesServiceImpl");
+
         if (match.getTeamAScore() > match.getTeamBScore()) {
             match.setWinner(match.getTeamA().getTeamName());
             existingTeamA.setWins(existingTeamA.getWins() + 1);
