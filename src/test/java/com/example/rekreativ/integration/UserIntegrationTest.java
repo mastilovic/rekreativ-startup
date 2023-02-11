@@ -66,16 +66,6 @@ public class UserIntegrationTest {
     }
 
     @Test
-    void should_LoginSuccessfully() throws Exception {
-
-        ResultActions usersResult = mockMvc.perform(post("/api/v1/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(userLoginDTO)));
-
-        usersResult.andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     void should_RegisterSuccessfully() throws Exception {
 
         ResultActions usersResult = mockMvc.perform(post("/api/v1/users/register")
@@ -83,5 +73,15 @@ public class UserIntegrationTest {
                 .content(mapper.writeValueAsString(user)));
 
         usersResult.andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    void should_LoginSuccessfully() throws Exception {
+
+        ResultActions usersResult = mockMvc.perform(post("/api/v1/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(userLoginDTO)));
+
+        usersResult.andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
