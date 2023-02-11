@@ -2,7 +2,7 @@ package com.example.rekreativ.controller;
 
 
 import com.example.rekreativ.auth.AuthUser;
-import com.example.rekreativ.dto.LoginDTO;
+import com.example.rekreativ.dto.UserLoginDTO;
 import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.service.UserService;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +24,8 @@ import static org.springframework.http.HttpStatus.OK;
 
 @Controller
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/user/v1")
+@RequestMapping("/api/v1/users")
 public class UserController {
-
-    private static final Logger LOGGER = Logger.getLogger( UserController.class.getName() );
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -43,8 +40,8 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> login(@RequestBody User user) {
+    @PostMapping(path = "/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO user) {
         authenticate(user.getUsername(), user.getPassword());
         User loginUser = userService.findUserByUsername(user.getUsername());
         AuthUser authUser = new AuthUser(loginUser);
@@ -57,7 +54,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    @RequestMapping(path = "/add/role/to/user", method = RequestMethod.POST)
+    @RequestMapping(path = "/role", method = RequestMethod.POST)
     public ResponseEntity<?> addRoleToUser(@RequestParam(value = "username", required = false) String username,
                                            @RequestParam(value = "roles", required = false) String roles) {
 
@@ -67,7 +64,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
         User obj = userService.findUserById(id);
 
@@ -102,7 +99,7 @@ public class UserController {
 
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/get/all", method = RequestMethod.GET)
+    @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
         Iterable<UserDTO> users = userService.findAll();
 
@@ -110,7 +107,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         userService.deleteUserById(id);
 
