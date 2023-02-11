@@ -23,8 +23,8 @@ Using JWT (JSON Web Token) for authorizing users. Dependency used for generating
 * Java 11
 * Spring Boot Framework
 * Tomcat apache
-* Local database (MySQL, PostgreSQL or others)
-* Configured database properties in project (src/main/resources/application.properties)
+* Docker MySQL image
+* Configured database properties in project (src/main/resources/application.yml)
 
 ## TODO: FRONTEND :)
 
