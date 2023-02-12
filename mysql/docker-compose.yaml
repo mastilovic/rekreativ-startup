@@ -6,7 +6,7 @@ services:
 #    container_name: mysql
     restart: on-failure
     ports:
-      - "3309:3306"
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: rekreativdb
       MSQL_USER: root
