@@ -1,4 +1,4 @@
-# rekreativ-startup
+# rekreativ
 
 ## About project
 
@@ -14,17 +14,86 @@ User with admin role (ROLE_ADMIN) is initialized when project is ran. When regis
 
 Project has basic CRUD API for each of entities.
 
-## Authorization
+## Technology Stack
+#### This project was built using IntelliJ IDEA and uses the following technologies:
+* _Java 11_
+* _Spring Framework/Spring Boot version 2.7.8_
+* _Authentication and Authorization_
+* _Auth0_
+* _Gradle_
+* _REST CRUD operations_
+* _MySQL Docker Image 5.7_
+* _Unit and Integration tests_
+* _Rest Error Handlers_
+* _Docker & Docker-compose_
+* _Postman_
+* _Git_
+* _Installed IntelliJ IDEA plugin Sonarlint_
 
-Using JWT (JSON Web Token) for authorizing users. Dependency used for generating token is auth0. Roles (ROLE_USER, ROLE_ADMIN) are used for permitting users to access each endpoint. ROLE_USER can access any endpoint that has anything to do with Teammate, Team and Matches.
+## Setup
+### Setup for local development
 
-## Requirements to run the project
+1. Run Docker Desktop
+2. Change active profile from `dev` to `local` in application.yaml
+3. Build project in root of the project:
+   * `gradle build`
+4. Navigate to mysql folder in root of the project and run docker-compose.yaml:
+    * `cd mysql`
+    * `docker-compose up -d`
+5. To run the application:
+    * return to root of the project from mysql folder: `cd ..`
+    * run application using gradle: `./gradlew bootRun`
+6. Test the API using Postman
+   * default user credentials:
+     * username: `admin`
+     * password: `admin`
 
-* Java 11
-* Spring Boot Framework
-* Tomcat apache
-* Docker MySQL image
-* Configured database properties in project (src/main/resources/application.yml)
+### Setup for running application on other devices
+
+1. Install Docker Desktop
+2. Create profile on DockerHub
+3. Install Postman for testing REST API
+4. Clone GitHub repository:
+   * `git clone https://github.com/salexdxd/rekreativ-startup.git`
+5. Change directory to rekreativ-startup:
+   * `cd rekreativ-startup`
+6. Run docker compose:
+    * `docker-compose up`
+7. Wait for application to start
+8. Test the API below using Postman
+
+
+## API Reference
+
+### Movies
+
+#### Register
+```http request
+POST /api/v1/users/register
+```
+
+| username: | admin |
+|-----------|-------|
+| password: | admin |
+
+#### Register
+```http request
+POST /api/v1/users/login
+```
+##### Send raw json body:
+{ <br />
+    "username":"admin", <br />
+    "password":"admin"
+<br />}
+
+##### Get token from headers
+Click on headers, find header named token, copy string value
+
+#### Send get request
+Click on headers tab, as key enter `Authorization`, for value type `Bearer` ` ` `paste token value` 
+```http request
+GET /api/v1/users
+```
 
 ## TODO: FRONTEND :)
 
