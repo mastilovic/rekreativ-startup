@@ -14,6 +14,8 @@ User with admin role (ROLE_ADMIN) is initialized when project is ran. When regis
 
 Project has basic CRUD API for each of entities.
 
+Docker image name of the application: `mastilovic/rekreativ:latest`
+
 ## Technology Stack
 #### This project was built using IntelliJ IDEA and uses the following technologies:
 * _Java 11_
