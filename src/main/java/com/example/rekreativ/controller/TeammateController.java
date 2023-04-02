@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/teammate/v1")
+@RequestMapping("/api/v1/teammate")
 public class TeammateController {
 
     private final TeammateService teammateService;

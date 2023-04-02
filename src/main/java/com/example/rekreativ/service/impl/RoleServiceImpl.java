@@ -9,8 +9,6 @@ import com.example.rekreativ.util.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 public class RoleServiceImpl implements RoleService {
@@ -25,21 +23,17 @@ public class RoleServiceImpl implements RoleService {
         this.validatorUtil = validatorUtil;
     }
 
-    public Role findByName(String name){
-        Optional<Role> optionalRole = roleRepository.findByName(name);
+    public Role findByName(String name) {
+        log.debug("calling findByName method");
 
-        if(optionalRole.isEmpty()){
-            log.debug("Role not found with name: {}", name);
-
-            throw new ObjectNotFoundException(Role.class, name);
-        }
-
-        return optionalRole.get();
+        return roleRepository.findByName(name)
+                .orElseThrow(() -> new ObjectNotFoundException(Role.class, name));
     }
 
     public Role save(Role role) {
+        log.debug("calling save method");
 
-        if(existsByName(role.getName())){
+        if (existsByName(role.getName())) {
             log.debug("Role already exists with name: {}", role.getName());
 
             throw new ObjectAlreadyExistsException(Role.class, role.getName());
@@ -63,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findByName(name).isPresent();
     }
 
-    public Iterable<Role> findAll(){
+    public Iterable<Role> findAll() {
         // todo: create check for empty list and return no content 204
         return roleRepository.findAll();
     }

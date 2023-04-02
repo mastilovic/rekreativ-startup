@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/matches/v1")
+@RequestMapping("/api/v1/matches")
 @Slf4j
 public class MatchesController {
 

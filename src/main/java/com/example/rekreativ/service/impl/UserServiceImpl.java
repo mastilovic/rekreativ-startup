@@ -20,9 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -48,21 +46,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.debug("calling loadUserByUsername method");
 
-        User user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("Username '%s' was not found",username)));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Username '%s' was not found", username)));
 
         return new AuthUser(user);
     }
 
-    public void addRoleToUser(String username, String roleName){
+    public void addRoleToUser(String username, String roleName) {
+        log.debug("calling addRoleToUser method");
 
         User user = findUserByUsername(username);
         Role role = roleService.findByName(roleName);
 
         boolean userContainsRole = user.getRoles().stream()
                 .map(Role::getName)
-                .anyMatch(r-> r.equals(roleName));
+                .anyMatch(r -> r.equals(roleName));
 
         if (userContainsRole) {
             log.debug("User already has {} role!", roleName);
@@ -74,9 +74,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     public User saveUser(User user) {
-        log.info("Saving new user {} to the database", user.getUsername());
+        log.debug("calling saveUser method");
 
-        if(userRepository.findByUsername(user.getUsername()).isPresent()){
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             log.debug("user already exists with username: {}", user.getUsername());
 
             throw new ObjectAlreadyExistsException(User.class, user.getUsername());
@@ -98,23 +98,30 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public User initSave(User user) {
+        log.debug("calling initSave method");
 
         return userRepository.save(user);
     }
 
     public void deleteUserById(Long id) {
+        log.debug("calling deleteUserById method");
+
         User user = findUserById(id);
 
         userRepository.deleteById(user.getId());
     }
 
     public void delete(User user) {
+        log.debug("calling delete method");
+
         User existingUser = findUserById(user.getId());
 
         userRepository.delete(existingUser);
     }
 
-    public Iterable<UserDTO> findAll(){
+    public Iterable<UserDTO> findAll() {
+        log.debug("calling findAll method");
+
         Iterable<User> users = userRepository.findAll();
 
         ModelMapper modelMapper = new ModelMapper();
@@ -125,44 +132,36 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     public Page<User> findAllPageable(Pageable pageable) {
+        log.debug("calling findAllPageable method");
 
         return userRepository.findAll(pageable);
     }
 
     public User findUserById(Long id) {
-        Optional<User> user = userRepository.findById(id);
+        log.debug("calling findUserById method");
 
-        if(user.isEmpty()){
-            log.debug("User not found with id: {}", id);
-
-            throw new ObjectNotFoundException(User.class, id);
-        }
-
-        return user.get();
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(User.class, id));
     }
 
     @Override
     public boolean existsById(Long id) {
+        log.debug("calling existsById method");
 
         return userRepository.existsById(id);
     }
 
     @Override
     public boolean existsByUsername(String username) {
+        log.debug("calling existsByUsername method");
 
         return userRepository.findByUsername(username).isPresent();
     }
 
-    public User findUserByUsername(String username){
-        Optional<User> user = userRepository.findByUsername(username);
+    public User findUserByUsername(String username) {
+        log.debug("calling findUserByUsername method");
 
-        if(user.isEmpty()){
-            log.debug("user not found with username: {}", username);
-
-            throw new ObjectNotFoundException(User.class, username);
-        }
-
-        return user.get();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ObjectNotFoundException(User.class, username));
     }
-
 }

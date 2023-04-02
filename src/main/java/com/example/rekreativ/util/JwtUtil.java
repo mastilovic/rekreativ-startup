@@ -30,24 +30,32 @@ public class JwtUtil {
     private static final String SECRET_KEY = "jKZGcDKSY1fcmFAwxVsof5GicOdsz9sD";
 
     public DecodedJWT decodedToken(String token) {
+        log.debug("calling decodeToken method");
+
         JWTVerifier verifier = tokenVerifier();
 
         return verifier.verify(token);
     }
 
     public boolean isTokenValid(String username, String token) {
+        log.debug("calling isTokenValid method");
+
         JWTVerifier verifier = tokenVerifier();
 
         return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
     }
 
     private boolean isTokenExpired(JWTVerifier verifier, String token) {
+        log.debug("calling isTokenExpired method");
+
         Date expiration = verifier.verify(token).getExpiresAt();
 
         return expiration.before(new Date());
     }
 
     public JWTVerifier tokenVerifier() {
+        log.debug("calling tokenVerifier method");
+
         JWTVerifier verifier;
 
         try {
@@ -66,6 +74,8 @@ public class JwtUtil {
     public Authentication getAuthentication(String username,
                                             Collection<SimpleGrantedAuthority> authorities,
                                             HttpServletRequest request) {
+        log.debug("calling getAuthentication method");
+
         UsernamePasswordAuthenticationToken userPasswordAuthToken = new
                 UsernamePasswordAuthenticationToken(username, null, authorities);
 
@@ -75,6 +85,8 @@ public class JwtUtil {
     }
 
     public Collection<SimpleGrantedAuthority> getAuthorities(String token) {
+        log.debug("calling getAuthorities method");
+
         String[] claims = getClaimsFromToken(token);
 
         return stream(claims)
@@ -83,6 +95,8 @@ public class JwtUtil {
     }
 
     public String generateJwtToken(AuthUser authUser) {
+        log.debug("calling generateJwtToken method");
+
         String[] claims = getClaimsFromUser(authUser);
 
         return JWT.create().withIssuer("issuer").withAudience("Audience")
@@ -93,23 +107,28 @@ public class JwtUtil {
     }
 
     public String getSubject(String token) {
+        log.debug("calling getSubject method");
+
         JWTVerifier verifier = tokenVerifier();
 
         return verifier.verify(token).getSubject();
     }
 
     private String[] getClaimsFromToken(String token) {
+        log.debug("calling getClaimsFromToken method");
+
         JWTVerifier verifier = tokenVerifier();
 
         return verifier.verify(token).getClaim("roles").asArray(String.class);
     }
 
     private String[] getClaimsFromUser(AuthUser user) {
+        log.debug("calling getClaimsFromUser method");
+
         List<String> authorities = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         return authorities.toArray(new String[0]);
     }
-
 }
