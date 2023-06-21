@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/matches/v1")
+@RequestMapping("/api/v1/matches")
 @Slf4j
 public class MatchesController {
 
@@ -53,6 +53,6 @@ public class MatchesController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         matchesService.delete(id);
 
-        return new ResponseEntity<Object>("Match deleted successfully!", HttpStatus.OK);
+        return new ResponseEntity<>("Match deleted successfully!", HttpStatus.OK);
     }
 }

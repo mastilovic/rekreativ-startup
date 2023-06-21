@@ -13,10 +13,10 @@ import com.example.rekreativ.service.TeammateService;
 import com.example.rekreativ.util.JwtUtil;
 import com.example.rekreativ.util.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +32,6 @@ public class TeamServiceImpl implements TeamService {
     private final TeammateService teammateService;
     private final ValidatorUtil validatorUtil;
 
-    @Autowired
     public TeamServiceImpl(JwtUtil jwtUtil,
                            TeamRepository teamRepository,
                            TeammateService teammateService,
@@ -44,33 +43,23 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public Iterable<Team> findAll() {
+        log.debug("calling findAll method");
+
         return teamRepository.findAll();
     }
 
     public Team findTeamById(Long id) {
-        Optional<Team> team = teamRepository.findById(id);
+        log.debug("calling findTeamById method");
 
-        if (team.isEmpty()) {
-            log.debug("Team with id: {} doesnt exist!", id);
-
-            throw new ObjectNotFoundException(Team.class, id);
-        }
-
-        return team.get();
+        return teamRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(Team.class, id));
     }
 
     public Team getByTeamname(String teamName) {
-        log.debug("calling getByTeamname method in TeamServiceImpl");
+        log.debug("calling getByTeamname method");
 
-        Optional<Team> team = teamRepository.findByTeamName(teamName);
-
-        if (team.isEmpty()) {
-            log.debug("Team not found with name: {}", teamName);
-
-            throw new ObjectNotFoundException(Team.class, teamName);
-        }
-
-        return team.get();
+        return teamRepository.findByTeamName(teamName)
+                .orElseThrow(() -> new ObjectNotFoundException(Team.class, teamName));
     }
 
     public void delete(Long id) {
@@ -80,6 +69,8 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public Team saveTeamWithUsername(Team team, HttpServletRequest request) {
+        log.debug("calling saveTeamWithUsername method");
+
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String token = authorizationHeader.substring("Bearer ".length());
         DecodedJWT decodedJWT = jwtUtil.decodedToken(token);
@@ -93,10 +84,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public Team save(Team team) {
-        log.info("inside save method in TeamServiceImpl");
+        log.info("calling save method in TeamServiceImpl");
+
         Optional<Team> optionalTeam = teamRepository.findByTeamName(team.getTeamName());
 
-        if(optionalTeam.isPresent()) {
+        if (optionalTeam.isPresent()) {
             log.error("Team already exists with name: " + team.getTeamName());
 
             throw new ObjectAlreadyExistsException(Team.class, team.getTeamName());
@@ -113,17 +105,22 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public void initSave(Team team) {
+        log.debug("calling initSave method in TeamServiceImpl");
 
         teamRepository.save(team);
     }
 
     public List<Teammate> findTeammatesInTeam(String teamName) {
+        log.debug("calling findTeammatesInTeam method in TeamServiceImpl");
+
         Team team = getByTeamname(teamName);
 
-        return team.getTeammates().stream().collect(Collectors.toList());
+        return new ArrayList<>(team.getTeammates());
     }
 
     public Team addTeammateToTeam(String teamname, String teammateName) {
+        log.debug("calling addTeammateToTeam method in TeamServiceImpl");
+
         Team existingTeam = getByTeamname(teamname);
         Teammate teammate = teammateService.findTeammateByName(teammateName);
 
@@ -141,6 +138,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     public void decreaseGamesPlayedByOne(Matches existingMatch) {
+        log.debug("calling decreaseGamesPlayedByOne method in TeamServiceImpl");
 
         Team teamA = getByTeamname(existingMatch.getTeamA().getTeamName());
         Team teamB = getByTeamname(existingMatch.getTeamB().getTeamName());
@@ -163,36 +161,28 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team deleteTeammateFromTeam(String teamname, String teammate) {
+        log.debug("calling deleteTeammateFromTeam method in TeamServiceImpl");
+
         Team existingTeam = getByTeamname(teamname);
         Teammate existingTeammate = teammateService.findTeammateByName(teammate);
 
-        if (existingTeam == null) {
-
-            throw new ObjectNotFoundException(Team.class, "Team not found!");
-        }
-
         existingTeam.getTeammates().remove(existingTeammate);
+
         return save(existingTeam);
     }
 
     public Integer getScoresFromTeammates(String teamName) {
+        log.debug("calling getScoresFromTeammates method in TeamServiceImpl");
 
         Team team = getByTeamname(teamName);
 
-        List<Integer> teamScoreList = team.getTeammates().stream()
+        return team.getTeammates().stream()
                 .map(Teammate::getTotalGamesPlayed)
-                .collect(Collectors.toList());
-
-        Integer teamScore = 0;
-
-        for (int i = 0; i < teamScoreList.size(); i++) {
-            teamScore += teamScoreList.get(i);
-        }
-
-        return teamScore;
+                .reduce(0, Integer::sum);
     }
 
     private Teammate teammateCreation(String teammateName) {
+        log.debug("calling teammateCreation method in TeamServiceImpl");
 
         Teammate newTeammate = new Teammate();
         newTeammate.setName(teammateName);

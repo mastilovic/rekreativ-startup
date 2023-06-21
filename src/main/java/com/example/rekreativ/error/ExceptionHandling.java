@@ -19,7 +19,7 @@ public class ExceptionHandling {
     @ResponseBody
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<HttpResponse> objectNotFoundException(ObjectNotFoundException e, HttpServletRequest request){
+    public ResponseEntity<HttpResponse> objectNotFoundException(ObjectNotFoundException e, HttpServletRequest request) {
         HttpStatus notFound = HttpStatus.NOT_FOUND;
 
         return createHttpResponse(notFound, e.getMessage(), request.getRequestURI());
@@ -28,7 +28,7 @@ public class ExceptionHandling {
     @ResponseBody
     @ExceptionHandler(ObjectAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<HttpResponse> objectAlreadyExistsException(ObjectAlreadyExistsException e, HttpServletRequest request){
+    public ResponseEntity<HttpResponse> objectAlreadyExistsException(ObjectAlreadyExistsException e, HttpServletRequest request) {
         HttpStatus notFound = HttpStatus.BAD_REQUEST;
 
         return createHttpResponse(notFound, e.getMessage(), request.getRequestURI());
@@ -37,13 +37,13 @@ public class ExceptionHandling {
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<HttpResponse> validationException(ConstraintViolationException e, HttpServletRequest request){
+    public ResponseEntity<HttpResponse> validationException(ConstraintViolationException e, HttpServletRequest request) {
         HttpStatus notFound = HttpStatus.BAD_REQUEST;
 
         return createHttpResponse(notFound, e.getMessage(), request.getRequestURI());
     }
 
-    private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message, String path){
+    private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message, String path) {
 
         return new ResponseEntity<>(new HttpResponse(
                 path, message, httpStatus, httpStatus.value(), LocalDateTime.now()), httpStatus);

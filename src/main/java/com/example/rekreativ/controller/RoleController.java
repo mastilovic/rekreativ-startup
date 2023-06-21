@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/role/v1")
+@RequestMapping("/api/v1/role")
 public class RoleController {
 
     private final RoleService roleService;

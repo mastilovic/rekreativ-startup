@@ -5,12 +5,13 @@ import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeammateRepository;
 import com.example.rekreativ.service.TeammateService;
 import com.example.rekreativ.util.ValidatorUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
+@Slf4j
 public class TeammateServiceImpl implements TeammateService {
 
     private final TeammateRepository teammateRepository;
@@ -22,32 +23,26 @@ public class TeammateServiceImpl implements TeammateService {
         this.validatorUtil = validatorUtil;
     }
 
-    public Teammate findTeammateByName(String name){
-        Optional<Teammate> teammate = teammateRepository.findTeammateByName(name);
+    public Teammate findTeammateByName(String name) {
+        log.debug("calling findTeammateByName method");
 
-        if (teammate.isEmpty()){
-
-            throw new ObjectNotFoundException(Teammate.class, name);
-        }
-
-        return teammate.get();
+        return teammateRepository.findTeammateByName(name)
+                .orElseThrow(() -> new ObjectNotFoundException(Teammate.class, name));
     }
 
     @Override
     public Teammate findById(Long id) {
-        Optional<Teammate> teammate = teammateRepository.findById(id);
+        log.debug("calling findById method");
 
-        if(teammate.isEmpty()){
-
-            throw new ObjectNotFoundException(Teammate.class, id);
-        }
-
-        return teammate.get();
+        return teammateRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(Teammate.class, id));
     }
 
 
     public Teammate save(Teammate teammate) {
-        if(Objects.isNull(teammate)) return null;
+        log.debug("calling save method");
+
+        if (Objects.isNull(teammate)) return null;
 
         Teammate newTeammate = new Teammate();
 
@@ -60,16 +55,20 @@ public class TeammateServiceImpl implements TeammateService {
     }
 
     public Teammate initSave(Teammate teammate) {
+        log.debug("calling initSave method");
 
         return teammateRepository.save(teammate);
     }
 
-    public Iterable<Teammate> findAll(){
+    public Iterable<Teammate> findAll() {
+        log.debug("calling findAll method");
 
         return teammateRepository.findAll();
     }
 
     public void delete(Long id) {
+        log.debug("calling delete method");
+
         Teammate teammate = findById(id);
 
         teammateRepository.deleteById(teammate.getId());

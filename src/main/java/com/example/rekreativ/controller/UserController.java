@@ -31,7 +31,6 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    @Autowired
     public UserController(UserService userService,
                           AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil) {
