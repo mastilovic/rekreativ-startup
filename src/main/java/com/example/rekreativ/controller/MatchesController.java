@@ -53,6 +53,6 @@ public class MatchesController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         matchesService.delete(id);
 
-        return new ResponseEntity<Object>("Match deleted successfully!", HttpStatus.OK);
+        return new ResponseEntity<>("Match deleted successfully!", HttpStatus.OK);
     }
 }

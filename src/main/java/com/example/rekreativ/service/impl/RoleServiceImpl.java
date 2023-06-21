@@ -18,7 +18,6 @@ public class RoleServiceImpl implements RoleService {
 
     public RoleServiceImpl(RoleRepository roleRepository,
                            ValidatorUtil validatorUtil) {
-
         this.roleRepository = roleRepository;
         this.validatorUtil = validatorUtil;
     }

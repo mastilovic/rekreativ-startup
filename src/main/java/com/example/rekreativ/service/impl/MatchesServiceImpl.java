@@ -83,8 +83,8 @@ public class MatchesServiceImpl implements MatchesService {
             match.setWinner(match.getTeamA().getTeamName());
             existingTeamA.setWins(existingTeamA.getWins() + 1);
 
-            increaseTotalGamesPlayed(existingTeamA);
-            increaseTotalGamesPlayed(existingTeamB);
+            increaseTeamTotalGamesPlayed(existingTeamA);
+            increaseTeamTotalGamesPlayed(existingTeamB);
 
             updateWinningTeammates(existingTeamA);
             updateLosingTeammates(existingTeamB);
@@ -96,8 +96,8 @@ public class MatchesServiceImpl implements MatchesService {
             match.setWinner(match.getTeamB().getTeamName());
             existingTeamB.setWins(existingTeamB.getWins() + 1);
 
-            increaseTotalGamesPlayed(existingTeamA);
-            increaseTotalGamesPlayed(existingTeamB);
+            increaseTeamTotalGamesPlayed(existingTeamA);
+            increaseTeamTotalGamesPlayed(existingTeamB);
 
             updateLosingTeammates(existingTeamA);
             updateWinningTeammates(existingTeamB);
@@ -108,8 +108,8 @@ public class MatchesServiceImpl implements MatchesService {
         } else if (match.getTeamAScore().equals(match.getTeamBScore())) {
             match.setWinner("draw");
 
-            increaseTotalGamesPlayed(existingTeamA);
-            increaseTotalGamesPlayed(existingTeamB);
+            increaseTeamTotalGamesPlayed(existingTeamA);
+            increaseTeamTotalGamesPlayed(existingTeamB);
 
             updateLosingTeammates(existingTeamA);
             updateLosingTeammates(existingTeamB);
@@ -143,10 +143,14 @@ public class MatchesServiceImpl implements MatchesService {
     private void updateWinningTeammates(Team team) {
 
         team.getTeammates().forEach(teammate -> {
+            teammate.setWins(teammate.getWins() + 1);
             teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
+
             double winsDecimal = teammate.getWins();
-            teammate.setWinRate((winsDecimal / teammate.getTotalGamesPlayed()) * 100);
-            teammate.setWinRate(Precision.round(teammate.getWinRate(), 2));
+            double winRate = (winsDecimal / teammate.getTotalGamesPlayed()) * 100;
+
+            teammate.setWinRate(Precision.round(winRate, 2));
+
             teammateService.initSave(teammate);
         });
     }
@@ -154,15 +158,17 @@ public class MatchesServiceImpl implements MatchesService {
     private void updateLosingTeammates(Team team) {
 
         team.getTeammates().forEach(teammate -> {
-            teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
             double winsDecimal = teammate.getWins();
-            teammate.setWinRate((winsDecimal / teammate.getTotalGamesPlayed()) * 100);
-            teammate.setWinRate(Precision.round(teammate.getWinRate(), 2));
+            double winRate = (winsDecimal / teammate.getTotalGamesPlayed()) * 100;
+
+            teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
+            teammate.setWinRate(Precision.round(winRate, 2));
+
             teammateService.initSave(teammate);
         });
     }
 
-    private void increaseTotalGamesPlayed(Team team) {
+    private void increaseTeamTotalGamesPlayed(Team team) {
         team.setTotalGamesPlayed(team.getTotalGamesPlayed() + 1);
     }
 

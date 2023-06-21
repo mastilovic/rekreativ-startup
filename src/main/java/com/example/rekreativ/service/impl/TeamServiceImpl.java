@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -114,7 +115,7 @@ public class TeamServiceImpl implements TeamService {
 
         Team team = getByTeamname(teamName);
 
-        return team.getTeammates().stream().collect(Collectors.toList());
+        return new ArrayList<>(team.getTeammates());
     }
 
     public Team addTeammateToTeam(String teamname, String teammateName) {
@@ -175,17 +176,9 @@ public class TeamServiceImpl implements TeamService {
 
         Team team = getByTeamname(teamName);
 
-        List<Integer> teamScoreList = team.getTeammates().stream()
+        return team.getTeammates().stream()
                 .map(Teammate::getTotalGamesPlayed)
-                .collect(Collectors.toList());
-
-        Integer teamScore = 0;
-
-        for (int i = 0; i < teamScoreList.size(); i++) {
-            teamScore += teamScoreList.get(i);
-        }
-
-        return teamScore;
+                .reduce(0, Integer::sum);
     }
 
     private Teammate teammateCreation(String teammateName) {

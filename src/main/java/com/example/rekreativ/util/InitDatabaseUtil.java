@@ -14,6 +14,11 @@ import javax.annotation.PostConstruct;
 @Slf4j
 public class InitDatabaseUtil {
 
+    private static final String ROLE_ADMIN_NAME = "ROLE_ADMIN";
+    private static final String ROLE_USER_NAME = "ROLE_USER";
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
+
     private final UserService userService;
 
     private final RoleService roleService;
@@ -32,24 +37,23 @@ public class InitDatabaseUtil {
     public void initRoleAndUser() {
         log.debug("calling initRoleAndUser method");
 
-        if (!roleService.existsByName("ROLE_ADMIN")) {
-            Role adminRole = new Role("ROLE_ADMIN");
+        if (!roleService.existsByName(ROLE_ADMIN_NAME)) {
+            Role adminRole = new Role(ROLE_ADMIN_NAME);
             roleService.initSave(adminRole);
         }
 
-        if (!roleService.existsByName("ROLE_USER")) {
-            Role userRole = new Role("ROLE_USER");
+        if (!roleService.existsByName(ROLE_USER_NAME)) {
+            Role userRole = new Role(ROLE_USER_NAME);
             roleService.initSave(userRole);
         }
 
-        if (!userService.existsByUsername("admin")) {
-            Role adminRole = roleService.findByName("ROLE_ADMIN");
+        if (!userService.existsByUsername(ADMIN_USERNAME)) {
+            Role adminRole = roleService.findByName(ROLE_ADMIN_NAME);
 
-            final String adminpass = "admin";
             User adminUser = new User(
                     null,
-                    "admin",
-                    passwordEncoder.encode(adminpass));
+                    ADMIN_USERNAME,
+                    passwordEncoder.encode(ADMIN_PASSWORD));
             adminUser.getRoles().add(adminRole);
 
             userService.initSave(adminUser);
