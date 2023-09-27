@@ -10,18 +10,18 @@ services:
       mysqldb:
         condition: service_healthy
     environment:
-      MYSQL_URI: jdbc:mysql://mysqldb:3306
-      MYSQL_PASSWORD: root
+      - DB_URI=jdbc:mysql://mysqldb:3306
+      - USERNAME=root
+      - PASSWORD=root
+      - DB_NAME=rekreativdb
   mysqldb:
     image: mysql:5.7
-    #    container_name: mysql
     restart: on-failure
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: rekreativdb
-      MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE=rekreativdb
+      - MYSQL_ROOT_PASSWORD=root
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 10s

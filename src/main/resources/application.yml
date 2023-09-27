@@ -2,16 +2,5 @@ server:
   port: '8080'
 
 spring:
-  datasource:
-    url: ${MYSQL_URI}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   profiles:
     active: local

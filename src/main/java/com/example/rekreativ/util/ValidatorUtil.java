@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Service
 @Slf4j
+//TODO: util class only has static methods, refactor name of the class
 public class ValidatorUtil {
 
     private final Validator validator;

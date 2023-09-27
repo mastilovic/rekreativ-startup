@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 
 @Service
 @Slf4j
+//TODO: util class only has static methods, refactor name of the class
 public class InitDatabaseUtil {
 
     private static final String ROLE_ADMIN_NAME = "ROLE_ADMIN";
