@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URI}/${DB_NAME}
+    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false
     username: ${USERNAME}
     password: ${PASSWORD}
   jpa:

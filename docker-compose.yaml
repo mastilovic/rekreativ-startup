@@ -7,14 +7,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mysqldb:
+      mysql:
         condition: service_healthy
     environment:
-      - DB_URI=jdbc:mysql://mysqldb:3306
+      - DB_HOST=mysql
       - USERNAME=root
       - PASSWORD=root
       - DB_NAME=rekreativdb
-  mysqldb:
+  mysql:
     image: mysql:5.7
     restart: on-failure
     ports:
