@@ -28,18 +28,15 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-#    - name: Build with Gradle
-#      run: ./gradlew clean build
+    - name: Build with Gradle
+      run: ./gradlew clean build
 
-#    - name: Build & Push Docker image
-#      uses: mr-smithers-excellent/docker-build-push@v5
-#      with:
-#        image: mastilovic/rekreativ
-#        tags: latest, ${project.version}
-#        registry: docker.io
-#        dockerfile: Dockerfile
-#        username: ${{ secrets.DOCKER_USERNAME }}
-#        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Clean & Build with Gradle, Build & Push with Docker
-      run: ./gradlew pushDockerImage
+    - name: Build & Push Docker image
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: mastilovic/rekreativ
+        tags: latest, ${project.version}
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
