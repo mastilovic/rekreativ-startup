@@ -30,12 +30,14 @@ jobs:
         distribution: 'temurin'
     - name: Build with Gradle
       run: ./gradlew clean build
+    - name: Set Project Version Variable
+      run: echo "PROJECT_VERSION=$(./gradlew properties -q | grep 'project_version:' | awk '{print $2}')" >> $GITHUB_ENV
 
     - name: Build & Push Docker image
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
         image: mastilovic/rekreativ
-        tags: latest, ${project.version}
+        tags: latest, $PROJECT_VERSION
         registry: docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
