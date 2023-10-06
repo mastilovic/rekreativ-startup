@@ -44,7 +44,7 @@ jobs:
           echo "tag=$(cat tag)" >>$GITHUB_ENV
 
       - name: Declare version as  variable
-        id: vars
+        id: varss
         shell: bash
         run: |
           export APP_VERSION=$(awk '/^version/{gsub(/\"/,"",$2);print $2}' build.gradle)
