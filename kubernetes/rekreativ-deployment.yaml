@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rekreativ
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rekreativ
+  template:
+    metadata:
+      labels:
+        app: rekreativ
+    spec:
+      containers:
+      - name: rekreativ
+        image: mastilovic/rekreativ:noauth-0.0.1-SNAPSHOT
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+        env:
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: DB_HOST
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: DB_NAME
+          - name: USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: db-secrets
+                key: username
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-secrets
+                key: password
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rekreativ
+spec:
+  selector:
+    app: rekreativ
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+
