@@ -51,7 +51,7 @@ jobs:
 #          export APP_VERSION=$( perl -nle 'print $& while m{(?<=version = ").*?(?=")}g' build.gradle )
 #          echo $APP_VERSION > app_version # debug to print the extracted text of "2020.1-BETA"
           echo -n $(perl -nle 'print $& while m{(?<=version = ").*?(?=")}g' build.gradle) >version
-          echo "version=$(cat version)" >>$GITHUB_ENV
+#          echo "version=$(cat version)" >>$GITHUB_ENV
 #           export APP_VERSION=$(awk '/^version/{gsub(/\"/,"",$2);print $2}' build.gradle)
 #    - echo $APP_VERSION # debug to print the extracted text of "2020.1-BETA"
 
