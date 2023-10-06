@@ -34,6 +34,7 @@ buildDockerImage.dependsOn copyJarToDockerDir
 pushDockerImage.dependsOn buildDockerImage
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.4'
 	implementation 'org.springframework.boot:spring-boot-starter-tomcat:2.7.4'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.4'
