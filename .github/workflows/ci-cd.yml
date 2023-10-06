@@ -47,7 +47,7 @@ jobs:
       - name: Declare project version
         shell: bash
         run: |
-          export VERSION = $(grep -E "version " rekreativ-startup/build.gradle | cut -d "\"" -f2)
+          export VERSION = $(grep -E "version " build.gradle | cut -d "\"" -f2)
           echo VERSION
 
       - name: Set up JDK 11
