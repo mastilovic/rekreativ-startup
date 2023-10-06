@@ -10,12 +10,6 @@ group = 'com.example'
 version = '0.0.2-SNAPSHOT'
 sourceCompatibility = '11'
 
-processResources {
-	filesMatching("**/ci-cd.yml") {
-		expand( project.version )
-	}
-}
-
 repositories {
 	mavenCentral()
 }

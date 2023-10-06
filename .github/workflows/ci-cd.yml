@@ -44,6 +44,11 @@ jobs:
 #          fi
 #          echo "tag=$(cat tag)" >>$GITHUB_ENV
 
+      - name: Declare project version
+        shell: bash
+        run: |
+          export VERSION = $(grep -E "version = " rekreativ-startup/build.gradle | cut -d "\"" -f2)
+
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
@@ -58,7 +63,7 @@ jobs:
 #        if: github.event_name == 'pull_request' && github.event.action == 'closed'
         with:
           image: mastilovic/rekreativ
-          tags: ${version}, latest
+          tags: $VERSION, latest
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
