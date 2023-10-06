@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true # running build job only after pr is merged
+#    if: github.event.pull_request.merged == true # running build job only after pr is merged
 #    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
@@ -70,7 +70,7 @@ jobs:
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+        if: github.event_name == 'push'
   #BELOW WORKS AS WELL FOR BUILDING AND PUSHING TO DOCKER
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v3
