@@ -67,7 +67,7 @@ jobs:
 #        if: github.event_name == 'pull_request' && github.event.action == 'closed'
         with:
           image: mastilovic/rekreativ
-          tags: ${APP_VERSION}, latest
+          tags: ${{ APP_VERSION }}, latest
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
