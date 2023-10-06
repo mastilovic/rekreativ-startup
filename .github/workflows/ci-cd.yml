@@ -52,24 +52,37 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
         with:
+          image: mastilovic/rekreativ
+          tags: ${{ env.tag }}, latest
+          registry: docker.io
+          dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build & push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          tags: mastilovic/rekreativ:${{ env.tag }}, mastilovic/rekreativ:latest
-          context: .
-          push: true
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v3
+#
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v3
+#
+#      - name: Login to Docker Hub
+#        uses: docker/login-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#
+#      - name: Build & push Docker image
+#        uses: docker/build-push-action@v5
+#        with:
+#          tags: mastilovic/rekreativ:${{ env.tag }}, mastilovic/rekreativ:latest
+#          context: .
+#          push: true
+
+
+          #potentaily delete below
 #      - name: Build & Push Docker image
 #        uses: docker/build-push-action@v4
 #        with:
