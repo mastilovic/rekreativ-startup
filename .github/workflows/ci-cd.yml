@@ -1,10 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -25,25 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-#      - name: Login to Container Registry
-#        uses: docker/login-action@v2
-#        with:
-#          registry: docker.io
-#          username: ${{ secrets.REGISTRY_USERNAME }}
-#          password: ${{ secrets.REGISTRY_PASSWORD }}
-#        if: github.event_name == 'push'
-
-#      - name: Declare tag variable as artifact
-#        id: vars
-#        shell: bash
-#        run: |
-#          echo -n $(git rev-parse --short HEAD) >tag
-#          # if it is a tag, use the tag
-#          if [[ $GITHUB_REF == refs/tags/* ]]; then
-#                echo -n ${GITHUB_REF#refs/tags/} >tag
-#          fi
-#          echo "tag=$(cat tag)" >>$GITHUB_ENV
-
       - name: Extract version from build.gradle
         run: |
           VERSION=$(grep -E "version\s*=\s*'[0-9A-Za-z.-]+'" ../../build.gradle | cut -d "'" -f2)
@@ -62,7 +36,6 @@ jobs:
 
       - name: Build & push Docker image
         uses: mr-smithers-excellent/docker-build-push@v6
-#        if: github.event_name == 'pull_request' && github.event.action == 'closed'
         with:
           image: mastilovic/rekreativ
           tags: ${{ env.VERSION }}, latest
@@ -71,23 +44,3 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
         if: github.event_name == 'push'
-  #BELOW WORKS AS WELL FOR BUILDING AND PUSHING TO DOCKER
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v3
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v3
-#
-#      - name: Login to Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-#
-#      - name: Build & push Docker image
-#        uses: docker/build-push-action@v5
-#        with:
-#          tags: mastilovic/rekreativ:${{ env.tag }}, mastilovic/rekreativ:latest
-#          context: .
-#          push: true
-
