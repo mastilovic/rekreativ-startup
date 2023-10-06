@@ -58,7 +58,7 @@ jobs:
           image: mastilovic/rekreativ
           tags: ${{ env.tag }}, latest
           registry: docker.io
-          dockerfile: Dockerfile
+          dockerfile: rekreativ-startup/Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 #      - name: Build & Push Docker image
