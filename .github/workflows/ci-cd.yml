@@ -18,7 +18,8 @@ permissions:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
 
     steps:
@@ -47,7 +48,7 @@ jobs:
         id: varss
         shell: bash
         run: |
-          export APP_VERSION=$(awk '/^version/{gsub(/\"/,"",$2);print $2}' build.gradle)
+          export APP_VERSION=$( perl -nle 'print $& while m{(?<=version = ").*?(?=")}g' build.gradle )
           echo $APP_VERSION # debug to print the extracted text of "2020.1-BETA"
 #           export APP_VERSION=$(awk '/^version/{gsub(/\"/,"",$2);print $2}' build.gradle)
 #    - echo $APP_VERSION # debug to print the extracted text of "2020.1-BETA"
