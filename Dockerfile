@@ -1,6 +1,8 @@
 FROM openjdk:11
 
-ARG JAR_FILE=build/libs/rekreativ-0.0.2-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/*.jar
+
+RUN mkdir -p /opt/app
 
 WORKDIR /opt/app
 

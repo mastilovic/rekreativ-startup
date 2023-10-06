@@ -62,6 +62,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+  #BELOW WORKS AS WELL FOR BUILDING AND PUSHING TO DOCKER
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v3
 #
@@ -81,14 +82,3 @@ jobs:
 #          context: .
 #          push: true
 
-
-          #potentaily delete below
-#      - name: Build & Push Docker image
-#        uses: docker/build-push-action@v4
-#        with:
-#          context: .
-#          image: mastilovic/rekreativ
-#          tags: latest
-#          registry: docker.io
-#          file: Dockerfile
-#          push: true
