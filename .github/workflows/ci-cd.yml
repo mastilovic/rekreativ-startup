@@ -33,19 +33,19 @@ jobs:
 #          password: ${{ secrets.REGISTRY_PASSWORD }}
 #        if: github.event_name == 'push'
 
-      - name: Declare tag variable as artifact
-        id: vars
-        shell: bash
-        run: |
-          echo -n $(git rev-parse --short HEAD) >tag
-          # if it is a tag, use the tag
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-                echo -n ${GITHUB_REF#refs/tags/} >tag
-          fi
-          echo "tag=$(cat tag)" >>$GITHUB_ENV
+#      - name: Declare tag variable as artifact
+#        id: vars
+#        shell: bash
+#        run: |
+#          echo -n $(git rev-parse --short HEAD) >tag
+#          # if it is a tag, use the tag
+#          if [[ $GITHUB_REF == refs/tags/* ]]; then
+#                echo -n ${GITHUB_REF#refs/tags/} >tag
+#          fi
+#          echo "tag=$(cat tag)" >>$GITHUB_ENV
 
       - name: Declare version as variable
-        id: varss
+        id: vars
         shell: bash
         run: |
 #          export APP_VERSION=$( perl -nle 'print $& while m{(?<=version = ").*?(?=")}g' build.gradle )
