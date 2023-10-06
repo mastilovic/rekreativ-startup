@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: |
           export APP_VERSION=$( perl -nle 'print $& while m{(?<=version = ").*?(?=")}g' build.gradle )
-          echo $APP_VERSION # debug to print the extracted text of "2020.1-BETA"
+          echo $APP_VERSION # debug to print the extracted text of "2020.1-BETA" > app_version
 #           export APP_VERSION=$(awk '/^version/{gsub(/\"/,"",$2);print $2}' build.gradle)
 #    - echo $APP_VERSION # debug to print the extracted text of "2020.1-BETA"
 
@@ -67,7 +67,7 @@ jobs:
 #        if: github.event_name == 'pull_request' && github.event.action == 'closed'
         with:
           image: mastilovic/rekreativ
-          tags: ${{ APP_VERSION }}, latest
+          tags: ${{ app_version }}, latest
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
