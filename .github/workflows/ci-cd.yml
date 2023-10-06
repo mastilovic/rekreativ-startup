@@ -46,7 +46,7 @@ jobs:
 
       - name: Extract version from build.gradle
         run: |
-          VERSION=$(grep -E "version = '[0-9A-Za-z.-]+'" ../../build.gradle | cut -d "'" -f2)
+          VERSION=$(grep -E "version ='[0-9A-Za-z.-]+'" ../../build.gradle | cut -d "'" -f2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
         working-directory: .github/workflows
 
