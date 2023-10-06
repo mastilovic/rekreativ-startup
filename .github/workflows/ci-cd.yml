@@ -33,27 +33,16 @@ jobs:
 #          password: ${{ secrets.REGISTRY_PASSWORD }}
 #        if: github.event_name == 'push'
 
-      - name: Declare tag variable as artifact
-        id: vars
-        shell: bash
-        run: |
-          echo -n $(git rev-parse --short HEAD) >tag
-          # if it is a tag, use the tag
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-                echo -n ${GITHUB_REF#refs/tags/} >tag
-          fi
-          echo "tag=$(cat tag)" >>$GITHUB_ENV
-
-      - name: Declare version as variable
-        id: varss
-        shell: bash
-        run: |
-#          export APP_VERSION=$( perl -nle 'print $& while m{(?<=version = ").*?(?=")}g' build.gradle )
-#          echo $APP_VERSION > app_version # debug to print the extracted text of "2020.1-BETA"
-          echo -n $(perl -nle 'print $& while m{(?<=version = ").*?(?=")}g' build.gradle) >version
-          echo "version=$(cat version)" >>$GITHUB_ENV
-#           export APP_VERSION=$(awk '/^version/{gsub(/\"/,"",$2);print $2}' build.gradle)
-#    - echo $APP_VERSION # debug to print the extracted text of "2020.1-BETA"
+#      - name: Declare tag variable as artifact
+#        id: vars
+#        shell: bash
+#        run: |
+#          echo -n $(git rev-parse --short HEAD) >tag
+#          # if it is a tag, use the tag
+#          if [[ $GITHUB_REF == refs/tags/* ]]; then
+#                echo -n ${GITHUB_REF#refs/tags/} >tag
+#          fi
+#          echo "tag=$(cat tag)" >>$GITHUB_ENV
 
       - name: Set up JDK 11
         uses: actions/setup-java@v3
@@ -69,7 +58,7 @@ jobs:
 #        if: github.event_name == 'pull_request' && github.event.action == 'closed'
         with:
           image: mastilovic/rekreativ
-          tags: ${{ env.version }}, latest
+          tags: ${version}, latest
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
