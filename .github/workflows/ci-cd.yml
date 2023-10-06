@@ -9,6 +9,9 @@ name: Java CI with Gradle
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - development
   pull_request:
     types:
       - closed
