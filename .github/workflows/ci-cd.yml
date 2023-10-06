@@ -19,7 +19,7 @@ permissions:
 jobs:
   build:
 #    if: github.event.pull_request.merged == true
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' # running build job only on main branch
     runs-on: ubuntu-latest
 
     steps:
