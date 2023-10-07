@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: Backend Build and Deploy
 
 on:
   push:
@@ -10,9 +10,9 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  ci:
 #    if: github.event.pull_request.merged == true # running build job only after pr is merged
-#    if: github.ref == 'refs/heads/main' #testing new if statement
+#    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,6 @@ jobs:
         run: |
           VERSION=$(grep -E "version\s*=\s*'[0-9A-Za-z.-]+'" ../../build.gradle | cut -d "'" -f2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo ${{env.VERSION}}
         working-directory: .github/workflows
 
       - name: Set up JDK 11
