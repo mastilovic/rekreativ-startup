@@ -67,7 +67,7 @@ Docker image name of the application: `mastilovic/rekreativ:latest`
 
 ## API Reference
 
-### Movies
+### Users
 
 #### Register
 ```http request
