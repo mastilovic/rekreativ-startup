@@ -40,8 +40,8 @@ public class TeammateController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/{name}", method = RequestMethod.GET)
-    public ResponseEntity<?> getByName(@PathVariable("name") String name) {
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public ResponseEntity<?> getByName(@RequestParam("name") String name) {
         Teammate teammate = teammateService.findTeammateByName(name);
 
         return new ResponseEntity<Object>(teammate, HttpStatus.OK);
