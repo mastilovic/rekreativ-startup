@@ -29,6 +29,13 @@ public class TeamController {
         return new ResponseEntity<Object>(team, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getByName(@RequestParam("name") String name) {
+        Team team = teamService.getByTeamname(name);
+
+        return new ResponseEntity<Object>(team, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody Team team) {
@@ -70,17 +77,14 @@ public class TeamController {
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeam(@RequestBody Team team) {
         Team existingTeam = teamService.findTeamById(team.getId());
-        if (existingTeam == null) {
 
-            return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-        }
         //todo: create update method for team
         existingTeam.setTeamName(team.getTeamName());
         existingTeam.setCity(team.getCity());
         existingTeam.setWins(team.getWins());
-        teamService.save(existingTeam);
+        Team update = teamService.save(existingTeam);
 
-        return new ResponseEntity<Object>(HttpStatus.CREATED);
+        return new ResponseEntity<>(update, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")

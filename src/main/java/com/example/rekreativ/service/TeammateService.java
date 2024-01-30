@@ -1,5 +1,6 @@
 package com.example.rekreativ.service;
 
+import com.example.rekreativ.dto.TeammateUpdateDTO;
 import com.example.rekreativ.model.Teammate;
 
 public interface TeammateService {
@@ -15,4 +16,5 @@ public interface TeammateService {
     Iterable<Teammate> findAll();
 
     void delete(Long id);
+    Teammate update(TeammateUpdateDTO teammateUpdateDTO);
 }

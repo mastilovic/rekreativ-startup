@@ -26,3 +26,8 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 10s
       retries: 10
+  frontend:
+    image: mastilovic/rk-frontend:latest
+    hostname: rk-frontend
+    ports:
+      - "4200:4200"

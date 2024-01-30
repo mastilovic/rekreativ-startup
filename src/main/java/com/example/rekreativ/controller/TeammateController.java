@@ -1,5 +1,6 @@
 package com.example.rekreativ.controller;
 
+import com.example.rekreativ.dto.TeammateUpdateDTO;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.service.TeammateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +62,13 @@ public class TeammateController {
         teammateService.delete(id);
 
         return new ResponseEntity<Object>("Teammate deleted successfully!", HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<Teammate> updateTeammate(@RequestBody TeammateUpdateDTO teammateUpdateDTO) {
+        Teammate teammate = teammateService.update(teammateUpdateDTO);
+
+        return new ResponseEntity<>(teammate, HttpStatus.OK);
     }
 }

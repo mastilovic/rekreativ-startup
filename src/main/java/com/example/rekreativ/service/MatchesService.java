@@ -8,9 +8,9 @@ public interface MatchesService {
 
     void processMatchOutcome(Matches newMatch, Team existingTeamA, Team existingTeamB);
 
-    public Matches createMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore);
+    Matches createMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore);
 
-    public Matches save(MatchesRequestDTO matches);
+    Matches save(MatchesRequestDTO matches);
 
     Iterable<Matches> findAll();
 

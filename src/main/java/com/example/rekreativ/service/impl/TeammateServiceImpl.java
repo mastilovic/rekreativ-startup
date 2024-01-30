@@ -1,5 +1,7 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.dto.TeammateRequestDTO;
+import com.example.rekreativ.dto.TeammateUpdateDTO;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeammateRepository;
@@ -38,7 +40,6 @@ public class TeammateServiceImpl implements TeammateService {
                 .orElseThrow(() -> new ObjectNotFoundException(Teammate.class, id));
     }
 
-
     public Teammate save(Teammate teammate) {
         log.debug("calling save method");
 
@@ -72,5 +73,14 @@ public class TeammateServiceImpl implements TeammateService {
         Teammate teammate = findById(id);
 
         teammateRepository.deleteById(teammate.getId());
+    }
+
+    public Teammate update(TeammateUpdateDTO teammateUpdateDTO) {
+        log.debug("calling save method");
+        Teammate teammate = this.findById(teammateUpdateDTO.getId());
+
+        teammate.setName(teammateUpdateDTO.getName());
+
+        return teammateRepository.save(teammate);
     }
 }
