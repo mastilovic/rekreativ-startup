@@ -62,8 +62,11 @@ Docker image name of the application: `mastilovic/rekreativ:latest`
 6. Run docker compose:
     * `docker-compose up`
 7. Wait for application to start
-8. Test the API below using Postman
-
+8. Access frontend of the application on localhost:4200 or test the backend API below using Postman 
+   * default credentials:
+     * username: `admin`
+     * password: `admin`
+10. Link to frontend repository: https://github.com/salexdxd/rekreativ-frontend
 
 ## API Reference
 
@@ -96,8 +99,3 @@ Click on headers tab, as key enter `Authorization`, for value type `Bearer` ` ` 
 ```http request
 GET /api/v1/users
 ```
-
-## TODO: FRONTEND :)
-
-
-
