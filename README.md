@@ -20,17 +20,16 @@ Docker image name of the application: `mastilovic/rekreativ:latest`
 #### This project was built using IntelliJ IDEA and uses the following technologies:
 * _Java 11_
 * _Spring Framework/Spring Boot version 2.7.8_
-* _Authentication and Authorization_
+* _Spring Security_
 * _Auth0_
 * _Gradle_
-* _REST CRUD operations_
-* _MySQL Docker Image 5.7_
+* _MySQL_
 * _Unit and Integration tests_
 * _Rest Error Handlers_
-* _Docker & Docker-compose_
+* _Docker_
 * _Postman_
 * _Git_
-* _Installed IntelliJ IDEA plugin Sonarlint_
+* _Sonarlint plugin_
 
 ## Setup
 ### Setup for local development
