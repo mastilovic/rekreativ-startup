@@ -9,7 +9,7 @@ import com.example.rekreativ.model.User;
 import com.example.rekreativ.repository.UserRepository;
 import com.example.rekreativ.service.RoleService;
 import com.example.rekreativ.service.UserService;
-import com.example.rekreativ.util.ValidatorUtil;
+import com.example.rekreativ.commons.CustomValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -32,16 +32,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final ValidatorUtil validatorUtil;
+    private final CustomValidator customValidator;
 
     public UserServiceImpl(UserRepository userRepository,
                            RoleService roleService,
                            PasswordEncoder passwordEncoder,
-                           ValidatorUtil validatorUtil) {
+                           CustomValidator customValidator) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
-        this.validatorUtil = validatorUtil;
+        this.customValidator = customValidator;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        validatorUtil.validate(newUser);
+        customValidator.validate(newUser);
 
         return userRepository.save(newUser);
     }

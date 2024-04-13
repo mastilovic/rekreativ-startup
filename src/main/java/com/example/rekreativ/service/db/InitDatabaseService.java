@@ -1,4 +1,4 @@
-package com.example.rekreativ.util;
+package com.example.rekreativ.service.db;
 
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.model.User;
@@ -12,8 +12,7 @@ import javax.annotation.PostConstruct;
 
 @Service
 @Slf4j
-//TODO: util class only has static methods, refactor name of the class
-public class InitDatabaseUtil {
+public class InitDatabaseService {
 
     private static final String ROLE_ADMIN_NAME = "ROLE_ADMIN";
     private static final String ROLE_USER_NAME = "ROLE_USER";
@@ -26,9 +25,9 @@ public class InitDatabaseUtil {
 
     private final PasswordEncoder passwordEncoder;
 
-    public InitDatabaseUtil(UserService userService,
-                            RoleService roleService,
-                            PasswordEncoder passwordEncoder) {
+    public InitDatabaseService(UserService userService,
+                               RoleService roleService,
+                               PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;

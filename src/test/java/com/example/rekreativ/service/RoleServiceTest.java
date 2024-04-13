@@ -5,7 +5,7 @@ import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.service.impl.RoleServiceImpl;
-import com.example.rekreativ.util.ValidatorUtil;
+import com.example.rekreativ.commons.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ class RoleServiceTest {
     @Mock
     private RoleRepository roleRepository;
     @Mock
-    private ValidatorUtil validatorUtil;
+    private CustomValidator customValidator;
     @InjectMocks
     private RoleServiceImpl underTest;
     @Captor

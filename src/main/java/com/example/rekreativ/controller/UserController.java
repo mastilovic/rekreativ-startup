@@ -6,9 +6,8 @@ import com.example.rekreativ.dto.UserLoginDTO;
 import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.service.UserService;
-import com.example.rekreativ.util.JwtUtil;
+import com.example.rekreativ.commons.JwtHandler;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.logging.Logger;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -29,14 +26,14 @@ public class UserController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+    private final JwtHandler jwtHandler;
 
     public UserController(UserService userService,
                           AuthenticationManager authenticationManager,
-                          JwtUtil jwtUtil) {
+                          JwtHandler jwtHandler) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+        this.jwtHandler = jwtHandler;
     }
 
     @PostMapping(path = "/login")
@@ -115,7 +112,7 @@ public class UserController {
 
     private HttpHeaders getJwtHeader(AuthUser user) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("token", jwtUtil.generateJwtToken(user));
+        headers.add("token", jwtHandler.generateJwtToken(user));
 
         return headers;
     }

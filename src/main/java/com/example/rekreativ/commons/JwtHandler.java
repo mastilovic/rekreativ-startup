@@ -1,4 +1,4 @@
-package com.example.rekreativ.util;
+package com.example.rekreativ.commons;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -26,7 +26,7 @@ import static java.util.Arrays.stream;
 @Service
 @Slf4j
 //TODO: util class only has static methods, refactor name of the class
-public class JwtUtil {
+public class JwtHandler {
 
     private static final String SECRET_KEY = "jKZGcDKSY1fcmFAwxVsof5GicOdsz9sD";
 

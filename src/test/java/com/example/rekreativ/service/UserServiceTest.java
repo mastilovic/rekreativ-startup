@@ -8,7 +8,7 @@ import com.example.rekreativ.model.User;
 import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.repository.UserRepository;
 import com.example.rekreativ.service.impl.UserServiceImpl;
-import com.example.rekreativ.util.ValidatorUtil;
+import com.example.rekreativ.commons.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class UserServiceTest {
     @Mock
     private RoleService roleService;
     @Mock
-    private ValidatorUtil validatorUtil;
+    private CustomValidator customValidator;
     @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks

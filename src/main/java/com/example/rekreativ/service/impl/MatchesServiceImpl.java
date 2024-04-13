@@ -10,15 +10,10 @@ import com.example.rekreativ.repository.MatchesRepository;
 import com.example.rekreativ.service.MatchesService;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.TeammateService;
-import com.example.rekreativ.util.ValidatorUtil;
+import com.example.rekreativ.commons.CustomValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
-import java.util.function.Supplier;
 
 
 @Service
@@ -28,16 +23,16 @@ public class MatchesServiceImpl implements MatchesService {
     private final MatchesRepository matchesRepository;
     private final TeammateService teammateService;
     private final TeamService teamService;
-    private final ValidatorUtil validatorUtil;
+    private final CustomValidator customValidator;
 
     public MatchesServiceImpl(MatchesRepository matchesRepository,
                               TeammateServiceImpl teammateServiceImpl,
                               TeamServiceImpl teamService,
-                              ValidatorUtil validatorUtil) {
+                              CustomValidator customValidator) {
         this.matchesRepository = matchesRepository;
         this.teammateService = teammateServiceImpl;
         this.teamService = teamService;
-        this.validatorUtil = validatorUtil;
+        this.customValidator = customValidator;
     }
 
     public Matches createMatchup(String teamOne, String teamTwo, Integer teamOneScore, Integer teamTwoScore) {
@@ -52,7 +47,7 @@ public class MatchesServiceImpl implements MatchesService {
         match.setTeamAScore(teamOneScore);
         match.setTeamBScore(teamTwoScore);
 
-        validatorUtil.validate(match);
+        customValidator.validate(match);
 
         return matchesRepository.save(match);
     }
