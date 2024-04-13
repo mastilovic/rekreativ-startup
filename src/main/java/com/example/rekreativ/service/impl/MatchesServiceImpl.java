@@ -15,6 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.Supplier;
+
 
 @Service
 @Slf4j
@@ -61,7 +66,6 @@ public class MatchesServiceImpl implements MatchesService {
 
         if (teammateInBothTeams) {
             log.debug("Teammate can't be part of both teams in a single match!");
-
             throw new ObjectAlreadyExistsException(Teammate.class, "Teammate can't be part of both teams in a single match");
         }
 
@@ -76,47 +80,44 @@ public class MatchesServiceImpl implements MatchesService {
         return matchesRepository.save(match);
     }
 
-    public void processMatchOutcome(Matches match, Team existingTeamA, Team existingTeamB) {
-        log.debug("calling method matchOutcome in MatchesServiceImpl");
+    public void processMatchOutcome(Matches match, Team teamA, Team teamB) {
+        log.debug("calling method processMatchOutcome in MatchesServiceImpl");
 
         if (match.getTeamAScore() > match.getTeamBScore()) {
             match.setWinner(match.getTeamA().getTeamName());
-            existingTeamA.setWins(existingTeamA.getWins() + 1);
-
-            increaseTeamTotalGamesPlayed(existingTeamA);
-            increaseTeamTotalGamesPlayed(existingTeamB);
-
-            updateWinningTeammates(existingTeamA);
-            updateLosingTeammates(existingTeamB);
-
-            teamService.save(existingTeamB);
-            teamService.save(existingTeamA);
+            updateScores(teamA, teamB, false);
 
         } else if (match.getTeamAScore() < match.getTeamBScore()) {
             match.setWinner(match.getTeamB().getTeamName());
-            existingTeamB.setWins(existingTeamB.getWins() + 1);
-
-            increaseTeamTotalGamesPlayed(existingTeamA);
-            increaseTeamTotalGamesPlayed(existingTeamB);
-
-            updateLosingTeammates(existingTeamA);
-            updateWinningTeammates(existingTeamB);
-
-            teamService.save(existingTeamB);
-            teamService.save(existingTeamA);
+            updateScores(teamB, teamA, false);
 
         } else if (match.getTeamAScore().equals(match.getTeamBScore())) {
             match.setWinner("draw");
-
-            increaseTeamTotalGamesPlayed(existingTeamA);
-            increaseTeamTotalGamesPlayed(existingTeamB);
-
-            updateLosingTeammates(existingTeamA);
-            updateLosingTeammates(existingTeamB);
-
-            teamService.save(existingTeamB);
-            teamService.save(existingTeamA);
+            updateScores(teamA, teamB, true);
         }
+    }
+
+    private void updateScores(Team winner, Team loser, boolean isDraw) {
+        log.debug("calling method updateScores in " + this.getClass().getSimpleName());
+
+        winner.setWins(winner.getWins() + 1);
+        increaseTeamTotalGamesPlayed(winner);
+        increaseTeamTotalGamesPlayed(loser);
+
+        if (isDraw) {
+            //todo: can create different method
+            // updateDrawScores - this method will take both teams
+            // update them appropriately
+            // implementation of this method would not call updateLosingTeammates
+            updateLosingTeammates(winner);
+            updateLosingTeammates(loser);
+        } else {
+            updateLosingTeammates(loser);
+            updateWinningTeammates(winner);
+        }
+
+        teamService.save(winner);
+        teamService.save(loser);
     }
 
     public Iterable<Matches> findAll() {
@@ -158,10 +159,11 @@ public class MatchesServiceImpl implements MatchesService {
     private void updateLosingTeammates(Team team) {
 
         team.getTeammates().forEach(teammate -> {
+            teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
+
             double winsDecimal = teammate.getWins();
             double winRate = (winsDecimal / teammate.getTotalGamesPlayed()) * 100;
 
-            teammate.setTotalGamesPlayed(teammate.getTotalGamesPlayed() + 1);
             teammate.setWinRate(Precision.round(winRate, 2));
 
             teammateService.initSave(teammate);
