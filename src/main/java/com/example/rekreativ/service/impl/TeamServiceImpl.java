@@ -1,6 +1,8 @@
 package com.example.rekreativ.service.impl;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.commons.JwtHandler;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Matches;
@@ -10,8 +12,6 @@ import com.example.rekreativ.model.User;
 import com.example.rekreativ.repository.TeamRepository;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.TeammateService;
-import com.example.rekreativ.commons.JwtHandler;
-import com.example.rekreativ.commons.CustomValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -1,11 +1,11 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.commons.CustomValidator;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.service.RoleService;
-import com.example.rekreativ.commons.CustomValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

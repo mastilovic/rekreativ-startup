@@ -1,5 +1,6 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.commons.CustomValidator;
 import com.example.rekreativ.dto.MatchesRequestDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
@@ -10,7 +11,6 @@ import com.example.rekreativ.repository.MatchesRepository;
 import com.example.rekreativ.service.MatchesService;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.TeammateService;
-import com.example.rekreativ.commons.CustomValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;

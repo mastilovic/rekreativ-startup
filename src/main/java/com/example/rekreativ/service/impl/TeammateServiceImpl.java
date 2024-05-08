@@ -1,11 +1,11 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.commons.CustomValidator;
 import com.example.rekreativ.dto.TeammateUpdateDTO;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeammateRepository;
 import com.example.rekreativ.service.TeammateService;
-import com.example.rekreativ.commons.CustomValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

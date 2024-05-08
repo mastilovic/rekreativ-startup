@@ -24,7 +24,7 @@ Docker image name of the application: `mastilovic/rekreativ:latest`
 * _Auth0_
 * _Gradle_
 * _MySQL_
-* _Unit and Integration tests_
+* _JUnit 5 & Mockito_
 * _Rest Error Handlers_
 * _Docker_
 * _Postman_
