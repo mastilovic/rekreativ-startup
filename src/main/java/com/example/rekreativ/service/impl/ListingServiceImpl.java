@@ -2,7 +2,6 @@ package com.example.rekreativ.service.impl;
 
 import com.example.rekreativ.dto.request.ListingRequestDto;
 import com.example.rekreativ.dto.response.ListingResponseDto;
-import com.example.rekreativ.dto.response.UserResponseDTO;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.mapper.ListingMapper;
 import com.example.rekreativ.mapper.UserMapper;
@@ -41,7 +40,7 @@ public class ListingServiceImpl implements ListingService {
     @Override
     public ListingResponseDto findById(Long id) {
         return listingRepository.findById(id)
-                .map(listingMapper::mapToResponseDto)
+                .map(this::mapUserToListing)
                 .orElseThrow(() -> new ObjectNotFoundException(Listing.class, id));
     }
 
@@ -60,18 +59,25 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public ListingResponseDto initSave(ListingResponseDto listingResponseDto) {
-        return null;
+    public ListingResponseDto initSave(Listing listing) {
+        return this.mapUserToListing(listingRepository.save(listing));
     }
 
     @Override
     public List<ListingResponseDto> findAll() {
-        return List.of();
+        return listingRepository.findAll().stream()
+                .map(this::mapUserToListing)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void delete(Long id) {
-
+        listingRepository.findById(id)
+                .ifPresentOrElse(listing -> {
+                    log.info("Listing found by id. Attempting to delete!");
+                    listingRepository.deleteById(id);
+                    log.info("Listing deleted successfully!!");
+                }, () -> log.error("Error occured while trying to delete listing!"));
     }
 
     @Override
@@ -80,13 +86,47 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public ListingResponseDto addUserToListing(Long listingId, Long userId) {
-        return null;
+    public ListingResponseDto addSignedUserToListing(Long listingId, Long userId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ObjectNotFoundException(Listing.class, listingId));
+        User user = userService.findRawUserById(userId);
+        listing.getSigned().add(user);
+        user.getListings().add(listing);
+        return this.initSave(listing);
     }
 
     @Override
-    public ListingResponseDto deleteUserFromListing(Long listingId, Long userId) {
-        return null;
+    public ListingResponseDto deleteSignedUserFromListing(Long listingId, Long userId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ObjectNotFoundException(Listing.class, listingId));
+        User user = userService.findRawUserById(userId);
+        listing.getSigned().remove(user);
+        user.getListings().remove(listing);
+
+        return this.initSave(listing);
+    }
+
+    @Override
+    public ListingResponseDto deleteAcceptedUserFromListing(Long listingId, Long userId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ObjectNotFoundException(Listing.class, listingId));
+        User user = userService.findRawUserById(userId);
+        listing.getAccepted().remove(user);
+        user.getListings().remove(listing);
+
+        return this.initSave(listing);
+    }
+
+    @Override
+    public ListingResponseDto addAcceptedUserToListing(Long listingId, Long userId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ObjectNotFoundException(Listing.class, listingId));
+        User user = userService.findRawUserById(userId);
+
+        listing.getAccepted().add(user);
+        user.getListings().add(listing);
+
+        return this.initSave(listing);
     }
 
     private ListingResponseDto mapUserToListing(Listing listing) {

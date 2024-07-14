@@ -35,7 +35,7 @@ public class UserMapper {
                                 ? Collections.emptyList()
                                 : user.getRoles());
         userListingDto.setReviews(reviews);
-        userListingDto.setAverageReviewRating(reviews.size() < 1
+        userListingDto.setAverageReviewRating(reviews.isEmpty()
                                               ? 0.0
                                               : reviews.stream()
                                                       .filter(review -> Objects.nonNull(review.getRating()))

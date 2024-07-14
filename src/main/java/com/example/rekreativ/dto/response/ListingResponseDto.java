@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ListingResponseDto {
+    private Long id;
     private ListingType listingType;
     private Set<PlayerType> lookingFor;
     private String title;
@@ -25,7 +26,8 @@ public class ListingResponseDto {
     public ListingResponseDto() {
     }
 
-    public ListingResponseDto(ListingType listingType,
+    public ListingResponseDto(Long id,
+                              ListingType listingType,
                               Set<PlayerType> lookingFor,
                               String title,
                               String description,
@@ -36,6 +38,7 @@ public class ListingResponseDto {
                               UserListingDto createdBy,
                               List<UserListingDto> signed,
                               List<UserListingDto> accepted) {
+        this.id = id;
         this.listingType = listingType;
         this.lookingFor = lookingFor;
         this.title = title;
@@ -47,6 +50,14 @@ public class ListingResponseDto {
         this.createdBy = createdBy;
         this.signed = signed;
         this.accepted = accepted;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public ListingType getListingType() {

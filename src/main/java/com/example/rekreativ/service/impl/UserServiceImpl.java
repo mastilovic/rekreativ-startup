@@ -192,4 +192,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(User.class, id));
     }
+
+
 }

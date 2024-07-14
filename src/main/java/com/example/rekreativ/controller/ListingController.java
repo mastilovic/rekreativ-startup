@@ -1,7 +1,6 @@
 package com.example.rekreativ.controller;
 
 import com.example.rekreativ.dto.request.ListingRequestDto;
-import com.example.rekreativ.dto.request.ReviewRequestDto;
 import com.example.rekreativ.service.ListingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +24,45 @@ public class ListingController {
     @PostMapping
     public ResponseEntity<?> createListing(@RequestBody ListingRequestDto review) {
         return ResponseEntity.ok(listingService.save(review));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(listingService.findById(id));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(listingService.findAll());
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @PostMapping("/signed")
+    public ResponseEntity<?> addSignedUserToListing(@RequestParam(name = "userId") Long userId,
+                                                    @RequestParam(name = "listingId") Long listingId) {
+        return ResponseEntity.ok(listingService.addSignedUserToListing(listingId, userId));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @DeleteMapping("/signed")
+    public ResponseEntity<?> deleteSignedUserFromListing(@RequestParam(name = "userId") Long userId,
+                                                         @RequestParam(name = "listingId") Long listingId) {
+        return ResponseEntity.ok(listingService.deleteSignedUserFromListing(listingId, userId));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @PostMapping("/accepted")
+    public ResponseEntity<?> addAcceptedUserToListing(@RequestParam(name = "userId") Long userId,
+                                                      @RequestParam(name = "listingId") Long listingId) {
+        return ResponseEntity.ok(listingService.addAcceptedUserToListing(listingId, userId));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @DeleteMapping("/accepted")
+    public ResponseEntity<?> deleteAcceptedUserFromListing(@RequestParam(name = "userId") Long userId,
+                                                           @RequestParam(name = "listingId") Long listingId) {
+        return ResponseEntity.ok(listingService.deleteAcceptedUserFromListing(listingId, userId));
     }
 }

@@ -2,6 +2,7 @@ package com.example.rekreativ.service;
 
 import com.example.rekreativ.dto.request.ListingRequestDto;
 import com.example.rekreativ.dto.response.ListingResponseDto;
+import com.example.rekreativ.model.Listing;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface ListingService {
 
     ListingResponseDto save(ListingRequestDto listingRequestDto);
 
-    ListingResponseDto initSave(ListingResponseDto listingResponseDto);
+    ListingResponseDto initSave(Listing listing);
 
     List<ListingResponseDto> findAll();
 
@@ -18,8 +19,12 @@ public interface ListingService {
 
     ListingResponseDto update(ListingResponseDto listingResponseDto);
 
-    ListingResponseDto addUserToListing(Long listingId, Long userId);
+    ListingResponseDto addSignedUserToListing(Long listingId, Long userId);
 
-    ListingResponseDto deleteUserFromListing(Long listingId, Long userId);
+    ListingResponseDto deleteSignedUserFromListing(Long listingId, Long userId);
+
+    ListingResponseDto addAcceptedUserToListing(Long listingId, Long userId);
+
+    ListingResponseDto deleteAcceptedUserFromListing(Long listingId, Long userId);
 
 }
