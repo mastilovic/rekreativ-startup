@@ -14,10 +14,10 @@ public class Role {
     @NotBlank(message = "Name can't be empty!")
     private String name;
 
-    @ManyToMany(mappedBy="roles")
+    @ManyToMany(mappedBy = "roles")
     private List<User> user = new ArrayList<>();
 
-    public Role(){
+    public Role() {
         super();
     }
 
@@ -29,6 +29,7 @@ public class Role {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }

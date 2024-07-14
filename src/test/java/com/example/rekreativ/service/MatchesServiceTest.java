@@ -1,5 +1,6 @@
 package com.example.rekreativ.service;
 
+import com.example.rekreativ.commons.CustomValidator;
 import com.example.rekreativ.dto.MatchesRequestDTO;
 import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.model.Team;
@@ -7,7 +8,6 @@ import com.example.rekreativ.repository.MatchesRepository;
 import com.example.rekreativ.service.impl.MatchesServiceImpl;
 import com.example.rekreativ.service.impl.TeamServiceImpl;
 import com.example.rekreativ.service.impl.TeammateServiceImpl;
-import com.example.rekreativ.commons.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MatchesServiceTest {

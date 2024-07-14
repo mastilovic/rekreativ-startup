@@ -1,9 +1,9 @@
 package com.example.rekreativ.service;
 
+import com.example.rekreativ.commons.CustomValidator;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeammateRepository;
 import com.example.rekreativ.service.impl.TeammateServiceImpl;
-import com.example.rekreativ.commons.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

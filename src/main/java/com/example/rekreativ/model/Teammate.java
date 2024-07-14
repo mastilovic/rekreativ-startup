@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -30,9 +29,6 @@ public class Teammate {
     @Column(name = "win_rate")
 //    @NotNull(message = "Win rate cant be null")
     private Double winRate;
-    // TODO
-    // change personalScore to totalGamesPlayed
-    // add wins for teammate
 
     @JsonIgnoreProperties(value = {"teammates"})
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "teammates")

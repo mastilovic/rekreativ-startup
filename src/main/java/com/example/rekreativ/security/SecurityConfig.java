@@ -1,7 +1,7 @@
 package com.example.rekreativ.security;
 
-import com.example.rekreativ.filter.JwtAuthorizationFilter;
 import com.example.rekreativ.commons.JwtHandler;
+import com.example.rekreativ.filter.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/api/v1/users/login/**", "/api/v1/users/register/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers(POST,"/api/v1/user/login").permitAll()
+                .authorizeRequests().antMatchers(POST, "/api/v1/user/login").permitAll()
                 .and()
                 .authorizeRequests().antMatchers(POST, "/api/v1/user/register").permitAll()
                 .and()
