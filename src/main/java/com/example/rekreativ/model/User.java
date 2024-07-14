@@ -32,6 +32,11 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    private List<Listing> listings = new ArrayList<>();
+
+    private Boolean activeListing;
+
     public User() {
         super();
     }
@@ -81,5 +86,21 @@ public class User {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public List<Listing> getListings() {
+        return listings;
+    }
+
+    public void setListings(List<Listing> listings) {
+        this.listings = listings;
+    }
+
+    public Boolean getActiveListing() {
+        return activeListing;
+    }
+
+    public void setActiveListing(Boolean activeListing) {
+        this.activeListing = activeListing;
     }
 }

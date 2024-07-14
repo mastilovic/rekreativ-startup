@@ -1,4 +1,4 @@
-package com.example.rekreativ.dto;
+package com.example.rekreativ.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

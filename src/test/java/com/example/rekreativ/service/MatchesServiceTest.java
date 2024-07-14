@@ -1,7 +1,7 @@
 package com.example.rekreativ.service;
 
 import com.example.rekreativ.commons.CustomValidator;
-import com.example.rekreativ.dto.MatchesRequestDTO;
+import com.example.rekreativ.dto.request.MatchesRequestDTO;
 import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.model.Team;
 import com.example.rekreativ.repository.MatchesRepository;

@@ -1,7 +1,7 @@
 package com.example.rekreativ.controller;
 
 
-import com.example.rekreativ.dto.TeammateRequestDTO;
+import com.example.rekreativ.dto.request.TeammateRequestDTO;
 import com.example.rekreativ.model.Team;
 import com.example.rekreativ.service.TeamService;
 import org.springframework.http.HttpStatus;

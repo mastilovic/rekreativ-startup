@@ -3,4 +3,4 @@ server:
 
 spring:
   profiles:
-    active: dev # dev or local
+    active: local # dev or local

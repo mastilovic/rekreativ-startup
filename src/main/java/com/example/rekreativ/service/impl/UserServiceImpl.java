@@ -2,8 +2,8 @@ package com.example.rekreativ.service.impl;
 
 import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.commons.CustomValidator;
-import com.example.rekreativ.dto.ReviewRequestDto;
-import com.example.rekreativ.dto.UserDTO;
+import com.example.rekreativ.dto.request.ReviewRequestDto;
+import com.example.rekreativ.dto.response.UserResponseDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.mapper.ReviewMapper;
@@ -76,7 +76,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         if (userContainsRole) {
             log.debug("User already has {} role!", roleName);
-
             throw new ObjectAlreadyExistsException(Role.class, "User already has role: " + roleName);
         }
 
@@ -85,7 +84,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     @Transactional
-    public UserDTO addReviewToUser(Long userId, ReviewRequestDto reviewRequest) {
+    public UserResponseDTO addReviewToUser(Long userId, ReviewRequestDto reviewRequest) {
         log.debug("calling addReviewToUser method");
 
         User user = findRawUserById(userId);
@@ -98,12 +97,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return initSave(user);
     }
 
-    public UserDTO saveUser(User userRequest) {
+    public UserResponseDTO saveUser(User userRequest) {
         log.debug("calling saveUser method");
 
         if (userRepository.findByUsername(userRequest.getUsername()).isPresent()) {
             log.debug("user already exists with username: {}", userRequest.getUsername());
-
             throw new ObjectAlreadyExistsException(User.class, userRequest.getUsername());
         }
 
@@ -118,44 +116,47 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         customValidator.validate(user);
 
-        return userMapper.mapToUserDto(userRepository.save(user));
+        return userMapper.mapToUserResponseDto(userRepository.save(user));
     }
 
     @Override
-    public UserDTO initSave(User user) {
+    public UserResponseDTO initSave(User user) {
         log.debug("calling initSave method");
 
-        return userMapper.mapToUserDto(userRepository.save(user));
+        return userMapper.mapToUserResponseDto(userRepository.save(user));
     }
 
     public void deleteUserById(Long id) {
         log.debug("calling deleteUserById method");
 
-        UserDTO user = findUserById(id);
-
-        userRepository.deleteById(user.getId());
+        userRepository.findById(id)
+                .ifPresentOrElse(user -> {
+                    log.info("user found with id: {}", id);
+                    userRepository.deleteById(user.getId());
+                    log.info("user deleted successfully!");
+                }, () -> log.info("Unable to complete deletion! User not found with id: {}", id));
     }
 
-    public Iterable<UserDTO> findAll() {
+    public Iterable<UserResponseDTO> findAll() {
         log.debug("calling findAll method");
 
         Iterable<User> users = userRepository.findAll();
 
         return StreamSupport.stream(users.spliterator(), false)
-                .map(userMapper::mapToUserDto)
+                .map(userMapper::mapToUserResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public Page<UserDTO> findAllPageable(Pageable pageable) {
+    public Page<UserResponseDTO> findAllPageable(Pageable pageable) {
         log.debug("calling findAllPageable method");
 
-        return userRepository.findAll(pageable).map(userMapper::mapToUserDto);
+        return userRepository.findAll(pageable).map(userMapper::mapToUserResponseDto);
     }
 
-    public UserDTO findUserById(Long id) {
+    public UserResponseDTO findUserById(Long id) {
         log.debug("calling findUserById method");
 
-        return userMapper.mapToUserDto(findRawUserById(id));
+        return userMapper.mapToUserResponseDto(findRawUserById(id));
     }
 
     @Override
@@ -172,10 +173,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    public UserDTO findUserByUsername(String username) {
+    public UserResponseDTO findUserByUsername(String username) {
         log.debug("calling findUserByUsername method");
 
-        return userMapper.mapToUserDto(findRawUserByUsername(username));
+        return userMapper.mapToUserResponseDto(findRawUserByUsername(username));
     }
 
     public User findRawUserByUsername(String username) {
@@ -185,7 +186,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .orElseThrow(() -> new ObjectNotFoundException(User.class, username));
     }
 
-    private User findRawUserById(Long id) {
+    public User findRawUserById(Long id) {
         log.debug("calling findRawUserById method");
 
         return userRepository.findById(id)

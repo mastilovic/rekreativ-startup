@@ -1,10 +1,11 @@
 package com.example.rekreativ.service.impl;
 
-import com.example.rekreativ.dto.ReviewRequestDto;
+import com.example.rekreativ.dto.request.ReviewRequestDto;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.mapper.ReviewMapper;
 import com.example.rekreativ.model.Review;
 import com.example.rekreativ.repository.ReviewRepository;
+import com.example.rekreativ.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ReviewServiceImpl {
+public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;

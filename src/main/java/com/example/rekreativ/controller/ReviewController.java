@@ -1,7 +1,7 @@
 package com.example.rekreativ.controller;
 
 import com.example.rekreativ.model.Teammate;
-import com.example.rekreativ.service.impl.ReviewServiceImpl;
+import com.example.rekreativ.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Slf4j
 public class ReviewController {
 
-    private final ReviewServiceImpl reviewService;
+    private final ReviewService reviewService;
 
-    public ReviewController(ReviewServiceImpl reviewService) {
+    public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 

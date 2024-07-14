@@ -2,7 +2,7 @@ package com.example.rekreativ.service;
 
 import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.commons.CustomValidator;
-import com.example.rekreativ.dto.UserDTO;
+import com.example.rekreativ.dto.response.UserResponseDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.mapper.UserMapper;
@@ -53,7 +53,7 @@ class UserServiceTest {
     private ArgumentCaptor<User> userArgumentCaptor;
 
     User userOne, emptyUser;
-    UserDTO userOneDto;
+    UserResponseDTO userOneDto;
     Role roleUser, roleAdmin;
     AuthUser authUser;
 
@@ -62,11 +62,13 @@ class UserServiceTest {
         userOne = new User(0L,
                 "testUsername",
                 "testPassword");
-        userOneDto = new UserDTO(0L,
-                "testUsername",
-                Collections.emptyList(),
-                0.0,
-                Collections.emptyList());
+        userOneDto = new UserResponseDTO(0L,
+                                         "testUsername",
+                                         Collections.emptyList(),
+                                         0.0,
+                                         0,
+                                         Collections.emptyList(),
+                                         Collections.emptyList());
 
         emptyUser = new User(null,
                 " ",
@@ -110,7 +112,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(userOne.getUsername()))
                 .thenReturn(Optional.of(userOne));
 
-        UserDTO user = underTest.findUserByUsername(userOne.getUsername());
+        UserResponseDTO user = underTest.findUserByUsername(userOne.getUsername());
 
         assertThat(user.getUsername()).isEqualTo(userOne.getUsername());
     }
@@ -157,9 +159,9 @@ class UserServiceTest {
         newUser.setId(userOne.getId());
         newUser.setUsername(userOne.getUsername());
         newUser.setPassword(passwordEncoder.encode(userOne.getPassword()));
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(userOne.getId());
-        userDTO.setUsername(userOne.getUsername());
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setId(userOne.getId());
+        userResponseDTO.setUsername(userOne.getUsername());
 
         when(userRepository.findByUsername(userOne.getUsername()))
                 .thenReturn(Optional.empty());
@@ -190,9 +192,9 @@ class UserServiceTest {
         when(userRepository.save(userOne))
                 .thenReturn(userOne);
 
-        User user = underTest.initSave(userOne);
+        UserResponseDTO userResponseDTO = underTest.initSave(userOne);
 
-        assertThat(user).isEqualTo(userOne);
+        assertThat(userResponseDTO.getUsername()).isEqualTo(userOne.getUsername());
     }
 
     @Test
@@ -212,7 +214,7 @@ class UserServiceTest {
         when(userRepository.findById(id))
                 .thenReturn(Optional.of(userOne));
 
-        underTest.delete(userOne);
+        underTest.deleteUserById(userOne.getId());
         verify(userRepository).delete(userOne);
         then(userRepository).should().delete(userOne);
     }
@@ -228,7 +230,7 @@ class UserServiceTest {
     void should_findUserById() {
         when(userRepository.findById(userOne.getId()))
                 .thenReturn(Optional.of(userOne));
-        UserDTO user = underTest.findUserById(userOne.getId());
+        UserResponseDTO user = underTest.findUserById(userOne.getId());
 
         assertThat(user.getUsername()).isEqualTo(userOne.getUsername());
     }

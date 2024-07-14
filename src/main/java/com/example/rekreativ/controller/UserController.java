@@ -2,8 +2,8 @@ package com.example.rekreativ.controller;
 
 
 import com.example.rekreativ.commons.AuthService;
-import com.example.rekreativ.dto.ReviewRequestDto;
-import com.example.rekreativ.dto.UserDTO;
+import com.example.rekreativ.dto.request.ReviewRequestDto;
+import com.example.rekreativ.dto.response.UserResponseDTO;
 import com.example.rekreativ.dto.UserLoginDTO;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.service.UserService;
@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping(path = "/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO user) {
         authService.authenticate(user.getUsername(), user.getPassword());
-        UserDTO loginUser = userService.findUserByUsername(user.getUsername());
+        UserResponseDTO loginUser = userService.findUserByUsername(user.getUsername());
         HttpHeaders jwtHeader = authService.getJwtHeader(user.getUsername());
 
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
@@ -77,7 +77,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-        Iterable<UserDTO> users = userService.findAll();
+        Iterable<UserResponseDTO> users = userService.findAll();
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

@@ -1,4 +1,4 @@
-package com.example.rekreativ.dto;
+package com.example.rekreativ.dto.request;
 
 public class ReviewRequestDto {
     private String title;
