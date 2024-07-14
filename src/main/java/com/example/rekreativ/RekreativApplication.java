@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RekreativApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RekreativApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RekreativApplication.class, args);
+    }
 
 }

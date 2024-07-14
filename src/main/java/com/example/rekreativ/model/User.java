@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity(name = "user")
 public class User {
@@ -27,8 +28,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles = new ArrayList<>();
-    
-    public User (){
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
+
+    public User() {
         super();
     }
 
@@ -71,4 +75,11 @@ public class User {
         this.roles = roles;
     }
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
 }

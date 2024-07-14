@@ -34,7 +34,7 @@ public class RoleController {
     //get all
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getAll() {
         Iterable<Role> role = roleService.findAll();
 
         return new ResponseEntity<Object>(role, HttpStatus.OK);

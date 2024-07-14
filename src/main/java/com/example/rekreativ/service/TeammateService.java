@@ -16,5 +16,6 @@ public interface TeammateService {
     Iterable<Teammate> findAll();
 
     void delete(Long id);
+
     Teammate update(TeammateUpdateDTO teammateUpdateDTO);
 }

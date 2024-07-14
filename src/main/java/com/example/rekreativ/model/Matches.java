@@ -10,14 +10,14 @@ public class Matches {
     @Id
     @GeneratedValue
     private Long id;
-    
-//    @Column(name = "team_a")
+
+    //    @Column(name = "team_a")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamA")
     @NotNull
     private Team teamA;
 
-//    @Column(name = "team_b")
+    //    @Column(name = "team_b")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamB")
     @NotNull
@@ -35,7 +35,7 @@ public class Matches {
     @NotBlank(message = "Name can't be empty!")
     private String winner;
 
-    public Matches(){
+    public Matches() {
         super();
     }
 

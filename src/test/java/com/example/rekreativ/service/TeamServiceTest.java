@@ -1,12 +1,12 @@
 package com.example.rekreativ.service;
 
+import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.commons.JwtHandler;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Team;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeamRepository;
 import com.example.rekreativ.service.impl.TeamServiceImpl;
-import com.example.rekreativ.commons.JwtHandler;
-import com.example.rekreativ.commons.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

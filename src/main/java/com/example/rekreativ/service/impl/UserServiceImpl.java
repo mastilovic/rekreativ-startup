@@ -2,16 +2,19 @@ package com.example.rekreativ.service.impl;
 
 import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.dto.ReviewRequestDto;
 import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
+import com.example.rekreativ.mapper.ReviewMapper;
+import com.example.rekreativ.mapper.UserMapper;
+import com.example.rekreativ.model.Review;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.repository.UserRepository;
 import com.example.rekreativ.service.RoleService;
 import com.example.rekreativ.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -33,15 +37,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final CustomValidator customValidator;
+    private final UserMapper userMapper;
+    private final ReviewMapper reviewMapper;
 
     public UserServiceImpl(UserRepository userRepository,
                            RoleService roleService,
                            PasswordEncoder passwordEncoder,
-                           CustomValidator customValidator) {
+                           CustomValidator customValidator,
+                           UserMapper userMapper,
+                           ReviewMapper reviewMapper) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
         this.customValidator = customValidator;
+        this.userMapper = userMapper;
+        this.reviewMapper = reviewMapper;
     }
 
     @Override
@@ -57,7 +67,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public void addRoleToUser(String username, String roleName) {
         log.debug("calling addRoleToUser method");
 
-        User user = findUserByUsername(username);
+        User user = findRawUserByUsername(username);
         Role role = roleService.findByName(roleName);
 
         boolean userContainsRole = user.getRoles().stream()
@@ -73,50 +83,57 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.getRoles().add(role);
     }
 
-    public User saveUser(User user) {
+    @Override
+    @Transactional
+    public UserDTO addReviewToUser(Long userId, ReviewRequestDto reviewRequest) {
+        log.debug("calling addReviewToUser method");
+
+        User user = findRawUserById(userId);
+
+        Review review = reviewMapper.mapToReview(reviewRequest);
+        review.setReviewDate(Instant.now());
+        review.setUser(user);
+        user.getReviews().add(review);
+
+        return initSave(user);
+    }
+
+    public UserDTO saveUser(User userRequest) {
         log.debug("calling saveUser method");
 
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            log.debug("user already exists with username: {}", user.getUsername());
+        if (userRepository.findByUsername(userRequest.getUsername()).isPresent()) {
+            log.debug("user already exists with username: {}", userRequest.getUsername());
 
-            throw new ObjectAlreadyExistsException(User.class, user.getUsername());
+            throw new ObjectAlreadyExistsException(User.class, userRequest.getUsername());
         }
 
         Role role = roleService.findByName("ROLE_USER");
         Role roleAdmin = roleService.findByName("ROLE_ADMIN");
 
-        User newUser = new User();
-        newUser.getRoles().add(role);
-        newUser.getRoles().add(roleAdmin);
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = new User();
+        user.getRoles().add(role);
+        user.getRoles().add(roleAdmin);
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
-        customValidator.validate(newUser);
+        customValidator.validate(user);
 
-        return userRepository.save(newUser);
+        return userMapper.mapToUserDto(userRepository.save(user));
     }
 
     @Override
-    public User initSave(User user) {
+    public UserDTO initSave(User user) {
         log.debug("calling initSave method");
 
-        return userRepository.save(user);
+        return userMapper.mapToUserDto(userRepository.save(user));
     }
 
     public void deleteUserById(Long id) {
         log.debug("calling deleteUserById method");
 
-        User user = findUserById(id);
+        UserDTO user = findUserById(id);
 
         userRepository.deleteById(user.getId());
-    }
-
-    public void delete(User user) {
-        log.debug("calling delete method");
-
-        User existingUser = findUserById(user.getId());
-
-        userRepository.delete(existingUser);
     }
 
     public Iterable<UserDTO> findAll() {
@@ -124,24 +141,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         Iterable<User> users = userRepository.findAll();
 
-        ModelMapper modelMapper = new ModelMapper();
-
         return StreamSupport.stream(users.spliterator(), false)
-                .map(u -> modelMapper.map(u, UserDTO.class))
+                .map(userMapper::mapToUserDto)
                 .collect(Collectors.toList());
     }
 
-    public Page<User> findAllPageable(Pageable pageable) {
+    public Page<UserDTO> findAllPageable(Pageable pageable) {
         log.debug("calling findAllPageable method");
 
-        return userRepository.findAll(pageable);
+        return userRepository.findAll(pageable).map(userMapper::mapToUserDto);
     }
 
-    public User findUserById(Long id) {
+    public UserDTO findUserById(Long id) {
         log.debug("calling findUserById method");
 
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(User.class, id));
+        return userMapper.mapToUserDto(findRawUserById(id));
     }
 
     @Override
@@ -158,10 +172,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    public User findUserByUsername(String username) {
+    public UserDTO findUserByUsername(String username) {
         log.debug("calling findUserByUsername method");
+
+        return userMapper.mapToUserDto(findRawUserByUsername(username));
+    }
+
+    public User findRawUserByUsername(String username) {
+        log.debug("calling findRawUserByUsername method");
 
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectNotFoundException(User.class, username));
+    }
+
+    private User findRawUserById(Long id) {
+        log.debug("calling findRawUserById method");
+
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(User.class, id));
     }
 }
