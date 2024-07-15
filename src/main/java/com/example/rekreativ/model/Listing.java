@@ -33,6 +33,11 @@ public class Listing {
     @Column
     @ElementCollection
     private List<User> signed = new ArrayList<>();
+    //TODO: e.g. create listing, add user as SHOOTER as player type
+    // deactivate listing, change player type for user
+    // check if user is updated within listing
+    // if updated, fix it so that it doesnt update
+    // for proper history tracking
     @Column
     @ElementCollection
     private List<User> accepted = new ArrayList<>();
