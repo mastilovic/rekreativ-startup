@@ -1,8 +1,8 @@
 package com.example.rekreativ.mapper;
 
-import com.example.rekreativ.dto.UserListingDto;
-import com.example.rekreativ.dto.request.ReviewRequestDto;
-import com.example.rekreativ.dto.response.UserResponseDTO;
+import com.example.rekreativ.model.dto.UserListingDto;
+import com.example.rekreativ.model.dto.request.ReviewRequestDto;
+import com.example.rekreativ.model.dto.response.UserResponseDTO;
 import com.example.rekreativ.model.User;
 import org.springframework.stereotype.Component;
 

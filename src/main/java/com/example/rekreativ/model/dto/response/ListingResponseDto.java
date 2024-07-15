@@ -1,6 +1,6 @@
-package com.example.rekreativ.dto.response;
+package com.example.rekreativ.model.dto.response;
 
-import com.example.rekreativ.dto.UserListingDto;
+import com.example.rekreativ.model.dto.UserListingDto;
 import com.example.rekreativ.model.enums.ListingType;
 import com.example.rekreativ.model.enums.PlayerType;
 

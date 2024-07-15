@@ -1,6 +1,9 @@
 package com.example.rekreativ.controller;
 
-import com.example.rekreativ.dto.request.ListingRequestDto;
+import com.example.rekreativ.model.dto.request.ListingRequestDto;
+import com.example.rekreativ.model.dto.request.PlayerTypeRequestDto;
+import com.example.rekreativ.model.dto.request.UserListingUpdateRequestDto;
+import com.example.rekreativ.model.enums.PlayerType;
 import com.example.rekreativ.service.ListingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -39,30 +42,42 @@ public class ListingController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @PostMapping("/signed")
-    public ResponseEntity<?> addSignedUserToListing(@RequestParam(name = "userId") Long userId,
-                                                    @RequestParam(name = "listingId") Long listingId) {
-        return ResponseEntity.ok(listingService.addSignedUserToListing(listingId, userId));
+    @DeleteMapping
+    public ResponseEntity<?> delete(@RequestParam(name = "userId") Long userId,
+                                    @RequestParam(name = "listingId") Long listingId) {
+        listingService.delete(listingId, userId);
+        return ResponseEntity.ok().build();
     }
-
+    //FIXME: test endpoints with new request body
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @PostMapping("/signed")
+    public ResponseEntity<?> addSignedUserToListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
+        return ResponseEntity.ok(listingService.addSignedUserToListing(userListingUpdateRequestDto));
+    }
+    //FIXME: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @DeleteMapping("/signed")
-    public ResponseEntity<?> deleteSignedUserFromListing(@RequestParam(name = "userId") Long userId,
-                                                         @RequestParam(name = "listingId") Long listingId) {
-        return ResponseEntity.ok(listingService.deleteSignedUserFromListing(listingId, userId));
+    public ResponseEntity<?> deleteSignedUserFromListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
+        return ResponseEntity.ok(listingService.deleteSignedUserFromListing(userListingUpdateRequestDto));
     }
 
+    //FIXME: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/accepted")
-    public ResponseEntity<?> addAcceptedUserToListing(@RequestParam(name = "userId") Long userId,
-                                                      @RequestParam(name = "listingId") Long listingId) {
-        return ResponseEntity.ok(listingService.addAcceptedUserToListing(listingId, userId));
+    public ResponseEntity<?> addAcceptedUserToListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
+        return ResponseEntity.ok(listingService.addAcceptedUserToListing(userListingUpdateRequestDto));
     }
-
+    //FIXME: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @DeleteMapping("/accepted")
-    public ResponseEntity<?> deleteAcceptedUserFromListing(@RequestParam(name = "userId") Long userId,
-                                                           @RequestParam(name = "listingId") Long listingId) {
-        return ResponseEntity.ok(listingService.deleteAcceptedUserFromListing(listingId, userId));
+    public ResponseEntity<?> deleteAcceptedUserFromListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
+        return ResponseEntity.ok(listingService.deleteAcceptedUserFromListing(userListingUpdateRequestDto));
+    }
+    //FIXME: test endpoints with new request body
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @PostMapping("/deactivate")
+    public ResponseEntity<?> deactivateListing(@RequestParam(name = "listingId") Long listingId,
+                                               @RequestParam(name = "userId") Long userId) {
+        return ResponseEntity.ok(listingService.deactivateListing(listingId, userId));
     }
 }

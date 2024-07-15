@@ -1,6 +1,6 @@
 package com.example.rekreativ.controller;
 
-import com.example.rekreativ.dto.request.MatchesRequestDTO;
+import com.example.rekreativ.model.dto.request.MatchesRequestDTO;
 import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.service.MatchesService;
 import lombok.extern.slf4j.Slf4j;

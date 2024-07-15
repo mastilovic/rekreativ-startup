@@ -37,6 +37,10 @@ public class User {
 
     private Boolean activeListing;
 
+    //FIXME: fix all mappings and properties regarding playerCharacteristics -> playerType
+    @Embedded
+    private PlayerCharacteristics playerCharacteristics;
+
     public User() {
         super();
     }
@@ -102,5 +106,13 @@ public class User {
 
     public void setActiveListing(Boolean activeListing) {
         this.activeListing = activeListing;
+    }
+
+    public PlayerCharacteristics getPlayerCharacteristics() {
+        return playerCharacteristics;
+    }
+
+    public void setPlayerCharacteristics(PlayerCharacteristics playerCharacteristics) {
+        this.playerCharacteristics = playerCharacteristics;
     }
 }

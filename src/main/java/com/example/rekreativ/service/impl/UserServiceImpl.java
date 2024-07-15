@@ -2,8 +2,9 @@ package com.example.rekreativ.service.impl;
 
 import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.commons.CustomValidator;
-import com.example.rekreativ.dto.request.ReviewRequestDto;
-import com.example.rekreativ.dto.response.UserResponseDTO;
+import com.example.rekreativ.model.dto.request.ReviewRequestDto;
+import com.example.rekreativ.model.dto.request.UserPlayerTypeRequestDto;
+import com.example.rekreativ.model.dto.response.UserResponseDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.mapper.ReviewMapper;
@@ -11,6 +12,7 @@ import com.example.rekreativ.mapper.UserMapper;
 import com.example.rekreativ.model.Review;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.model.User;
+import com.example.rekreativ.model.enums.PlayerType;
 import com.example.rekreativ.repository.UserRepository;
 import com.example.rekreativ.service.RoleService;
 import com.example.rekreativ.service.UserService;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -193,5 +196,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .orElseThrow(() -> new ObjectNotFoundException(User.class, id));
     }
 
-
+    @Override
+    public UserResponseDTO addPlayerTypeToUser(UserPlayerTypeRequestDto userPlayerTypeRequestDto) {
+        User user = findRawUserById(userPlayerTypeRequestDto.getUserId());
+        return initSave(user);
+    }
 }

@@ -1,7 +1,7 @@
 package com.example.rekreativ.service.impl;
 
 import com.example.rekreativ.commons.CustomValidator;
-import com.example.rekreativ.dto.TeammateUpdateDTO;
+import com.example.rekreativ.model.dto.TeammateUpdateDTO;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeammateRepository;

@@ -2,9 +2,10 @@ package com.example.rekreativ.controller;
 
 
 import com.example.rekreativ.commons.AuthService;
-import com.example.rekreativ.dto.request.ReviewRequestDto;
-import com.example.rekreativ.dto.response.UserResponseDTO;
-import com.example.rekreativ.dto.UserLoginDTO;
+import com.example.rekreativ.model.dto.request.ReviewRequestDto;
+import com.example.rekreativ.model.dto.request.UserPlayerTypeRequestDto;
+import com.example.rekreativ.model.dto.response.UserResponseDTO;
+import com.example.rekreativ.model.dto.UserLoginDTO;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.service.UserService;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +36,6 @@ public class UserController {
         authService.authenticate(user.getUsername(), user.getPassword());
         UserResponseDTO loginUser = userService.findUserByUsername(user.getUsername());
         HttpHeaders jwtHeader = authService.getJwtHeader(user.getUsername());
-
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
     }
 
@@ -44,7 +44,6 @@ public class UserController {
     public ResponseEntity<?> addRoleToUser(@RequestParam(value = "username", required = false) String username,
                                            @RequestParam(value = "roles", required = false) String roles) {
         userService.addRoleToUser(username, roles);
-
         return new ResponseEntity<>("Role successfully added to user!", OK);
     }
 
@@ -57,7 +56,6 @@ public class UserController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User user) {
-
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
@@ -77,23 +75,25 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-        Iterable<UserResponseDTO> users = userService.findAll();
-
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         userService.deleteUserById(id);
-
         return new ResponseEntity<>("User deleted successfully!", HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/review/{userId}", method = RequestMethod.POST)
     public ResponseEntity<?> addReviewToUser(@PathVariable("userId") Long userId, @RequestBody ReviewRequestDto review) {
-
         return ResponseEntity.ok(userService.addReviewToUser(userId, review));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/type", method = RequestMethod.POST)
+    public ResponseEntity<?> addPlayerTypeToUser(@RequestBody UserPlayerTypeRequestDto userPlayerTypeRequestDto) {
+        return ResponseEntity.ok(userService.addPlayerTypeToUser(userPlayerTypeRequestDto));
     }
 }

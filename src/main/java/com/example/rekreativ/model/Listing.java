@@ -6,11 +6,13 @@ import com.example.rekreativ.model.enums.PlayerType;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_is_active", columnList = "isActive")
+})
 public class Listing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

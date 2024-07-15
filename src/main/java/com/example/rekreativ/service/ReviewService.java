@@ -1,6 +1,6 @@
 package com.example.rekreativ.service;
 
-import com.example.rekreativ.dto.request.ReviewRequestDto;
+import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.example.rekreativ.service.impl;
 
-import com.example.rekreativ.dto.request.ReviewRequestDto;
+import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.mapper.ReviewMapper;
 import com.example.rekreativ.model.Review;

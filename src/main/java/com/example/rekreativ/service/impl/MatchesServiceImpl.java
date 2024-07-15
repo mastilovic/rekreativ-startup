@@ -1,7 +1,7 @@
 package com.example.rekreativ.service.impl;
 
 import com.example.rekreativ.commons.CustomValidator;
-import com.example.rekreativ.dto.request.MatchesRequestDTO;
+import com.example.rekreativ.model.dto.request.MatchesRequestDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Matches;

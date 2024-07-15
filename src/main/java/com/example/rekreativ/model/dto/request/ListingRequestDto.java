@@ -1,4 +1,4 @@
-package com.example.rekreativ.dto.request;
+package com.example.rekreativ.model.dto.request;
 
 import com.example.rekreativ.model.enums.ListingType;
 import com.example.rekreativ.model.enums.PlayerType;

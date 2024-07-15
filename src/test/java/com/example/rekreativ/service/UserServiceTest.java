@@ -2,7 +2,7 @@ package com.example.rekreativ.service;
 
 import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.commons.CustomValidator;
-import com.example.rekreativ.dto.response.UserResponseDTO;
+import com.example.rekreativ.model.dto.response.UserResponseDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.mapper.UserMapper;
@@ -67,6 +67,7 @@ class UserServiceTest {
                                          Collections.emptyList(),
                                          0.0,
                                          0,
+                                         Collections.emptySet(),
                                          Collections.emptyList(),
                                          Collections.emptyList());
 

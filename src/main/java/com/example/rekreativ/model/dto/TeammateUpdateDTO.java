@@ -1,4 +1,4 @@
-package com.example.rekreativ.dto;
+package com.example.rekreativ.model.dto;
 
 public class TeammateUpdateDTO {
     private Long id;

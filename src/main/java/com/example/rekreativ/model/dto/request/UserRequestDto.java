@@ -1,4 +1,4 @@
-package com.example.rekreativ.dto.request;
+package com.example.rekreativ.model.dto.request;
 
 import com.example.rekreativ.model.Role;
 

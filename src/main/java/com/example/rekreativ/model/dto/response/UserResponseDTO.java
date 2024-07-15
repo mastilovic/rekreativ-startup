@@ -1,14 +1,13 @@
-package com.example.rekreativ.dto.response;
+package com.example.rekreativ.model.dto.response;
 
-import com.example.rekreativ.dto.request.ReviewRequestDto;
-import com.example.rekreativ.model.Listing;
+import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 import com.example.rekreativ.model.Role;
+import com.example.rekreativ.model.enums.PlayerType;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class UserResponseDTO {
     private Long id;
@@ -16,6 +15,7 @@ public class UserResponseDTO {
     private Collection<Role> roles = new ArrayList<>();
     private double averageReviewRating;
     private Integer reviewsCount;
+    private Set<PlayerType> playerTypes;
     private List<ReviewRequestDto> reviews = new ArrayList<>();
     private List<ListingResponseDto> listings = new ArrayList<>();
 
@@ -28,6 +28,7 @@ public class UserResponseDTO {
                            Collection<Role> roles,
                            double averageReviewRating,
                            Integer reviewsCount,
+                           Set<PlayerType> playerTypes,
                            List<ReviewRequestDto> reviews,
                            List<ListingResponseDto> listings) {
         this.id = id;
@@ -35,6 +36,7 @@ public class UserResponseDTO {
         this.roles = roles;
         this.averageReviewRating = averageReviewRating;
         this.reviewsCount = reviewsCount;
+        this.playerTypes = playerTypes;
         this.reviews = reviews;
         this.listings = listings;
     }
@@ -93,5 +95,13 @@ public class UserResponseDTO {
 
     public void setListings(List<ListingResponseDto> listings) {
         this.listings = listings;
+    }
+
+    public Set<PlayerType> getPlayerTypes() {
+        return playerTypes;
+    }
+
+    public void setPlayerTypes(Set<PlayerType> playerTypes) {
+        this.playerTypes = playerTypes;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.rekreativ.dto;
+package com.example.rekreativ.model.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,11 +1,10 @@
-package com.example.rekreativ.dto;
+package com.example.rekreativ.model.dto;
 
-import com.example.rekreativ.dto.request.ReviewRequestDto;
+import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 import com.example.rekreativ.model.Role;
+import com.example.rekreativ.model.enums.PlayerType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class UserListingDto {
     private Long id;
@@ -13,6 +12,7 @@ public class UserListingDto {
     private Collection<Role> roles = new ArrayList<>();
     private double averageReviewRating;
     private Integer reviewsCount;
+    private Set<PlayerType> playerTypes = new HashSet<>();
     private List<ReviewRequestDto> reviews = new ArrayList<>();
 
     public UserListingDto() {
@@ -23,12 +23,14 @@ public class UserListingDto {
                           Collection<Role> roles,
                           double averageReviewRating,
                           Integer reviewsCount,
+                          Set<PlayerType> playerTypes,
                           List<ReviewRequestDto> reviews) {
         this.id = id;
         this.username = username;
         this.roles = roles;
         this.averageReviewRating = averageReviewRating;
         this.reviewsCount = reviewsCount;
+        this.playerTypes = playerTypes;
         this.reviews = reviews;
     }
 
@@ -78,5 +80,13 @@ public class UserListingDto {
 
     public void setReviews(List<ReviewRequestDto> reviews) {
         this.reviews = reviews;
+    }
+
+    public Set<PlayerType> getPlayerTypes() {
+        return playerTypes;
+    }
+
+    public void setPlayerTypes(Set<PlayerType> playerTypes) {
+        this.playerTypes = playerTypes;
     }
 }

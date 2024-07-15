@@ -1,5 +1,6 @@
 package com.example.rekreativ.error;
 
+import com.example.rekreativ.error.exceptions.IllegalParameterException;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,15 @@ public class ExceptionHandling {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<HttpResponse> validationException(ConstraintViolationException e, HttpServletRequest request) {
+        HttpStatus notFound = HttpStatus.BAD_REQUEST;
+
+        return createHttpResponse(notFound, e.getMessage(), request.getRequestURI());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(IllegalParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<HttpResponse> illegalParameterException(IllegalParameterException e, HttpServletRequest request) {
         HttpStatus notFound = HttpStatus.BAD_REQUEST;
 
         return createHttpResponse(notFound, e.getMessage(), request.getRequestURI());

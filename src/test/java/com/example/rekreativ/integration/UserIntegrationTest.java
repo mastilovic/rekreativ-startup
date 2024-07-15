@@ -1,6 +1,6 @@
 package com.example.rekreativ.integration;
 
-import com.example.rekreativ.dto.UserLoginDTO;
+import com.example.rekreativ.model.dto.UserLoginDTO;
 import com.example.rekreativ.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

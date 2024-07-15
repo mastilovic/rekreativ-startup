@@ -1,7 +1,7 @@
 package com.example.rekreativ.mapper;
 
-import com.example.rekreativ.dto.request.ListingRequestDto;
-import com.example.rekreativ.dto.response.ListingResponseDto;
+import com.example.rekreativ.model.dto.request.ListingRequestDto;
+import com.example.rekreativ.model.dto.response.ListingResponseDto;
 import com.example.rekreativ.model.Listing;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package com.example.rekreativ.service;
 
-import com.example.rekreativ.dto.TeammateUpdateDTO;
+import com.example.rekreativ.model.dto.TeammateUpdateDTO;
 import com.example.rekreativ.model.Teammate;
 
 public interface TeammateService {

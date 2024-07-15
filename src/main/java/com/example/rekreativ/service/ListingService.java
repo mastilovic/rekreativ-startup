@@ -1,8 +1,11 @@
 package com.example.rekreativ.service;
 
-import com.example.rekreativ.dto.request.ListingRequestDto;
-import com.example.rekreativ.dto.response.ListingResponseDto;
+import com.example.rekreativ.model.dto.request.ListingRequestDto;
+import com.example.rekreativ.model.dto.request.PlayerTypeRequestDto;
+import com.example.rekreativ.model.dto.request.UserListingUpdateRequestDto;
+import com.example.rekreativ.model.dto.response.ListingResponseDto;
 import com.example.rekreativ.model.Listing;
+import com.example.rekreativ.model.enums.PlayerType;
 
 import java.util.List;
 
@@ -15,16 +18,18 @@ public interface ListingService {
 
     List<ListingResponseDto> findAll();
 
-    void delete(Long id);
+    void delete(Long listingId, Long userId);
 
     ListingResponseDto update(ListingResponseDto listingResponseDto);
 
-    ListingResponseDto addSignedUserToListing(Long listingId, Long userId);
+    ListingResponseDto addSignedUserToListing(UserListingUpdateRequestDto userListingUpdateRequestDto);
 
-    ListingResponseDto deleteSignedUserFromListing(Long listingId, Long userId);
+    ListingResponseDto deleteSignedUserFromListing(UserListingUpdateRequestDto userListingUpdateRequestDto);
 
-    ListingResponseDto addAcceptedUserToListing(Long listingId, Long userId);
+    ListingResponseDto addAcceptedUserToListing(UserListingUpdateRequestDto userListingUpdateRequestDto);
 
-    ListingResponseDto deleteAcceptedUserFromListing(Long listingId, Long userId);
+    ListingResponseDto deleteAcceptedUserFromListing(UserListingUpdateRequestDto userListingUpdateRequestDto);
+
+    ListingResponseDto deactivateListing(Long listingId, Long userId);
 
 }

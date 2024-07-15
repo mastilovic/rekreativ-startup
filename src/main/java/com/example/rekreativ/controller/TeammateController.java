@@ -1,6 +1,6 @@
 package com.example.rekreativ.controller;
 
-import com.example.rekreativ.dto.TeammateUpdateDTO;
+import com.example.rekreativ.model.dto.TeammateUpdateDTO;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.service.TeammateService;
 import org.springframework.beans.factory.annotation.Autowired;
