@@ -1,9 +1,9 @@
 package com.example.rekreativ.mapper;
 
+import com.example.rekreativ.model.User;
 import com.example.rekreativ.model.dto.UserListingDto;
 import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 import com.example.rekreativ.model.dto.response.UserResponseDTO;
-import com.example.rekreativ.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -23,10 +23,13 @@ public class UserMapper {
     }
 
     public UserListingDto mapToUserListingDto(User user) {
+
         UserListingDto userListingDto = new UserListingDto();
-        List<ReviewRequestDto> reviews = Objects.isNull(user.getReviews()) || user.getReviews().isEmpty()
+        List<ReviewRequestDto> reviews = Objects.isNull(user.getPlayer().getReviews()) || user.getPlayer()
+                .getReviews()
+                .isEmpty()
                                          ? Collections.emptyList()
-                                         : user.getReviews().stream()
+                                         : user.getPlayer().getReviews().stream()
                                                  .map(reviewMapper::mapToReviewRequest)
                                                  .collect(Collectors.toList());
         userListingDto.setUsername(user.getUsername());
@@ -49,9 +52,13 @@ public class UserMapper {
     public UserResponseDTO mapToUserResponseDto(User user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
 
-        List<ReviewRequestDto> reviews = Objects.isNull(user.getReviews()) || user.getReviews().isEmpty()
+        boolean reviewsExist =
+                (Objects.isNull(user.getPlayer()) || Objects.isNull(user.getPlayer().getReviews()))
+                        || user.getPlayer().getReviews().isEmpty();
+
+        List<ReviewRequestDto> reviews = reviewsExist
                                          ? Collections.emptyList()
-                                         : user.getReviews().stream()
+                                         : user.getPlayer().getReviews().stream()
                                                  .map(reviewMapper::mapToReviewRequest)
                                                  .collect(Collectors.toList());
         userResponseDTO.setUsername(user.getUsername());
@@ -60,7 +67,7 @@ public class UserMapper {
                                  ? Collections.emptyList()
                                  : user.getRoles());
         userResponseDTO.setReviews(reviews);
-        userResponseDTO.setAverageReviewRating(reviews.size() < 1
+        userResponseDTO.setAverageReviewRating(reviews.isEmpty()
                                                ? 0.0
                                                : reviews.stream()
                                                        .filter(review -> Objects.nonNull(review.getRating()))
@@ -68,7 +75,9 @@ public class UserMapper {
                                                        .average()
                                                        .orElse(0.0));
         userResponseDTO.setReviewsCount(reviews.size());
-        userResponseDTO.setListings(user.getListings().stream()
+        userResponseDTO.setListings(user.getListings().isEmpty()
+                                    ? Collections.emptyList()
+                                    : user.getListings().stream()
                                             .map(listingMapper::mapToResponseDto)
                                             .collect(Collectors.toList()));
         return userResponseDTO;

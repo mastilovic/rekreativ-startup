@@ -1,7 +1,7 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.model.dto.UserListingDto;
 import com.example.rekreativ.model.dto.request.ListingRequestDto;
-import com.example.rekreativ.model.dto.request.PlayerTypeRequestDto;
 import com.example.rekreativ.model.dto.request.UserListingUpdateRequestDto;
 import com.example.rekreativ.model.dto.response.ListingResponseDto;
 import com.example.rekreativ.error.exceptions.IllegalParameterException;
@@ -11,13 +11,11 @@ import com.example.rekreativ.mapper.ListingMapper;
 import com.example.rekreativ.mapper.UserMapper;
 import com.example.rekreativ.model.Listing;
 import com.example.rekreativ.model.User;
-import com.example.rekreativ.model.enums.PlayerType;
 import com.example.rekreativ.repository.ListingRepository;
 import com.example.rekreativ.service.ListingService;
 import com.example.rekreativ.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
@@ -109,7 +107,7 @@ public class ListingServiceImpl implements ListingService {
 
         validateSignedUserWithListing(user, listing);
 
-        listing.getSigned().add(user);
+        listing.getSigned().add(user.getPlayer());
 //        user.getListings().add(listing);
 
         return this.initSave(listing);
@@ -124,7 +122,7 @@ public class ListingServiceImpl implements ListingService {
         if(listing.getSigned().isEmpty() && user.getListings().isEmpty())
             throw new IllegalParameterException("Listing signed users and user listings are empty lists!");
 
-        listing.getSigned().remove(user);
+        listing.getSigned().remove(user.getPlayer());
 //        user.getListings().remove(listing);
 
         return this.initSave(listing);
@@ -139,7 +137,7 @@ public class ListingServiceImpl implements ListingService {
         if(listing.getAccepted().isEmpty() && user.getListings().isEmpty())
             throw new IllegalParameterException("Listing accepted users and user listings are empty lists!");
 
-        listing.getAccepted().remove(user);
+        listing.getAccepted().remove(user.getPlayer());
 //        user.getListings().remove(listing);
 
         return this.initSave(listing);
@@ -160,8 +158,8 @@ public class ListingServiceImpl implements ListingService {
             return this.initSave(listing);
         }
 
-        listing.getAccepted().add(user);
-        listing.getSigned().remove(user);
+        listing.getAccepted().add(user.getPlayer());
+        listing.getSigned().remove(user.getPlayer());
 //        user.getListings().add(listing);
 
         return this.initSave(listing);
@@ -204,12 +202,8 @@ public class ListingServiceImpl implements ListingService {
     private ListingResponseDto mapUserToListing(Listing listing) {
         ListingResponseDto listingResponseDto = listingMapper.mapToResponseDto(listingRepository.save(listing));
         listingResponseDto.setCreatedBy(userMapper.mapToUserListingDto(listing.getCreatedBy()));
-        listingResponseDto.setSigned(listing.getSigned().stream()
-                                             .map(userMapper::mapToUserListingDto)
-                                             .collect(Collectors.toList()));
-        listingResponseDto.setAccepted(listing.getAccepted().stream()
-                                               .map(userMapper::mapToUserListingDto)
-                                               .collect(Collectors.toList()));
+        listingResponseDto.setSigned(listing.getSigned());
+        listingResponseDto.setAccepted(listing.getAccepted());
         return listingResponseDto;
     }
 }

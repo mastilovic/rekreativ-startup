@@ -4,10 +4,12 @@ package com.example.rekreativ.controller;
 import com.example.rekreativ.commons.AuthService;
 import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 import com.example.rekreativ.model.dto.request.UserPlayerTypeRequestDto;
+import com.example.rekreativ.model.dto.response.LoginResponseDto;
 import com.example.rekreativ.model.dto.response.UserResponseDTO;
 import com.example.rekreativ.model.dto.UserLoginDTO;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 import static org.springframework.http.HttpStatus.OK;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -34,9 +38,12 @@ public class UserController {
     @PostMapping(path = "/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO user) {
         authService.authenticate(user.getUsername(), user.getPassword());
-        UserResponseDTO loginUser = userService.findUserByUsername(user.getUsername());
-        HttpHeaders jwtHeader = authService.getJwtHeader(user.getUsername());
-        return new ResponseEntity<>(loginUser, jwtHeader, OK);
+
+        LoginResponseDto loginResponseDto = authService.getJwtHeader(user.getUsername());
+        HashMap<String, String> token = new HashMap<>();
+        token.put("token", loginResponseDto.getToken());
+        
+        return new ResponseEntity<>(token, loginResponseDto.getHeaders(), OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
@@ -55,12 +62,12 @@ public class UserController {
 
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody User user) {
+    public ResponseEntity<?> register(@RequestBody UserLoginDTO user) {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/update", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> updateUser(@RequestBody User user) {
 //        User existingUser = userService.findUserById(user.getId());
 //
@@ -73,7 +80,7 @@ public class UserController {
 
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }

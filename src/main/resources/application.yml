@@ -1,6 +1,14 @@
 server:
   port: '8080'
 
+project-name: rekreativ
+
 spring:
   profiles:
     active: local # dev or local
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  show-login-endpoin: true

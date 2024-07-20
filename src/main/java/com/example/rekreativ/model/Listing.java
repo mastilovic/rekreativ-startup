@@ -30,17 +30,23 @@ public class Listing {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User createdBy;
-    @Column
-    @ElementCollection
-    private List<User> signed = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "player_signed",
+            joinColumns = @JoinColumn(name = "listing_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id"))
+    private List<Player> signed = new ArrayList<>();
     //TODO: e.g. create listing, add user as SHOOTER as player type
     // deactivate listing, change player type for user
     // check if user is updated within listing
     // if updated, fix it so that it doesnt update
     // for proper history tracking
-    @Column
-    @ElementCollection
-    private List<User> accepted = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "player_accepted",
+            joinColumns = @JoinColumn(name = "listing_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id"))
+    private List<Player> accepted = new ArrayList<>();
 
     public Listing() {
     }
@@ -55,8 +61,8 @@ public class Listing {
                    Integer needPlayersCount,
                    Boolean isActive,
                    User createdBy,
-                   List<User> signed,
-                   List<User> accepted) {
+                   List<Player> signed,
+                   List<Player> accepted) {
         this.id = id;
         this.listingType = listingType;
         this.lookingFor = lookingFor;
@@ -151,19 +157,19 @@ public class Listing {
         this.createdBy = createdBy;
     }
 
-    public List<User> getSigned() {
+    public List<Player> getSigned() {
         return signed;
     }
 
-    public void setSigned(List<User> signed) {
+    public void setSigned(List<Player> signed) {
         this.signed = signed;
     }
 
-    public List<User> getAccepted() {
+    public List<Player> getAccepted() {
         return accepted;
     }
 
-    public void setAccepted(List<User> accepted) {
+    public void setAccepted(List<Player> accepted) {
         this.accepted = accepted;
     }
 }

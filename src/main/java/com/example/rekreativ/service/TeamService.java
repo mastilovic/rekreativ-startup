@@ -3,6 +3,7 @@ package com.example.rekreativ.service;
 import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.model.Team;
 import com.example.rekreativ.model.Teammate;
+import com.example.rekreativ.model.dto.request.TeamScoreRequestDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -20,6 +21,7 @@ public interface TeamService {
     Team saveTeamWithUsername(Team team, HttpServletRequest request);
 
     Team save(Team team);
+    void initSave(TeamScoreRequestDto teamScoreRequestDto);
 
     List<Teammate> findTeammatesInTeam(String teamName);
 

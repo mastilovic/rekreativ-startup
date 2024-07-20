@@ -1,17 +1,15 @@
 package com.example.rekreativ.controller;
 
-import com.example.rekreativ.model.dto.TeammateUpdateDTO;
 import com.example.rekreativ.model.Teammate;
+import com.example.rekreativ.model.dto.TeammateUpdateDTO;
 import com.example.rekreativ.service.TeammateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
-@Controller
+@RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/teammate")
 public class TeammateController {
@@ -33,7 +31,7 @@ public class TeammateController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/get/all", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
         Iterable<Teammate> teammates = teammateService.findAll();
 
@@ -41,7 +39,7 @@ public class TeammateController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(path = "/name", method = RequestMethod.GET)
     public ResponseEntity<?> getByName(@RequestParam("name") String name) {
         Teammate teammate = teammateService.findTeammateByName(name);
 
@@ -57,7 +55,7 @@ public class TeammateController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteTeammate(@PathVariable Long id) {
         teammateService.delete(id);
 
@@ -65,7 +63,7 @@ public class TeammateController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/update", method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<Teammate> updateTeammate(@RequestBody TeammateUpdateDTO teammateUpdateDTO) {
         Teammate teammate = teammateService.update(teammateUpdateDTO);
 

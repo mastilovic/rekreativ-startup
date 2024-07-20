@@ -2,6 +2,7 @@ package com.example.rekreativ.service;
 
 import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.model.dto.UserLoginDTO;
 import com.example.rekreativ.model.dto.response.UserResponseDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
@@ -156,8 +157,8 @@ class UserServiceTest {
         long userId = 1L;
         userOne.setId(userId);
 
-        User newUser = new User();
-        newUser.setId(userOne.getId());
+        UserLoginDTO newUser = new UserLoginDTO();
+//        newUser.setId(userOne.getId());
         newUser.setUsername(userOne.getUsername());
         newUser.setPassword(passwordEncoder.encode(userOne.getPassword()));
         UserResponseDTO userResponseDTO = new UserResponseDTO();
@@ -181,10 +182,13 @@ class UserServiceTest {
     void should_ThrowIfUserIsPresentForSaveUser() {
         long userId = 1L;
         userOne.setId(userId);
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO.setUsername(userOne.getUsername());
+        userLoginDTO.setPassword(userOne.getPassword());
         when(userRepository.findByUsername(userOne.getUsername()))
                 .thenReturn(Optional.of(userOne));
 
-        assertThatThrownBy(() -> underTest.saveUser(userOne))
+        assertThatThrownBy(() -> underTest.saveUser(userLoginDTO))
                 .isInstanceOf(ObjectAlreadyExistsException.class);
     }
 

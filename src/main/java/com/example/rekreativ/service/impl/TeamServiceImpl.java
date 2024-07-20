@@ -9,6 +9,7 @@ import com.example.rekreativ.model.Matches;
 import com.example.rekreativ.model.Team;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.model.User;
+import com.example.rekreativ.model.dto.request.TeamScoreRequestDto;
 import com.example.rekreativ.repository.TeamRepository;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.TeammateService;
@@ -107,6 +108,11 @@ public class TeamServiceImpl implements TeamService {
         log.debug("calling initSave method in TeamServiceImpl");
 
         teamRepository.save(team);
+    }
+
+    @Override
+    public void initSave(TeamScoreRequestDto teamScoreRequestDto) {
+        return;
     }
 
     public List<Teammate> findTeammatesInTeam(String teamName) {

@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/listing")
 @Slf4j
@@ -48,32 +48,32 @@ public class ListingController {
         listingService.delete(listingId, userId);
         return ResponseEntity.ok().build();
     }
-    //FIXME: test endpoints with new request body
+    //TODO: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/signed")
     public ResponseEntity<?> addSignedUserToListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
         return ResponseEntity.ok(listingService.addSignedUserToListing(userListingUpdateRequestDto));
     }
-    //FIXME: test endpoints with new request body
+    //TODO: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @DeleteMapping("/signed")
     public ResponseEntity<?> deleteSignedUserFromListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
         return ResponseEntity.ok(listingService.deleteSignedUserFromListing(userListingUpdateRequestDto));
     }
 
-    //FIXME: test endpoints with new request body
+    //TODO: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/accepted")
     public ResponseEntity<?> addAcceptedUserToListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
         return ResponseEntity.ok(listingService.addAcceptedUserToListing(userListingUpdateRequestDto));
     }
-    //FIXME: test endpoints with new request body
+    //TODO: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @DeleteMapping("/accepted")
     public ResponseEntity<?> deleteAcceptedUserFromListing(@RequestBody UserListingUpdateRequestDto userListingUpdateRequestDto) {
         return ResponseEntity.ok(listingService.deleteAcceptedUserFromListing(userListingUpdateRequestDto));
     }
-    //FIXME: test endpoints with new request body
+    //TODO: test endpoints with new request body
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/deactivate")
     public ResponseEntity<?> deactivateListing(@RequestParam(name = "listingId") Long listingId,

@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/team")
 public class TeamController {
@@ -22,14 +22,14 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
         Team team = teamService.findTeamById(id);
 
         return new ResponseEntity<Object>(team, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(path = "/name", method = RequestMethod.GET)
     public ResponseEntity<?> getByName(@RequestParam("name") String name) {
         Team team = teamService.getByTeamname(name);
 
@@ -44,8 +44,10 @@ public class TeamController {
         return new ResponseEntity<Object>(newTeam, HttpStatus.CREATED);
     }
 
+    //FIXME: something is not right with this logic
+    // fix it
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/update/score", method = RequestMethod.POST)
+    @RequestMapping(path = "/score", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeamScore(@RequestBody Team team) {
         Team existingTeam = teamService.getByTeamname(team.getTeamName());
 
@@ -56,7 +58,7 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/add/teammate", method = RequestMethod.POST)
+    @RequestMapping(path = "/add_teammate", method = RequestMethod.POST)
     public ResponseEntity<?> addTeammateToTeam(@RequestBody TeammateRequestDTO teammateDTO) {
         Team team = teamService.addTeammateToTeam(teammateDTO.getTeamName(), teammateDTO.getTeamMate());
 
@@ -73,6 +75,8 @@ public class TeamController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //FIXME: something is not right with this logic
+    // fix it
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     public ResponseEntity<?> updateTeam(@RequestBody Team team) {
@@ -88,7 +92,7 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/get/all", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
         Iterable<Team> teams = teamService.findAll();
 
@@ -96,7 +100,7 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         teamService.delete(id);
 

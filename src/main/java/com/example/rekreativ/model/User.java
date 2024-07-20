@@ -28,18 +28,13 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
-
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Listing> listings = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "player_id", referencedColumnName = "id")
+    private Player player;
 
     private Boolean activeListing;
-
-    //FIXME: fix all mappings and properties regarding playerCharacteristics -> playerType
-    @Embedded
-    private PlayerCharacteristics playerCharacteristics;
 
     public User() {
         super();
@@ -60,19 +55,19 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
+    public @NotBlank(message = "Username is mandatory!") String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(@NotBlank(message = "Username is mandatory!") String username) {
         this.username = username;
     }
 
-    public String getPassword() {
+    public @NotBlank(message = "Password is mandatory!") String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NotBlank(message = "Password is mandatory!") String password) {
         this.password = password;
     }
 
@@ -84,14 +79,6 @@ public class User {
         this.roles = roles;
     }
 
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
     public List<Listing> getListings() {
         return listings;
     }
@@ -100,19 +87,19 @@ public class User {
         this.listings = listings;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public Boolean getActiveListing() {
         return activeListing;
     }
 
     public void setActiveListing(Boolean activeListing) {
         this.activeListing = activeListing;
-    }
-
-    public PlayerCharacteristics getPlayerCharacteristics() {
-        return playerCharacteristics;
-    }
-
-    public void setPlayerCharacteristics(PlayerCharacteristics playerCharacteristics) {
-        this.playerCharacteristics = playerCharacteristics;
     }
 }

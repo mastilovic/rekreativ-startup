@@ -1,32 +1,30 @@
-package com.example.rekreativ.model;
+package com.example.rekreativ.model.dto.response;
 
-import javax.persistence.*;
 import java.time.Instant;
 
-@Entity
-public class Review {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ReviewResponseDto {
     private Long id;
     private String title;
     private String description;
     private Integer rating;
     private Instant reviewDate;
-    @ManyToOne
-    @JoinColumn(name = "player_id")
-    private Player player;
+    private Long playerId;
 
-    public Review() {
+    public ReviewResponseDto() {
     }
 
-    public Review(Long id, String title, String description, Integer rating, Instant reviewDate, Player player) {
+    public ReviewResponseDto(Long id,
+                             String title,
+                             String description,
+                             Integer rating,
+                             Instant reviewDate,
+                             Long playerId) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.rating = rating;
         this.reviewDate = reviewDate;
-        this.player = player;
+        this.playerId = playerId;
     }
 
     public Long getId() {
@@ -69,11 +67,11 @@ public class Review {
         this.reviewDate = reviewDate;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Long getPlayerId() {
+        return playerId;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setPlayerId(Long playerId) {
+        this.playerId = playerId;
     }
 }

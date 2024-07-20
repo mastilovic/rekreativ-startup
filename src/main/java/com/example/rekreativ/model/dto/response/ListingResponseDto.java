@@ -1,5 +1,6 @@
 package com.example.rekreativ.model.dto.response;
 
+import com.example.rekreativ.model.Player;
 import com.example.rekreativ.model.dto.UserListingDto;
 import com.example.rekreativ.model.enums.ListingType;
 import com.example.rekreativ.model.enums.PlayerType;
@@ -20,8 +21,8 @@ public class ListingResponseDto {
     private Integer needPlayersCount;
     private Boolean isActive;
     private UserListingDto createdBy;
-    private List<UserListingDto> signed = new ArrayList<>();
-    private List<UserListingDto> accepted = new ArrayList<>();
+    private List<Player> signed = new ArrayList<>();
+    private List<Player> accepted = new ArrayList<>();
 
     public ListingResponseDto() {
     }
@@ -36,8 +37,8 @@ public class ListingResponseDto {
                               Integer needPlayersCount,
                               Boolean isActive,
                               UserListingDto createdBy,
-                              List<UserListingDto> signed,
-                              List<UserListingDto> accepted) {
+                              List<Player> signed,
+                              List<Player> accepted) {
         this.id = id;
         this.listingType = listingType;
         this.lookingFor = lookingFor;
@@ -132,19 +133,19 @@ public class ListingResponseDto {
         this.createdBy = createdBy;
     }
 
-    public List<UserListingDto> getSigned() {
+    public List<Player> getSigned() {
         return signed;
     }
 
-    public void setSigned(List<UserListingDto> signed) {
+    public void setSigned(List<Player> signed) {
         this.signed = signed;
     }
 
-    public List<UserListingDto> getAccepted() {
+    public List<Player> getAccepted() {
         return accepted;
     }
 
-    public void setAccepted(List<UserListingDto> accepted) {
+    public void setAccepted(List<Player> accepted) {
         this.accepted = accepted;
     }
 }

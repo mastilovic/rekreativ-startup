@@ -1,5 +1,6 @@
 package com.example.rekreativ.service;
 
+import com.example.rekreativ.model.dto.UserLoginDTO;
 import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 import com.example.rekreativ.model.dto.request.UserPlayerTypeRequestDto;
 import com.example.rekreativ.model.dto.response.UserResponseDTO;
@@ -14,7 +15,7 @@ public interface UserService {
 
     void addRoleToUser(String username, String roles);
 
-    UserResponseDTO saveUser(User user);
+    UserResponseDTO saveUser(UserLoginDTO user);
 
     UserResponseDTO initSave(User user);
 

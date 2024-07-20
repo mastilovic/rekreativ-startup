@@ -7,7 +7,7 @@ plugins {
 
 apply plugin: 'java'
 group = 'com.example'
-version = '0.0.2-SNAPSHOT'
+version = '0.0.3-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
@@ -51,17 +51,22 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools:2.7.3'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.5'
 
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.4'
 	testImplementation 'com.h2database:h2:2.1.214'
 	testImplementation 'org.springframework.security:spring-security-test:5.7.3'
 	testImplementation 'org.testcontainers:testcontainers:1.17.4'
 	testImplementation 'org.testcontainers:junit-jupiter:1.17.4'
 	testImplementation 'org.testcontainers:mysql:1.17.4'
-
 	compileOnly 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+springBoot {
+	buildInfo()
 }

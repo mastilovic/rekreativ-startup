@@ -2,6 +2,8 @@ package com.example.rekreativ.service.impl;
 
 import com.example.rekreativ.auth.AuthUser;
 import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.model.Player;
+import com.example.rekreativ.model.dto.UserLoginDTO;
 import com.example.rekreativ.model.dto.request.ReviewRequestDto;
 import com.example.rekreativ.model.dto.request.UserPlayerTypeRequestDto;
 import com.example.rekreativ.model.dto.response.UserResponseDTO;
@@ -94,13 +96,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         Review review = reviewMapper.mapToReview(reviewRequest);
         review.setReviewDate(Instant.now());
-        review.setUser(user);
-        user.getReviews().add(review);
+        review.setPlayer(user.getPlayer());
+        user.getPlayer().getReviews().add(review);
 
         return initSave(user);
     }
 
-    public UserResponseDTO saveUser(User userRequest) {
+    public UserResponseDTO saveUser(UserLoginDTO userRequest) {
         log.debug("calling saveUser method");
 
         if (userRepository.findByUsername(userRequest.getUsername()).isPresent()) {
@@ -118,6 +120,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         customValidator.validate(user);
+
+        Player player = new Player();
+        player.setUser(user);
+        user.setPlayer(player);
 
         return userMapper.mapToUserResponseDto(userRepository.save(user));
     }

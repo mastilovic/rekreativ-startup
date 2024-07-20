@@ -1,6 +1,7 @@
 package com.example.rekreativ.commons;
 
 import com.example.rekreativ.auth.AuthUser;
+import com.example.rekreativ.model.dto.response.LoginResponseDto;
 import com.example.rekreativ.service.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,13 +21,14 @@ public class AuthService {
         this.jwtHandler = jwtHandler;
     }
 
-    public HttpHeaders getJwtHeader(String username) {
+    public LoginResponseDto getJwtHeader(String username) {
         AuthUser authUser = new AuthUser(userService.findRawUserByUsername(username));
+        String token = jwtHandler.generateJwtToken(authUser);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("token", jwtHandler.generateJwtToken(authUser));
+        headers.add("token", token);
 
-        return headers;
+        return new LoginResponseDto(headers, token);
     }
 
     public void authenticate(String username, String password) {
