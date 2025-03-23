@@ -1,12 +1,12 @@
 package com.example.rekreativ.service;
 
+import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.commons.JwtHandler;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Team;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeamRepository;
 import com.example.rekreativ.service.impl.TeamServiceImpl;
-import com.example.rekreativ.util.JwtUtil;
-import com.example.rekreativ.util.ValidatorUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -31,13 +31,13 @@ import static org.mockito.Mockito.when;
 class TeamServiceTest {
 
     @Mock
-    private JwtUtil jwtUtil;
+    private JwtHandler jwtHandler;
     @Mock
     private TeamRepository teamRepository;
     @Mock
     private TeammateService teammateService;
     @Mock
-    private ValidatorUtil validatorUtil;
+    private CustomValidator customValidator;
     @InjectMocks
     private TeamServiceImpl underTest;
     @Captor

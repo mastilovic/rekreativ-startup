@@ -1,14 +1,16 @@
 package com.example.rekreativ.service;
 
 import com.example.rekreativ.auth.AuthUser;
+import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.dto.UserDTO;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
+import com.example.rekreativ.mapper.UserMapper;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.model.User;
 import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.repository.UserRepository;
 import com.example.rekreativ.service.impl.UserServiceImpl;
-import com.example.rekreativ.util.ValidatorUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,15 +42,18 @@ class UserServiceTest {
     @Mock
     private RoleService roleService;
     @Mock
-    private ValidatorUtil validatorUtil;
+    private CustomValidator customValidator;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private UserMapper userMapper;
     @InjectMocks
     private UserServiceImpl underTest;
     @Captor
     private ArgumentCaptor<User> userArgumentCaptor;
 
     User userOne, emptyUser;
+    UserDTO userOneDto;
     Role roleUser, roleAdmin;
     AuthUser authUser;
 
@@ -56,6 +62,11 @@ class UserServiceTest {
         userOne = new User(0L,
                 "testUsername",
                 "testPassword");
+        userOneDto = new UserDTO(0L,
+                "testUsername",
+                Collections.emptyList(),
+                0.0,
+                Collections.emptyList());
 
         emptyUser = new User(null,
                 " ",
@@ -99,9 +110,9 @@ class UserServiceTest {
         when(userRepository.findByUsername(userOne.getUsername()))
                 .thenReturn(Optional.of(userOne));
 
-        User user = underTest.findUserByUsername(userOne.getUsername());
+        UserDTO user = underTest.findUserByUsername(userOne.getUsername());
 
-        assertThat(user).isEqualTo(userOne);
+        assertThat(user.getUsername()).isEqualTo(userOne.getUsername());
     }
 
     @Test
@@ -133,7 +144,7 @@ class UserServiceTest {
                 .thenReturn(roleUser);
 
         userOne.getRoles().add(roleUser);
-        assertThatThrownBy(() ->  underTest.addRoleToUser(userOne.getUsername(), roleUser.getName()))
+        assertThatThrownBy(() -> underTest.addRoleToUser(userOne.getUsername(), roleUser.getName()))
                 .isInstanceOf(ObjectAlreadyExistsException.class);
     }
 
@@ -141,16 +152,22 @@ class UserServiceTest {
     void should_saveUser() {
         long userId = 1L;
         userOne.setId(userId);
-        when(userRepository.findByUsername(userOne.getUsername()))
-                .thenReturn(Optional.empty());
 
         User newUser = new User();
         newUser.setId(userOne.getId());
         newUser.setUsername(userOne.getUsername());
         newUser.setPassword(passwordEncoder.encode(userOne.getPassword()));
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(userOne.getId());
+        userDTO.setUsername(userOne.getUsername());
+
+        when(userRepository.findByUsername(userOne.getUsername()))
+                .thenReturn(Optional.empty());
+        when(roleService.findByName(anyString()))
+                .thenReturn(null);
 
         underTest.saveUser(newUser);
-//        verify(userRepository).save(userArgumentCaptor.capture());
+
         then(userRepository).should().save(userArgumentCaptor.capture());
         User capturedUser = userArgumentCaptor.getValue();
 
@@ -164,7 +181,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(userOne.getUsername()))
                 .thenReturn(Optional.of(userOne));
 
-        assertThatThrownBy(() ->  underTest.saveUser(userOne))
+        assertThatThrownBy(() -> underTest.saveUser(userOne))
                 .isInstanceOf(ObjectAlreadyExistsException.class);
     }
 
@@ -211,9 +228,9 @@ class UserServiceTest {
     void should_findUserById() {
         when(userRepository.findById(userOne.getId()))
                 .thenReturn(Optional.of(userOne));
-        User user = underTest.findUserById(userOne.getId());
+        UserDTO user = underTest.findUserById(userOne.getId());
 
-        assertThat(user).isEqualTo(userOne);
+        assertThat(user.getUsername()).isEqualTo(userOne.getUsername());
     }
 
     @Test
@@ -221,7 +238,7 @@ class UserServiceTest {
         when(userRepository.findById(userOne.getId()))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() ->  underTest.findUserById(userOne.getId()))
+        assertThatThrownBy(() -> underTest.findUserById(userOne.getId()))
                 .isInstanceOf(ObjectNotFoundException.class);
     }
 

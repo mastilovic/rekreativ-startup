@@ -1,5 +1,6 @@
 package com.example.rekreativ.controller;
 
+import com.example.rekreativ.dto.TeammateUpdateDTO;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.service.TeammateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,34 @@ public class TeammateController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getByName(@RequestParam("name") String name) {
+        Teammate teammate = teammateService.findTeammateByName(name);
+
+        return new ResponseEntity<Object>(teammate, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        Teammate teammate = teammateService.findById(id);
+
+        return new ResponseEntity<Object>(teammate, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteTeammate(@PathVariable Long id) {
         teammateService.delete(id);
 
         return new ResponseEntity<Object>("Teammate deleted successfully!", HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @RequestMapping(path = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<Teammate> updateTeammate(@RequestBody TeammateUpdateDTO teammateUpdateDTO) {
+        Teammate teammate = teammateService.update(teammateUpdateDTO);
+
+        return new ResponseEntity<>(teammate, HttpStatus.OK);
     }
 }

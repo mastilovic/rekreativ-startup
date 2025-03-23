@@ -1,11 +1,11 @@
 package com.example.rekreativ.service;
 
+import com.example.rekreativ.commons.CustomValidator;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.service.impl.RoleServiceImpl;
-import com.example.rekreativ.util.ValidatorUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ class RoleServiceTest {
     @Mock
     private RoleRepository roleRepository;
     @Mock
-    private ValidatorUtil validatorUtil;
+    private CustomValidator customValidator;
     @InjectMocks
     private RoleServiceImpl underTest;
     @Captor
@@ -43,6 +43,7 @@ class RoleServiceTest {
         roleUser = new Role("ROLE_USER");
         roleAdmin = new Role("ROLE_ADMIN");
     }
+
     @Test
     void should_FindByName() {
         String roleUserName = roleUser.getName();

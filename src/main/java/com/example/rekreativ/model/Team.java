@@ -4,8 +4,6 @@ package com.example.rekreativ.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -22,8 +20,8 @@ public class Team {
     @JsonIgnoreProperties(value = {"team"})
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "team_teammates",
-        joinColumns = { @JoinColumn(name = "team_id")},
-        inverseJoinColumns = { @JoinColumn (name = "teammate_id")})
+            joinColumns = {@JoinColumn(name = "team_id")},
+            inverseJoinColumns = {@JoinColumn(name = "teammate_id")})
     private Collection<Teammate> teammates = new ArrayList<>();
 
     private String city;
@@ -32,7 +30,7 @@ public class Team {
 
     private Integer totalGamesPlayed;
 
-    public Team(){
+    public Team() {
         super();
     }
 

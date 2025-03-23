@@ -1,10 +1,11 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.dto.TeammateUpdateDTO;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Teammate;
 import com.example.rekreativ.repository.TeammateRepository;
 import com.example.rekreativ.service.TeammateService;
-import com.example.rekreativ.util.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,12 @@ import java.util.Objects;
 public class TeammateServiceImpl implements TeammateService {
 
     private final TeammateRepository teammateRepository;
-    private final ValidatorUtil validatorUtil;
+    private final CustomValidator customValidator;
 
     public TeammateServiceImpl(TeammateRepository teammateRepository,
-                               ValidatorUtil validatorUtil) {
+                               CustomValidator customValidator) {
         this.teammateRepository = teammateRepository;
-        this.validatorUtil = validatorUtil;
+        this.customValidator = customValidator;
     }
 
     public Teammate findTeammateByName(String name) {
@@ -38,7 +39,6 @@ public class TeammateServiceImpl implements TeammateService {
                 .orElseThrow(() -> new ObjectNotFoundException(Teammate.class, id));
     }
 
-
     public Teammate save(Teammate teammate) {
         log.debug("calling save method");
 
@@ -49,7 +49,7 @@ public class TeammateServiceImpl implements TeammateService {
         newTeammate.setName(teammate.getName());
         newTeammate.setTotalGamesPlayed(0);
         newTeammate.setWins(0);
-        validatorUtil.validate(newTeammate);
+        customValidator.validate(newTeammate);
 
         return teammateRepository.save(newTeammate);
     }
@@ -72,5 +72,14 @@ public class TeammateServiceImpl implements TeammateService {
         Teammate teammate = findById(id);
 
         teammateRepository.deleteById(teammate.getId());
+    }
+
+    public Teammate update(TeammateUpdateDTO teammateUpdateDTO) {
+        log.debug("calling save method");
+        Teammate teammate = this.findById(teammateUpdateDTO.getId());
+
+        teammate.setName(teammateUpdateDTO.getName());
+
+        return teammateRepository.save(teammate);
     }
 }

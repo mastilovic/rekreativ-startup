@@ -1,6 +1,6 @@
 package com.example.rekreativ.filter;
 
-import com.example.rekreativ.util.JwtUtil;
+import com.example.rekreativ.commons.JwtHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,11 +24,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     public static final String TOKEN_PREFIX = "Bearer ";
     private static final String SECRET_KEY = "jKZGcDKSY1fcmFAwxVsof5GicOdsz9sD";
 
-    private final JwtUtil jwtUtil;
+    private final JwtHandler jwtHandler;
 
     @Autowired
-    public JwtAuthorizationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public JwtAuthorizationFilter(JwtHandler jwtHandler) {
+        this.jwtHandler = jwtHandler;
     }
 
     @Override
@@ -46,11 +46,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
             String token = authorizationHeader.substring(TOKEN_PREFIX.length());
-            String username = jwtUtil.getSubject(token);
+            String username = jwtHandler.getSubject(token);
 
-            if (jwtUtil.isTokenValid(username, token)) {
-                Collection<SimpleGrantedAuthority> authorities = jwtUtil.getAuthorities(token);
-                Authentication authentication = jwtUtil.getAuthentication(username, authorities, request);
+            if (jwtHandler.isTokenValid(username, token)) {
+                Collection<SimpleGrantedAuthority> authorities = jwtHandler.getAuthorities(token);
+                Authentication authentication = jwtHandler.getAuthentication(username, authorities, request);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 SecurityContextHolder.clearContext();

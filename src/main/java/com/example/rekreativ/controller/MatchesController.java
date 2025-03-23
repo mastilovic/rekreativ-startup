@@ -32,7 +32,7 @@ public class MatchesController {
         return new ResponseEntity<>(newMatch, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    //    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
         Iterable<Matches> matches = matchesService.findAll();
@@ -40,7 +40,7 @@ public class MatchesController {
         return new ResponseEntity<Object>(matches, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    //    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
         Matches match = matchesService.findMatchById(id);

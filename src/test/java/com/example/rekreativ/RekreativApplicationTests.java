@@ -12,18 +12,18 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 class RekreativApplicationTests {
 
-	@Container
-	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:5.7");
+    @Container
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:5.7");
 
-	@DynamicPropertySource
-	static void registerMySQLProperties(DynamicPropertyRegistry registry) {
-		registry.add("spring.datasource.url", mysql::getJdbcUrl);
-		registry.add("spring.datasource.username", mysql::getUsername);
-		registry.add("spring.datasource.password", mysql::getPassword);
-	}
+    @DynamicPropertySource
+    static void registerMySQLProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mysql::getJdbcUrl);
+        registry.add("spring.datasource.username", mysql::getUsername);
+        registry.add("spring.datasource.password", mysql::getPassword);
+    }
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

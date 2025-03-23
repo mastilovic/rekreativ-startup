@@ -1,6 +1,8 @@
 package com.example.rekreativ.service.impl;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.rekreativ.commons.CustomValidator;
+import com.example.rekreativ.commons.JwtHandler;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Matches;
@@ -10,8 +12,6 @@ import com.example.rekreativ.model.User;
 import com.example.rekreativ.repository.TeamRepository;
 import com.example.rekreativ.service.TeamService;
 import com.example.rekreativ.service.TeammateService;
-import com.example.rekreativ.util.JwtUtil;
-import com.example.rekreativ.util.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -27,19 +26,19 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Slf4j
 public class TeamServiceImpl implements TeamService {
 
-    private final JwtUtil jwtUtil;
+    private final JwtHandler jwtHandler;
     private final TeamRepository teamRepository;
     private final TeammateService teammateService;
-    private final ValidatorUtil validatorUtil;
+    private final CustomValidator customValidator;
 
-    public TeamServiceImpl(JwtUtil jwtUtil,
+    public TeamServiceImpl(JwtHandler jwtHandler,
                            TeamRepository teamRepository,
                            TeammateService teammateService,
-                           ValidatorUtil validatorUtil) {
-        this.jwtUtil = jwtUtil;
+                           CustomValidator customValidator) {
+        this.jwtHandler = jwtHandler;
         this.teamRepository = teamRepository;
         this.teammateService = teammateService;
-        this.validatorUtil = validatorUtil;
+        this.customValidator = customValidator;
     }
 
     public Iterable<Team> findAll() {
@@ -73,12 +72,12 @@ public class TeamServiceImpl implements TeamService {
 
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String token = authorizationHeader.substring("Bearer ".length());
-        DecodedJWT decodedJWT = jwtUtil.decodedToken(token);
+        DecodedJWT decodedJWT = jwtHandler.decodedToken(token);
         String username = decodedJWT.getSubject();
 
         User user = new User();
         user.setUsername(username);
-        validatorUtil.validate(user);
+        customValidator.validate(user);
 
         return teamRepository.save(team);
     }
@@ -99,7 +98,7 @@ public class TeamServiceImpl implements TeamService {
         newTeam.setCity(team.getCity());
         newTeam.setWins(0);
         newTeam.setTotalGamesPlayed(0);
-        validatorUtil.validate(newTeam);
+        customValidator.validate(newTeam);
 
         return teamRepository.save(team);
     }

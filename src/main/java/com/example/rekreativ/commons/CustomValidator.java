@@ -1,4 +1,4 @@
-package com.example.rekreativ.util;
+package com.example.rekreativ.commons;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import java.util.Set;
 @Service
 @Slf4j
 //TODO: util class only has static methods, refactor name of the class
-public class ValidatorUtil {
+public class CustomValidator {
 
     private final Validator validator;
 
-    public ValidatorUtil(Validator validator) {
+    public CustomValidator(Validator validator) {
         this.validator = validator;
     }
 

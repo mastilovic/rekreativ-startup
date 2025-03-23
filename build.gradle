@@ -58,8 +58,8 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter:1.17.4'
 	testImplementation 'org.testcontainers:mysql:1.17.4'
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 tasks.named('test') {

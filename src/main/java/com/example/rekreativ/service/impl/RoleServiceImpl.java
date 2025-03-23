@@ -1,11 +1,11 @@
 package com.example.rekreativ.service.impl;
 
+import com.example.rekreativ.commons.CustomValidator;
 import com.example.rekreativ.error.exceptions.ObjectAlreadyExistsException;
 import com.example.rekreativ.error.exceptions.ObjectNotFoundException;
 import com.example.rekreativ.model.Role;
 import com.example.rekreativ.repository.RoleRepository;
 import com.example.rekreativ.service.RoleService;
-import com.example.rekreativ.util.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final ValidatorUtil validatorUtil;
+    private final CustomValidator customValidator;
 
     public RoleServiceImpl(RoleRepository roleRepository,
-                           ValidatorUtil validatorUtil) {
+                           CustomValidator customValidator) {
         this.roleRepository = roleRepository;
-        this.validatorUtil = validatorUtil;
+        this.customValidator = customValidator;
     }
 
     public Role findByName(String name) {
@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
 
         Role newRole = new Role();
         newRole.setName(role.getName());
-        validatorUtil.validate(role);
+        customValidator.validate(role);
 
         return roleRepository.save(newRole);
     }
